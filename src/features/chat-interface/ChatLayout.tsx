@@ -1,5 +1,4 @@
 import React from "react";
-import { OpenAILimitsBadge } from "./OpenAILimitsBadge";
 
 export const ChatLayout = ({
   children,

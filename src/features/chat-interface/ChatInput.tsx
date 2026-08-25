@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Send, Paperclip, X, Download } from "lucide-react";
+import { Send, Paperclip, X, Download, Loader2 } from "lucide-react";
 import {
   useFileValidation,
   FileProcessingResult,
@@ -9,13 +9,17 @@ import {
 } from "../file-validation/useFileValidation";
 import { ValidationChecklistModal } from "./ValidationChecklistModal";
 
+type ChatInputProps = {
+  onSendMessage: (message: string) => void;
+  onSendFile?: (file: File) => void;
+  isChatDisabled?: boolean;
+};
+
 export const ChatInput = ({
   onSendMessage,
   onSendFile,
-}: {
-  onSendMessage: (text: string) => void;
-  onSendFile?: (file: File) => void;
-}) => {
+  isChatDisabled,
+}: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -25,6 +29,7 @@ export const ChatInput = ({
     useState<FileProcessingResult | null>(null);
   const [validationReport, setValidationReport] =
     useState<ValidationReport | null>(null);
+  const [isProcessingFile, setIsProcessingFile] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { processFile, regenerateCsvFile, error, setError, clearError } =
@@ -37,71 +42,110 @@ export const ChatInput = ({
   };
 
   const handleFileSelectFromModal = async (file: File) => {
-    const result = await processFile(file);
-    setPendingFileResult(result);
-    setValidationReport(result.report || null);
+    setIsProcessingFile(true);
+    const start = Date.now();
+    // Allow UI to update before blocking
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    try {
+      const result = await processFile(file);
+
+      const elapsed = Date.now() - start;
+      const minDuration = 1000; // Mínimo 1 segundo de animación
+      if (elapsed < minDuration) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, minDuration - elapsed),
+        );
+      }
+
+      setPendingFileResult(result);
+      setValidationReport(result.report || null);
+    } finally {
+      setIsProcessingFile(false);
+    }
   };
 
   const handleProceedValidation = (
     decision?: "group" | "individual" | "discard",
   ) => {
-    setIsValidationModalOpen(false);
-    if (pendingFileResult?.valid && pendingFileResult.report) {
-      let finalData = [...pendingFileResult.parsedData!];
-
-      const originalIssueCol = pendingFileResult.issueColumnName;
-      const originalIdCol = pendingFileResult.report.matchedIdColumn;
-      const originalCommentCol = pendingFileResult.report.matchedCommentColumn!;
-
-      const tempIssueCol = originalIssueCol || "issue_number";
-
-      if (
-        pendingFileResult.hasOrphans &&
-        decision &&
-        decision !== "individual"
-      ) {
-        if (decision === "group") {
-          finalData = finalData.map((row) => {
-            const newRow = { ...row };
-            if (
-              !newRow[tempIssueCol] ||
-              String(newRow[tempIssueCol]).trim() === ""
-            ) {
-              newRow[tempIssueCol] = "UNGROUPED-COMMENTS";
-            }
-            return newRow;
-          });
-        } else if (decision === "discard") {
-          finalData = finalData.filter(
-            (row) =>
-              row[tempIssueCol] && String(row[tempIssueCol]).trim() !== "",
-          );
-        }
-      }
-
-      const mappedData = finalData.map((row) => {
-        return {
-          comment_id: row[originalIdCol || "comment_id"],
-          comment: row[originalCommentCol],
-          issue_number: row[tempIssueCol] || "",
-        };
-      });
-
-      if (mappedData.length === 0) {
-        setError(
-          "Al descartar los comentarios huérfanos, el archivo quedó completamente vacío. Por favor, sube otro archivo o escoge agruparlos.",
-        );
-        setPendingFileResult(null);
-        return;
-      }
-
-      const newFile = regenerateCsvFile(
-        mappedData,
-        pendingFileResult.file!.name,
-      );
-      setSelectedFile(newFile);
-      setPendingFileResult(null);
+    if (!pendingFileResult?.valid || !pendingFileResult.report) {
+      setIsValidationModalOpen(false);
+      return;
     }
+
+    // Capture narrowed values for the setTimeout closure to satisfy TypeScript
+    const validResult = pendingFileResult;
+    const validReport = pendingFileResult.report;
+
+    setIsProcessingFile(true);
+
+    // Allow the modal's spinner to render before freezing the main thread with map/filter on massive arrays
+    setTimeout(() => {
+      try {
+        const start = Date.now();
+        let finalData = [...validResult.parsedData!];
+
+        const originalIssueCol = validResult.issueColumnName;
+        const originalIdCol = validReport.matchedIdColumn;
+        const originalCommentCol = validReport.matchedCommentColumn!;
+
+        const tempIssueCol = originalIssueCol || "issue_number";
+
+        if (validResult.hasOrphans && decision && decision !== "individual") {
+          if (decision === "group") {
+            finalData = finalData.map((row) => {
+              const newRow = { ...row };
+              if (
+                !newRow[tempIssueCol] ||
+                String(newRow[tempIssueCol]).trim() === ""
+              ) {
+                newRow[tempIssueCol] = "UNGROUPED-COMMENTS";
+              }
+              return newRow;
+            });
+          } else if (decision === "discard") {
+            finalData = finalData.filter(
+              (row) =>
+                row[tempIssueCol] && String(row[tempIssueCol]).trim() !== "",
+            );
+          }
+        }
+
+        const mappedData = finalData.map((row) => {
+          return {
+            comment_id: row[originalIdCol || "comment_id"],
+            comment: row[originalCommentCol],
+            issue_number: row[tempIssueCol] || "",
+          };
+        });
+
+        if (mappedData.length === 0) {
+          setError(
+            "Al descartar los comentarios huérfanos, el archivo quedó completamente vacío. Por favor, sube otro archivo o escoge agruparlos.",
+          );
+          setPendingFileResult(null);
+          return;
+        }
+
+        const newFile = regenerateCsvFile(mappedData, validResult.file!.name);
+        setSelectedFile(newFile);
+        setPendingFileResult(null);
+
+        const finishProcessing = () => {
+          setIsValidationModalOpen(false);
+          setIsProcessingFile(false);
+        };
+
+        const elapsed = Date.now() - start;
+        const minDuration = 1000; // Mínimo 1 segundo de animación
+        if (elapsed < minDuration) {
+          setTimeout(finishProcessing, minDuration - elapsed);
+        } else {
+          finishProcessing();
+        }
+      } catch {
+        setIsProcessingFile(false);
+      }
+    }, 100);
   };
 
   const handleCloseValidationModal = () => {
@@ -117,6 +161,8 @@ export const ChatInput = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isChatDisabled) return;
+
     if (selectedFile && onSendFile) {
       onSendFile(selectedFile);
       removeFile();
@@ -149,10 +195,14 @@ export const ChatInput = ({
           <button
             type="button"
             onClick={handleAttachmentClick}
-            disabled={!!selectedFile}
-            className={`p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"}`}
+            disabled={!!selectedFile || isProcessingFile || isChatDisabled}
+            className={`p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"} ${isProcessingFile || isChatDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            <Paperclip className="w-5 h-5" />
+            {isProcessingFile ? (
+              <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+            ) : (
+              <Paperclip className="w-5 h-5" />
+            )}
           </button>
 
           {selectedFile ? (
@@ -204,15 +254,20 @@ export const ChatInput = ({
                   handleSubmit(e);
                 }
               }}
-              placeholder="Escribe un comentario o adjunta un dataset..."
-              className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none py-3 px-2 text-slate-800 placeholder-slate-400"
+              placeholder={
+                isChatDisabled
+                  ? "Análisis en progreso. Por favor espera..."
+                  : "Escribe un comentario o adjunta un dataset..."
+              }
+              className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none py-3 px-2 text-slate-800 placeholder-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
               rows={1}
+              disabled={isChatDisabled}
             />
           )}
 
           <button
             type="submit"
-            disabled={!message.trim() && !selectedFile}
+            disabled={(!message.trim() && !selectedFile) || isChatDisabled}
             className="p-3 bg-slate-800 text-white rounded-full hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all self-end shadow-sm"
           >
             <Send className="w-5 h-5" />
@@ -233,6 +288,7 @@ export const ChatInput = ({
         onFileSelect={handleFileSelectFromModal}
         report={validationReport}
         hasOrphans={pendingFileResult?.hasOrphans}
+        isProcessingFile={isProcessingFile}
       />
     </div>
   );

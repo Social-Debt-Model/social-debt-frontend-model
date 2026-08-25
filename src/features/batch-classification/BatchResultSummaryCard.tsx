@@ -1,8 +1,9 @@
 import React from "react";
-import { CheckCircle2, BarChart2, Trash2, FileText } from "lucide-react";
+import { CheckCircle2, BarChart2, Trash2 } from "lucide-react";
+import { BatchResultData } from "./actions";
 
 type BatchResultSummaryCardProps = {
-  resultData: any;
+  resultData: BatchResultData;
   filename: string;
   isDeleted: boolean;
   onViewDashboard: () => void;

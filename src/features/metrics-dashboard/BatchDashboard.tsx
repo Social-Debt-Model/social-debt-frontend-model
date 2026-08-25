@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { getMacroCauseColor } from "../ontology/ontologyColorMap";
 import { useOntology } from "../ontology/useOntology";
 import {
   BarChart3,
@@ -24,20 +23,27 @@ import {
 } from "lucide-react";
 import { TextResultCard } from "../text-classification/TextResultCard";
 
+import { BatchResultData, MetricsData } from "../batch-classification/actions";
+
 type BatchDashboardProps = {
-  resultData: {
-    comments: any[];
-    social_debt_metrics?: Record<string, any>;
-    issues_metrics?: Record<string, any>;
-  };
+  resultData: BatchResultData;
 };
 
 export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
   const { comments = [], social_debt_metrics, issues_metrics } = resultData;
-  const metrics = social_debt_metrics || issues_metrics || {};
+  const metrics: Record<string, MetricsData> = (social_debt_metrics ||
+    issues_metrics ||
+    {}) as Record<string, MetricsData>;
   const issueKeys = Object.keys(metrics);
+
+  const orphanComments = useMemo(() => {
+    return comments.filter((c) => !c.issue_number);
+  }, [comments]);
+
+  const hasOrphanComments = orphanComments.length > 0;
+
   const [selectedIssue, setSelectedIssue] = useState<string>(
-    issueKeys[0] || "all",
+    issueKeys[0] || (hasOrphanComments ? "individuales" : "all"),
   );
   const [showComments, setShowComments] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,13 +57,30 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
     );
   }, [issueKeys, searchQuery]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedIssue]);
+  const [prevSelectedIssue, setPrevSelectedIssue] = useState(selectedIssue);
+  if (selectedIssue !== prevSelectedIssue) {
+    setPrevSelectedIssue(selectedIssue);
+    if (currentPage !== 1) setCurrentPage(1);
+  }
 
   const { getMacroCauseDescription } = useOntology();
 
-  if (issueKeys.length === 0) {
+  const currentMetrics = metrics[selectedIssue] as MetricsData | undefined;
+
+  const chartData = useMemo(() => {
+    if (!currentMetrics?.dominant_macrocauses) return [];
+    return currentMetrics.dominant_macrocauses.map((item: [string, number]) => {
+      const code = item[0];
+      return {
+        name: code,
+        desc: getMacroCauseDescription(code),
+        count: item[1],
+        color: code === "H" ? "#94a3b8" : "#3b82f6",
+      };
+    });
+  }, [currentMetrics, getMacroCauseDescription]);
+
+  if (issueKeys.length === 0 && hasOrphanComments) {
     const totalPages = Math.ceil(comments.length / pageSize);
     const paginatedComments = comments.slice(
       (currentPage - 1) * pageSize,
@@ -117,21 +140,6 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
     );
   }
 
-  const currentMetrics = metrics[selectedIssue];
-
-  const chartData = useMemo(() => {
-    if (!currentMetrics?.dominant_macrocauses) return [];
-    return currentMetrics.dominant_macrocauses.map((item: [string, number]) => {
-      const code = item[0];
-      return {
-        name: code,
-        desc: getMacroCauseDescription(code),
-        count: item[1],
-        color: code === "H" ? "#94a3b8" : "#3b82f6",
-      };
-    });
-  }, [currentMetrics, getMacroCauseDescription]);
-
   const sdiPercent = Math.round((currentMetrics?.social_debt_index || 0) * 100);
 
   let sdiColor = "text-emerald-500 bg-emerald-50 border-emerald-200";
@@ -151,68 +159,90 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
           </p>
         </div>
 
-        <div className="relative">
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="glass-panel px-4 py-2 flex items-center justify-between gap-3 w-auto outline-none text-sm font-medium text-slate-700 hover:shadow-md transition-shadow cursor-pointer"
-          >
-            <span className="truncate">
-              Issue: {selectedIssue} (
-              {metrics[selectedIssue]?.comment_count || 0} comentarios)
-            </span>
-            <ChevronDown className="w-4 h-4 flex-shrink-0 text-slate-500" />
-          </button>
+        <div className="flex items-center gap-3">
+          {hasOrphanComments && (
+            <button
+              onClick={() => setSelectedIssue("individuales")}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors shadow-sm border ${
+                selectedIssue === "individuales"
+                  ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                  : "bg-white/80 text-slate-700 border-slate-200 hover:bg-white"
+              }`}
+            >
+              Individuales ({orphanComments.length})
+            </button>
+          )}
 
-          {isDropdownOpen && (
-            <>
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setIsDropdownOpen(false)}
-              ></div>
+          {issueKeys.length > 0 && (
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className={`glass-panel px-4 py-2 flex items-center justify-between gap-3 w-auto outline-none text-sm font-medium transition-shadow cursor-pointer ${
+                  selectedIssue !== "individuales"
+                    ? "border-indigo-300 ring-1 ring-indigo-200 text-indigo-800"
+                    : "text-slate-700 hover:shadow-md"
+                }`}
+              >
+                <span className="truncate">
+                  {selectedIssue === "individuales"
+                    ? "Seleccionar Issue..."
+                    : `Issue: ${selectedIssue} (${metrics[selectedIssue]?.comment_count || 0} comentarios)`}
+                </span>
+                <ChevronDown className="w-4 h-4 flex-shrink-0 text-slate-500" />
+              </button>
 
-              <div className="absolute top-full right-0 mt-2 w-72 glass-panel p-2 z-50 flex flex-col gap-2 shadow-2xl border border-white/50">
-                <div className="relative flex-shrink-0">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    type="text"
-                    autoFocus
-                    placeholder="Buscar Issue..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white/70 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all placeholder:text-slate-400"
-                  />
-                </div>
+              {isDropdownOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsDropdownOpen(false)}
+                  ></div>
 
-                <div className="max-h-60 overflow-y-auto flex flex-col gap-1 pr-1 custom-scrollbar">
-                  {filteredIssues.length === 0 ? (
-                    <p className="text-xs text-center text-slate-500 py-3">
-                      No se encontraron issues.
-                    </p>
-                  ) : (
-                    filteredIssues.map((key) => (
-                      <button
-                        key={key}
-                        onClick={() => {
-                          setSelectedIssue(key);
-                          setIsDropdownOpen(false);
-                          setSearchQuery("");
-                        }}
-                        className={`text-left px-3 py-2 text-sm rounded-lg transition-colors ${
-                          selectedIssue === key
-                            ? "bg-indigo-100 text-indigo-800 font-semibold"
-                            : "hover:bg-white/80 text-slate-700"
-                        }`}
-                      >
-                        <span className="block truncate">Issue: {key}</span>
-                        <span className="text-xs text-slate-500">
-                          {metrics[key].comment_count} comentarios
-                        </span>
-                      </button>
-                    ))
-                  )}
-                </div>
-              </div>
-            </>
+                  <div className="absolute top-full right-0 mt-2 w-72 glass-panel p-2 z-50 flex flex-col gap-2 shadow-2xl border border-white/50">
+                    <div className="relative flex-shrink-0">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <input
+                        type="text"
+                        autoFocus
+                        placeholder="Buscar Issue..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-white/70 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all placeholder:text-slate-400"
+                      />
+                    </div>
+
+                    <div className="max-h-60 overflow-y-auto flex flex-col gap-1 pr-1 custom-scrollbar">
+                      {filteredIssues.length === 0 ? (
+                        <p className="text-xs text-center text-slate-500 py-3">
+                          No se encontraron issues.
+                        </p>
+                      ) : (
+                        filteredIssues.map((key) => (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              setSelectedIssue(key);
+                              setIsDropdownOpen(false);
+                              setSearchQuery("");
+                            }}
+                            className={`text-left px-3 py-2 text-sm rounded-lg transition-colors ${
+                              selectedIssue === key
+                                ? "bg-indigo-50 text-indigo-700 font-medium"
+                                : "text-slate-600 hover:bg-slate-100"
+                            }`}
+                          >
+                            Issue: {key}
+                            <span className="block text-xs text-slate-500">
+                              {metrics[key].comment_count} comentarios
+                            </span>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -276,9 +306,11 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                         }}
                       />
                       <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                        {chartData.map((entry: any, index: number) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
+                        {chartData.map(
+                          (entry: { color: string }, index: number) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ),
+                        )}
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
@@ -330,7 +362,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                 </h3>
                 <ul className="space-y-2">
                   {currentMetrics.dominant_community_smells?.map(
-                    (s: any, idx: number) => (
+                    (s: [string, number], idx: number) => (
                       <li
                         key={idx}
                         className="text-xs bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
@@ -352,19 +384,21 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                   <AlertTriangle className="w-4 h-4 text-orange-500" /> Riesgos
                 </h3>
                 <ul className="space-y-2">
-                  {currentMetrics.dominant_risks?.map((r: any, idx: number) => (
-                    <li
-                      key={idx}
-                      className="text-xs bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
-                    >
-                      <span className="text-slate-700 pr-2">
-                        {r[0].replace(/_/g, " ")}
-                      </span>
-                      <span className="font-semibold text-slate-500 bg-white px-2 py-0.5 rounded shadow-sm flex-shrink-0">
-                        {r[1]}
-                      </span>
-                    </li>
-                  ))}
+                  {currentMetrics.dominant_risks?.map(
+                    (r: [string, number], idx: number) => (
+                      <li
+                        key={idx}
+                        className="text-xs bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
+                      >
+                        <span className="text-slate-700 pr-2">
+                          {r[0].replace(/_/g, " ")}
+                        </span>
+                        <span className="font-semibold text-slate-500 bg-white px-2 py-0.5 rounded shadow-sm flex-shrink-0">
+                          {r[1]}
+                        </span>
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
 
@@ -374,7 +408,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                 </h3>
                 <ul className="space-y-2">
                   {currentMetrics.dominant_microcauses?.map(
-                    (m: any, idx: number) => (
+                    (m: [string, number], idx: number) => (
                       <li
                         key={idx}
                         className="text-xs bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
@@ -394,28 +428,22 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
           </div>
         )}
 
-        <div className="bg-slate-50/50 p-4 border-t border-slate-200 flex-shrink-0">
-          <button
-            onClick={() => {
-              setShowComments(!showComments);
-              setCurrentPage(1);
-            }}
-            className="w-full py-2 bg-white text-slate-600 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 transition shadow-sm"
-          >
-            {showComments
-              ? "Ocultar Detalles de Comentarios"
-              : `Ver los ${currentMetrics?.comment_count} comentarios clasificados`}
-          </button>
-
-          {showComments && (
-            <div className="flex flex-col gap-8 mt-4 pr-2 pb-2">
+        {selectedIssue === "individuales" && (
+          <div className="p-6">
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-slate-800 mb-1">
+                Comentarios Individuales
+              </h3>
+              <p className="text-sm text-slate-500">
+                Estos comentarios no estaban asociados a ningún issue, o
+                elegiste procesarlos de manera individual. No poseen métricas
+                grupales.
+              </p>
+            </div>
+            <div className="flex flex-col gap-8 pr-2 pb-2">
               {(() => {
-                const issueComments = comments.filter(
-                  (c) =>
-                    c.issue_number && String(c.issue_number) === selectedIssue,
-                );
-                const totalPages = Math.ceil(issueComments.length / pageSize);
-                const paginatedComments = issueComments.slice(
+                const totalPages = Math.ceil(orphanComments.length / pageSize);
+                const paginatedComments = orphanComments.slice(
                   (currentPage - 1) * pageSize,
                   currentPage * pageSize,
                 );
@@ -459,8 +487,79 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                 );
               })()}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {selectedIssue !== "individuales" && (
+          <div className="bg-slate-50/50 p-4 border-t border-slate-200 flex-shrink-0">
+            <button
+              onClick={() => {
+                setShowComments(!showComments);
+                setCurrentPage(1);
+              }}
+              className="w-full py-2 bg-white text-slate-600 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 transition shadow-sm"
+            >
+              {showComments
+                ? "Ocultar Detalles de Comentarios"
+                : `Ver los ${currentMetrics?.comment_count} comentarios clasificados`}
+            </button>
+
+            {showComments && (
+              <div className="flex flex-col gap-8 mt-4 pr-2 pb-2">
+                {(() => {
+                  const issueComments = comments.filter(
+                    (c) =>
+                      c.issue_number &&
+                      String(c.issue_number) === selectedIssue,
+                  );
+                  const totalPages = Math.ceil(issueComments.length / pageSize);
+                  const paginatedComments = issueComments.slice(
+                    (currentPage - 1) * pageSize,
+                    currentPage * pageSize,
+                  );
+
+                  return (
+                    <>
+                      {paginatedComments.map((c, i) => (
+                        <TextResultCard
+                          key={i}
+                          result={c}
+                          isDashboardMode={true}
+                          index={(currentPage - 1) * pageSize + i + 1}
+                        />
+                      ))}
+                      {totalPages > 1 && (
+                        <div className="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-200 mt-2 shadow-sm">
+                          <button
+                            disabled={currentPage === 1}
+                            onClick={() =>
+                              setCurrentPage((p) => Math.max(1, p - 1))
+                            }
+                            className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
+                          >
+                            Anterior
+                          </button>
+                          <span className="text-sm font-semibold text-slate-600">
+                            Página {currentPage} de {totalPages}
+                          </span>
+                          <button
+                            disabled={currentPage === totalPages}
+                            onClick={() =>
+                              setCurrentPage((p) => Math.min(totalPages, p + 1))
+                            }
+                            className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
+                          >
+                            Siguiente
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

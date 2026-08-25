@@ -26,16 +26,18 @@ export type ClassifyTextResponse = {
   comment_id?: number | string;
 };
 
-export async function classifyText(text: string): Promise<ClassifyTextResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-  const apiKey = process.env.API_SECRET_KEY || '';
+export async function classifyText(
+  text: string,
+): Promise<ClassifyTextResponse> {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiKey = process.env.API_SECRET_KEY || "";
 
   try {
     const res = await fetch(`${apiUrl}/classify/text`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': apiKey,
+        "Content-Type": "application/json",
+        "X-API-Key": apiKey,
       },
       body: JSON.stringify({ text }),
     });
@@ -44,18 +46,18 @@ export async function classifyText(text: string): Promise<ClassifyTextResponse> 
       throw new Error(`API returned status ${res.status}`);
     }
 
-    const data = await res.json();
+    const data = (await res.json()) as ClassifyTextResponse;
     return data;
-  } catch (err: any) {
-    console.error('Classification error:', err);
+  } catch (err: unknown) {
+    console.error("Classification error:", err);
     return {
       cleaned_text: text,
       is_noise: false,
-      noise_level: 'none',
-      macro_cause_code: 'H',
+      noise_level: "none",
+      macro_cause_code: "H",
       confidence: 0,
       microcauses: [],
-      error: 'Hubo un error de conexión con la API de Social Debt.',
+      error: "Hubo un error de conexión con la API de Social Debt.",
     };
   }
 }

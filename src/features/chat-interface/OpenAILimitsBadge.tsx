@@ -85,8 +85,12 @@ export const OpenAILimitsBadge = () => {
             )}
           </div>
           <div className="relative flex-shrink-0 ml-2">
-            <span className={`absolute inline-flex h-full w-full rounded-full opacity-30 animate-ping ${errorObj.isError ? "bg-red-400" : "bg-blue-400"}`}></span>
-            <Info className={`w-4 h-4 relative ${errorObj.isError ? "text-red-500" : "text-blue-500"}`} />
+            <span
+              className={`absolute inline-flex h-full w-full rounded-full opacity-30 animate-ping ${errorObj.isError ? "bg-red-400" : "bg-blue-400"}`}
+            ></span>
+            <Info
+              className={`w-4 h-4 relative ${errorObj.isError ? "text-red-500" : "text-blue-500"}`}
+            />
           </div>
         </div>
 
@@ -116,10 +120,13 @@ export const OpenAILimitsBadge = () => {
                     Cuota de Red OpenAI
                   </h4>
                   <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                    Número estimado de comentarios restantes que puedes analizar antes de alcanzar el límite dinámico de la API.
+                    Número estimado de comentarios restantes que puedes analizar
+                    antes de alcanzar el límite dinámico de la API.
                   </p>
                   <div className="flex justify-between items-center text-xs mt-2 pt-2 border-t border-slate-200/30">
-                    <span className="text-slate-500/90 font-medium">Reinicio de cuota en:</span>
+                    <span className="text-slate-500/90 font-medium">
+                      Reinicio de cuota en:
+                    </span>
                     <span className="font-mono text-slate-700 font-semibold tracking-wide">
                       {limits?.reset_requests}
                     </span>

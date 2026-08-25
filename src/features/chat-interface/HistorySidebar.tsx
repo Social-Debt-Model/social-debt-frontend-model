@@ -50,10 +50,15 @@ export const HistorySidebar = ({
                 onClick={() => onSelect(item.jobId)}
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0 pr-2 overflow-hidden">
-                  <div className={`p-2 rounded-xl flex-shrink-0 transition-all ${isActive ? "bg-blue-500 text-white shadow-md shadow-blue-200" : "bg-slate-50/30 text-slate-400 group-hover:bg-white/50 group-hover:text-blue-500"}`}>
+                  <div
+                    className={`p-2 rounded-xl flex-shrink-0 transition-all ${isActive ? "bg-blue-500 text-white shadow-md shadow-blue-200" : "bg-slate-50/30 text-slate-400 group-hover:bg-white/50 group-hover:text-blue-500"}`}
+                  >
                     <FileText className="w-5 h-5" />
                   </div>
-                  <div className="flex-1 min-w-0 overflow-hidden flex flex-col justify-center" style={{ containerType: 'inline-size' }}>
+                  <div
+                    className="flex-1 min-w-0 overflow-hidden flex flex-col justify-center"
+                    style={{ containerType: "inline-size" }}
+                  >
                     <p
                       className={`text-lg animate-marquee w-max font-bold ${isActive ? "text-slate-800" : "text-slate-600"}`}
                       title={item.filename}

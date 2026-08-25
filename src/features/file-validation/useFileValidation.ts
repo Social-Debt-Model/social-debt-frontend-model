@@ -37,7 +37,7 @@ export type FileProcessingResult = {
   valid: boolean;
   file?: File;
   hasOrphans?: boolean;
-  parsedData?: any[];
+  parsedData?: Record<string, unknown>[];
   issueColumnName?: string;
   report?: ValidationReport;
 };
@@ -80,7 +80,7 @@ export const useFileValidation = () => {
         Papa.parse(file, {
           header: true,
           skipEmptyLines: "greedy",
-          complete: (results: any) => {
+          complete: (results: Papa.ParseResult<Record<string, unknown>>) => {
             const headers = results.meta.fields || [];
             const report = validateHeaders(headers);
 
@@ -89,7 +89,7 @@ export const useFileValidation = () => {
               return;
             }
 
-            const data = results.data as any[];
+            const data = results.data as Record<string, unknown>[];
             let hasOrphans = false;
             let missingIssueCount = 0;
             let missingIdCount = 0;
@@ -174,7 +174,7 @@ export const useFileValidation = () => {
             const jsonData = XLSX.utils.sheet_to_json(worksheet, {
               defval: "",
               raw: false,
-            }) as any[];
+            }) as Record<string, unknown>[];
             let hasOrphans = false;
             let missingIssueCount = 0;
             let missingIdCount = 0;
@@ -232,7 +232,7 @@ export const useFileValidation = () => {
               issueColumnName: report.matchedIssueColumn,
               report,
             });
-          } catch (err) {
+          } catch {
             setError("Hubo un error al leer el archivo Excel.");
             resolve({ valid: false });
           }
@@ -247,7 +247,10 @@ export const useFileValidation = () => {
     });
   };
 
-  const regenerateCsvFile = (data: any[], originalFileName: string): File => {
+  const regenerateCsvFile = (
+    data: Record<string, unknown>[],
+    originalFileName: string,
+  ): File => {
     const keys = new Set<string>();
     data.forEach((row) => {
       Object.keys(row).forEach((key) => keys.add(key));

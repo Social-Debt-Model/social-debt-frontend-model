@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
-import { Outfit } from 'next/font/google';
-import './globals.css';
+import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
+import "./globals.css";
 
-const outfit = Outfit({ subsets: ['latin'] });
+const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Analizador de Deuda Social',
-  description: 'Detect and classify communication breakdowns',
+  title: "Social Debt Model",
+  description: "Detect and classify communication breakdowns",
 };
 
 export default function RootLayout({
@@ -16,9 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${outfit.className} antialiased`}>
-        {children}
-      </body>
+      <body className={`${outfit.className} antialiased`}>{children}</body>
     </html>
   );
 }

@@ -35,8 +35,14 @@ body {
 }
 
 @keyframes marquee {
-  0%, 15% { transform: translateX(0); }
-  85%, 100% { transform: translateX(min(0px, calc(100cqi - 100%))); }
+  0%,
+  15% {
+    transform: translateX(0);
+  }
+  85%,
+  100% {
+    transform: translateX(min(0px, calc(100cqi - 100%)));
+  }
 }
 
 .animate-marquee {

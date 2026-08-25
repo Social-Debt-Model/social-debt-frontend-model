@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   X,
   CheckCircle,
@@ -9,6 +9,7 @@ import {
   XCircle,
   AlertTriangle,
   UploadCloud,
+  Loader2,
 } from "lucide-react";
 import {
   ValidationReport,
@@ -24,6 +25,7 @@ type ValidationModalProps = {
   onFileSelect?: (file: File) => void;
   report: ValidationReport | null;
   hasOrphans?: boolean;
+  isProcessingFile?: boolean;
 };
 
 export const ValidationChecklistModal = ({
@@ -33,17 +35,20 @@ export const ValidationChecklistModal = ({
   onFileSelect,
   report,
   hasOrphans,
+  isProcessingFile,
 }: ValidationModalProps) => {
   const [decision, setDecision] = useState<
     "group" | "individual" | "discard" | undefined
   >();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!isOpen) {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (!isOpen && decision !== undefined) {
       setDecision(undefined);
     }
-  }, [isOpen]);
+  }
 
   if (!isOpen) return null;
 
@@ -153,16 +158,36 @@ export const ValidationChecklistModal = ({
           </div>
 
           <div
-            className="border-2 border-dashed border-blue-200 bg-blue-50/30 hover:bg-blue-50/80 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition"
-            onClick={() => fileInputRef.current?.click()}
+            className={`border-2 border-dashed ${
+              isProcessingFile
+                ? "border-indigo-300 bg-indigo-50/50 cursor-wait"
+                : "border-blue-200 bg-blue-50/30 hover:bg-blue-50/80 cursor-pointer"
+            } rounded-xl p-8 flex flex-col items-center justify-center transition`}
+            onClick={() => {
+              if (!isProcessingFile) fileInputRef.current?.click();
+            }}
           >
-            <UploadCloud className="w-8 h-8 text-blue-500 mb-3" />
-            <span className="text-base font-semibold text-blue-900">
-              Haz clic o arrastra tu archivo aquí
-            </span>
-            <span className="text-sm text-blue-600/70 mt-1">
-              Soporta formatos .CSV y .XLSX
-            </span>
+            {isProcessingFile ? (
+              <>
+                <Loader2 className="w-8 h-8 text-indigo-500 mb-3 animate-spin" />
+                <span className="text-base font-semibold text-indigo-900">
+                  Subiendo y analizando dataset...
+                </span>
+                <span className="text-sm text-indigo-600/70 mt-1">
+                  Por favor espera un momento
+                </span>
+              </>
+            ) : (
+              <>
+                <UploadCloud className="w-8 h-8 text-blue-500 mb-3" />
+                <span className="text-base font-semibold text-blue-900">
+                  Haz clic o arrastra tu archivo aquí
+                </span>
+                <span className="text-sm text-blue-600/70 mt-1">
+                  Soporta formatos .CSV y .XLSX
+                </span>
+              </>
+            )}
             <input
               type="file"
               ref={fileInputRef}
@@ -174,6 +199,7 @@ export const ValidationChecklistModal = ({
                   onFileSelect(file);
                 }
               }}
+              disabled={isProcessingFile}
             />
           </div>
         </div>
@@ -494,14 +520,21 @@ export const ValidationChecklistModal = ({
                     onProceed?.(hasOrphans ? decision : undefined);
                   }
                 }}
-                disabled={hasOrphans && !decision}
-                className={`px-5 py-2 rounded-lg font-medium transition shadow-sm ${
-                  hasOrphans && !decision
+                disabled={(hasOrphans && !decision) || isProcessingFile}
+                className={`px-5 py-2 rounded-lg font-medium transition shadow-sm flex items-center justify-center min-w-[120px] gap-2 ${
+                  (hasOrphans && !decision) || isProcessingFile
                     ? "bg-slate-300 text-slate-500 cursor-not-allowed"
                     : "bg-emerald-600 text-white hover:bg-emerald-700"
                 }`}
               >
-                Continuar
+                {isProcessingFile ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Procesando...
+                  </>
+                ) : (
+                  "Continuar"
+                )}
               </button>
             </>
           )}

@@ -9,6 +9,7 @@ import {
 } from "@/features/text-classification/actions";
 import { TextResultCard } from "@/features/text-classification/TextResultCard";
 import { BatchProgressCard } from "@/features/batch-classification/BatchProgressCard";
+import { BatchResultData } from "@/features/batch-classification/actions";
 import { BatchDashboard } from "@/features/metrics-dashboard/BatchDashboard";
 import { BatchResultSummaryCard } from "@/features/batch-classification/BatchResultSummaryCard";
 import { OpenAILimitsBadge } from "@/features/chat-interface/OpenAILimitsBadge";
@@ -19,18 +20,23 @@ import {
   saveHistoryItem,
   deleteHistoryItem,
   HistoryItem,
+  getPendingJobs,
 } from "@/lib/historyDB";
 
 type Message = {
   id: number;
   text?: string;
   sender: "user" | "system";
+  isDashboard?: boolean;
   isFile?: boolean;
   isLoading?: boolean;
   result?: ClassifyTextResponse;
   batchFile?: File;
   batchJobId?: string;
-  batchResult?: any;
+  batchResult?: BatchResultData;
+  batchError?: boolean;
+  batchCancelled?: boolean;
+  batchFileName?: string;
 };
 
 export default function Home() {
@@ -53,10 +59,32 @@ export default function Home() {
     loadHistory();
   }, []);
 
-  const loadHistory = async () => {
+  async function loadHistory() {
     const items = await getAllHistoryItems();
     setHistoryItems(items);
-  };
+
+    // Check for pending jobs
+    const pendingJobs = await getPendingJobs();
+    if (pendingJobs.length > 0) {
+      // Create fake messages for pending jobs to resume them
+      // In this version, we assume only ONE pending job at a time per user requirement
+      const pending = pendingJobs[0];
+
+      setMessages((prev) => {
+        // Only add if not already in messages
+        const exists = prev.some((m) => m.batchJobId === pending.jobId);
+        if (exists) return prev;
+
+        const systemMsg: Message = {
+          id: Date.now(),
+          sender: "system",
+          batchJobId: pending.jobId,
+          batchFileName: pending.filename,
+        };
+        return [...prev, systemMsg];
+      });
+    }
+  }
 
   const handleSendMessage = async (text: string) => {
     const userMsg: Message = { id: Date.now(), text, sender: "user" };
@@ -97,29 +125,46 @@ export default function Home() {
     setMessages((prev) => [...prev, userMsg, batchMsg]);
   };
 
+  const handleBatchError = (msgId: number) => {
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === msgId ? { ...msg, batchError: true } : msg,
+      ),
+    );
+  };
+
+  const handleBatchCancelled = (msgId: number) => {
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === msgId ? { ...msg, batchCancelled: true } : msg,
+      ),
+    );
+  };
+
   const handleBatchCompleted = async (
     messageId: number,
     jobId: string,
-    resultData: any,
+    resultData: BatchResultData,
   ) => {
-    let filename = `Lote ${new Date().toLocaleTimeString()}`;
+    const msg = messages.find((m) => m.id === messageId);
+    const filename =
+      msg?.batchFile?.name ||
+      msg?.batchFileName ||
+      `Lote ${new Date().toLocaleTimeString()}`;
 
-    setMessages((prev) => {
-      const msg = prev.find((m) => m.id === messageId);
-      if (msg?.batchFile?.name) {
-        filename = msg.batchFile.name;
-      }
-      return prev.map((msg) =>
-        msg.id === messageId
-          ? { ...msg, batchJobId: jobId, batchResult: resultData }
-          : msg,
-      );
-    });
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === messageId
+          ? { ...m, batchJobId: jobId, batchResult: resultData }
+          : m,
+      ),
+    );
 
+    const timestamp = new Date().getTime();
     const historyItem: HistoryItem = {
       jobId,
       filename,
-      timestamp: Date.now(),
+      timestamp,
       resultData,
     };
     await saveHistoryItem(historyItem);
@@ -147,6 +192,16 @@ export default function Home() {
   const focusedItem = focusedJobId
     ? historyItems.find((i) => i.jobId === focusedJobId)
     : null;
+
+  // Determinar si el chat debe estar bloqueado (hay un trabajo de batch activo en pantalla)
+  const isChatDisabled = messages.some(
+    (msg) =>
+      (msg.batchFile || msg.batchJobId) &&
+      !msg.batchResult &&
+      !msg.batchError &&
+      !msg.batchCancelled &&
+      !historyItems.some((h) => h.jobId === msg.batchJobId),
+  );
 
   return (
     <ChatLayout
@@ -222,12 +277,20 @@ export default function Home() {
                         msg.batchJobId && handleSelectHistory(msg.batchJobId)
                       }
                     />
-                  ) : msg.batchFile ? (
+                  ) : msg.batchFile || (msg.batchJobId && !msg.batchResult) ? (
                     <BatchProgressCard
                       file={msg.batchFile}
+                      resumeJobId={msg.batchJobId}
+                      resumeFilename={msg.batchFileName}
                       onCompleted={(jobId, data) =>
                         handleBatchCompleted(msg.id, jobId, data)
                       }
+                      onCancelled={() => {
+                        handleBatchCancelled(msg.id);
+                      }}
+                      onError={() => {
+                        handleBatchError(msg.id);
+                      }}
                     />
                   ) : null}
                 </div>
@@ -242,6 +305,7 @@ export default function Home() {
         <ChatInput
           onSendMessage={handleSendMessage}
           onSendFile={handleSendFile}
+          isChatDisabled={isChatDisabled}
         />
       )}
     </ChatLayout>
