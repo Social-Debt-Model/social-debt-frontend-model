@@ -15,7 +15,6 @@ export const BatchResultSummaryCard = ({
   isDeleted,
   onViewDashboard,
 }: BatchResultSummaryCardProps) => {
-  // Fix: The API returns the comments array directly inside resultData for both grouped and individual
   const comments = resultData?.comments || [];
   const count = comments.length || 0;
 

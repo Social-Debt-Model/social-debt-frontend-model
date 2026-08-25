@@ -49,7 +49,6 @@ export async function classifyText(
     const data = (await res.json()) as ClassifyTextResponse;
     return data;
   } catch (err: unknown) {
-    console.error("Classification error:", err);
     return {
       cleaned_text: text,
       is_noise: false,

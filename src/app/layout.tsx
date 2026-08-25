@@ -15,8 +15,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${outfit.className} antialiased`}>{children}</body>
+    <html lang="en" className="overscroll-none">
+      <body className={`${outfit.className} antialiased overscroll-none`}>
+        {children}
+      </body>
     </html>
   );
 }

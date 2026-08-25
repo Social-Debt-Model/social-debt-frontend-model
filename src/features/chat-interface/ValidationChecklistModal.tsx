@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   X,
   CheckCircle,
@@ -50,12 +51,12 @@ export const ValidationChecklistModal = ({
     }
   }
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === "undefined") return null;
 
   if (!report) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-800/10 backdrop-blur-sm p-4 overflow-y-auto">
-        <div className="glass-panel p-6 max-w-4xl w-full relative bg-white/80 my-auto">
+    const content = (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-800/1 md:bg-slate-800/10 backdrop-blur-lg md:backdrop-blur-sm p-4 overflow-y-auto">
+        <div className="glass-panel p-6 max-w-4xl w-full relative bg-white md:bg-white/80 my-auto">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition"
@@ -205,11 +206,12 @@ export const ValidationChecklistModal = ({
         </div>
       </div>
     );
+    return createPortal(content, document.body);
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-800/10 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="glass-panel p-5 max-w-3xl w-full relative bg-white/80 my-auto">
+  const content = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-800/1 md:bg-slate-800/10 backdrop-blur-lg md:backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="glass-panel p-5 max-w-3xl w-full relative bg-white md:bg-white/80 my-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition"
@@ -542,4 +544,5 @@ export const ValidationChecklistModal = ({
       </div>
     </div>
   );
+  return createPortal(content, document.body);
 };

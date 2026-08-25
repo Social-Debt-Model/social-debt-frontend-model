@@ -44,7 +44,6 @@ export const ChatInput = ({
   const handleFileSelectFromModal = async (file: File) => {
     setIsProcessingFile(true);
     const start = Date.now();
-    // Allow UI to update before blocking
     await new Promise((resolve) => setTimeout(resolve, 100));
     try {
       const result = await processFile(file);
@@ -72,13 +71,11 @@ export const ChatInput = ({
       return;
     }
 
-    // Capture narrowed values for the setTimeout closure to satisfy TypeScript
     const validResult = pendingFileResult;
     const validReport = pendingFileResult.report;
 
     setIsProcessingFile(true);
 
-    // Allow the modal's spinner to render before freezing the main thread with map/filter on massive arrays
     setTimeout(() => {
       try {
         const start = Date.now();
@@ -174,7 +171,7 @@ export const ChatInput = ({
   };
 
   return (
-    <div className="absolute bottom-0 left-0 w-full px-4 pt-4 pb-8 z-20">
+    <div className="absolute bottom-0 left-0 w-full px-2 md:px-4 pt-2 md:pt-4 pb-2 md:pb-8 z-20">
       <div className="max-w-3xl mx-auto">
         {error && (
           <div className="mb-2 p-3 bg-red-100 text-red-700 rounded-lg text-sm border border-red-200 shadow-sm flex justify-between items-start">
@@ -196,7 +193,7 @@ export const ChatInput = ({
             type="button"
             onClick={handleAttachmentClick}
             disabled={!!selectedFile || isProcessingFile || isChatDisabled}
-            className={`p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"} ${isProcessingFile || isChatDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`flex-shrink-0 p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"} ${isProcessingFile || isChatDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {isProcessingFile ? (
               <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
@@ -206,19 +203,19 @@ export const ChatInput = ({
           </button>
 
           {selectedFile ? (
-            <div className="flex-1 flex items-center justify-between bg-blue-50/80 border border-blue-200 rounded-lg px-3 py-2 text-sm text-blue-800 shadow-sm h-[44px] mb-[2px]">
-              <span className="flex items-center gap-2 truncate">
+            <div className="flex-1 min-w-0 flex items-center justify-between bg-blue-50/80 border border-blue-200 rounded-lg px-2 md:px-3 py-2 text-sm text-blue-800 shadow-sm h-[44px] mb-[2px]">
+              <span className="flex items-center gap-2 min-w-0 flex-1">
                 <span
                   className="font-medium truncate"
                   title={selectedFile.name}
                 >
                   {selectedFile.name}
                 </span>
-                <span className="text-xs text-blue-500 bg-blue-100 px-2 py-0.5 rounded-full ml-2 flex-shrink-0">
-                  Listo para analizar
+                <span className="hidden md:inline-flex text-xs text-blue-500 bg-blue-100 px-2 py-0.5 rounded-full flex-shrink-0">
+                  Listo
                 </span>
               </span>
-              <div className="flex items-center flex-shrink-0">
+              <div className="flex items-center flex-shrink-0 ml-1 md:ml-3">
                 <button
                   type="button"
                   onClick={() => {
@@ -229,7 +226,7 @@ export const ChatInput = ({
                     a.click();
                     URL.revokeObjectURL(url);
                   }}
-                  className="ml-3 text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-200/50 transition-colors"
+                  className="text-blue-600 hover:text-blue-900 p-1 md:p-1.5 rounded hover:bg-blue-200/50 transition-colors"
                   title="Descargar archivo procesado para auditoría"
                 >
                   <Download className="w-4 h-4" />
@@ -237,7 +234,7 @@ export const ChatInput = ({
                 <button
                   type="button"
                   onClick={removeFile}
-                  className="ml-1 text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-200/50 transition-colors"
+                  className="ml-0.5 md:ml-1 text-blue-600 hover:text-blue-900 p-1 md:p-1.5 rounded hover:bg-blue-200/50 transition-colors"
                   title="Quitar archivo"
                 >
                   <X className="w-4 h-4" />
@@ -255,11 +252,9 @@ export const ChatInput = ({
                 }
               }}
               placeholder={
-                isChatDisabled
-                  ? "Análisis en progreso. Por favor espera..."
-                  : "Escribe un comentario o adjunta un dataset..."
+                isChatDisabled ? "Analizando..." : "Escribe un mensaje..."
               }
-              className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none py-3 px-2 text-slate-800 placeholder-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none py-3 px-2 text-base text-slate-800 placeholder-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
               rows={1}
               disabled={isChatDisabled}
             />
@@ -268,13 +263,13 @@ export const ChatInput = ({
           <button
             type="submit"
             disabled={(!message.trim() && !selectedFile) || isChatDisabled}
-            className="p-3 bg-slate-800 text-white rounded-full hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all self-end shadow-sm"
+            className="flex-shrink-0 p-3 bg-slate-800 text-white rounded-full hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all self-end shadow-sm"
           >
             <Send className="w-5 h-5" />
           </button>
         </form>
-        <div className="flex justify-center items-center mt-4">
-          <p className="text-center text-xs text-slate-500 font-medium">
+        <div className="flex justify-center items-center mt-2">
+          <p className="text-center text-[10px] md:text-xs text-slate-500 font-medium leading-tight">
             Los resultados son inferidos por el modelo y pueden no ser
             completamente exactos o deterministas.
           </p>

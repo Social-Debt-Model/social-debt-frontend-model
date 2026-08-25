@@ -1,6 +1,6 @@
 # Social Debt API Model
 
-API web diseñada para identificar y clasificar "Deuda Social" (Social Debt) en comunicaciones de ingeniería de software (ej. comentarios de GitHub), utilizando Procesamiento de Lenguaje Natural (NLP), Modelos de Lenguaje Grandes (LLM), y Emparejamiento Semántico. 
+API web diseñada para identificar y clasificar "Deuda Social" (Social Debt) en comunicaciones de ingeniería de software (ej. comentarios de GitHub), utilizando Procesamiento de Lenguaje Natural (NLP), Modelos de Lenguaje Grandes (LLM), y Emparejamiento Semántico.
 
 El modelo matemático detrás de esta API ha sido extraído y replicado exactamente a partir de los cuadernos de investigación (Jupyter Notebooks) originales del cliente, logrando una **similitud matemática del 99.2%**.
 
@@ -22,13 +22,16 @@ Para garantizar el mejor rendimiento, los menores costos y un determinismo preci
 Esta sección detalla cómo integrar y consumir la API desde cualquier aplicación Frontend.
 
 ### Seguridad y Autenticación
+
 Todos los endpoints están asegurados. Tu aplicación Frontend debe enviar obligatoriamente el Header HTTP `X-API-Key` en **todas** las peticiones.
+
 ```http
 X-API-Key: <TU_API_SECRET_KEY>
 ```
 
 ### Optimización de Ancho de Banda (Diccionario Frontend)
-Para reducir el tamaño de las respuestas JSON y ahorrar ancho de banda, la API **no devuelve los textos largos de las descripciones de ontología**. 
+
+Para reducir el tamaño de las respuestas JSON y ahorrar ancho de banda, la API **no devuelve los textos largos de las descripciones de ontología**.
 En su lugar, la API devuelve códigos cortos (Ej. Macrocausa `"A"`, Microcausa `"COG-011_SystemConfigurationConstraints"`).
 El Frontend debe cargar el archivo estático ubicado en `data/frontend_ontology_dictionary.json` para mapear estos códigos a sus títulos descriptivos legibles por el usuario en la interfaz.
 
@@ -37,9 +40,12 @@ El Frontend debe cargar el archivo estático ubicado en `data/frontend_ontology_
 ### Endpoints Principales
 
 #### 1. Validar Límites de OpenAI
+
 `GET /system/openai-limits`
 Realiza un "ping" a la red de OpenAI y extrae la cuota exacta de peticiones disponibles. **Llamar siempre antes de enviar lotes masivos para evitar errores 429.**
+
 - **Respuesta Exitosa:**
+
 ```json
 {
   "status": "success",
@@ -51,14 +57,19 @@ Realiza un "ping" a la red de OpenAI y extrae la cuota exacta de peticiones disp
 ```
 
 #### 2. Clasificación Síncrona (Un solo comentario)
+
 `POST /classify/text`
+
 - **Body:**
+
 ```json
 {
   "text": "This PR breaks the compilation on Windows machines because of the path separator."
 }
 ```
+
 - **Respuesta:**
+
 ```json
 {
   "cleaned_text": "This PR breaks the compilation on Windows machines because of the path separator.",
@@ -78,10 +89,13 @@ Realiza un "ping" a la red de OpenAI y extrae la cuota exacta de peticiones disp
 ```
 
 #### 3. Clasificación Asíncrona (Lotes Masivos)
+
 `POST /classify/batch`
 Sube un archivo `.csv` (Multipart/form-data). La API procesará los comentarios en segundo plano con alta concurrencia respetando los Rate Limits dinámicos.
+
 - **Form Data:** Key `file` con el archivo CSV adjunto.
 - **Respuesta:** Retorna casi instantáneamente un `job_id`.
+
 ```json
 {
   "message": "Archivo aceptado. Procesamiento en segundo plano iniciado.",
@@ -90,17 +104,22 @@ Sube un archivo `.csv` (Multipart/form-data). La API procesará los comentarios 
 ```
 
 #### 4. Polling de Resultados Masivos
+
 `GET /classify/batch/{job_id}`
 El Frontend debe consultar este endpoint cada 2-3 segundos para actualizar la barra de progreso.
+
 - **Estado `processing`:**
+
 ```json
 {
   "status": "processing",
   "progress": "25 de 100 comentarios procesados (25%)"
 }
 ```
+
 - **Estado `completed`:**
-Retorna el JSON completo con todos los comentarios analizados y las **Métricas SDI** por Issue (Solo si el CSV original incluía la columna `issue_number`).
+  Retorna el JSON completo con todos los comentarios analizados y las **Métricas SDI** por Issue (Solo si el CSV original incluía la columna `issue_number`).
+
 ```json
 {
   "status": "completed",
@@ -126,18 +145,18 @@ Retorna el JSON completo con todos los comentarios analizados y las **Métricas 
 
 Dentro del directorio `scripts/` encontrarás valiosas herramientas interactivas de consola:
 
-* **`scripts/run_interactive_load_test.py`**: Script de pruebas de carga *End-to-End*. Permite seleccionar entre distintos tamaños de dataset (100, 1000, 2593 comentarios), elegir si golpear el servidor local o el VPS remoto, hace validaciones previas de límites de OpenAI, realiza el polling asíncrono y guarda el resultado automáticamente en un archivo `resultado_api_X.json` en la misma carpeta.
-* **`scripts/audit_openai_variance.py`**: Herramienta de auditoría forense que compara los resultados de esta API directamente contra la versión en crudo del código fuente original del cliente para garantizar la paridad matemática.
-* **`scripts/debug_single_comment.py`**: Script ultra rápido para probar el ciclo de vida síncrono de un único comentario de texto por consola.
-* **`scripts/run_metrics_benchmark.py`**: Valida exclusivamente la estabilidad del servidor midiendo consumo de RAM y CPU durante simulaciones de carga.
+- **`scripts/run_interactive_load_test.py`**: Script de pruebas de carga _End-to-End_. Permite seleccionar entre distintos tamaños de dataset (100, 1000, 2593 comentarios), elegir si golpear el servidor local o el VPS remoto, hace validaciones previas de límites de OpenAI, realiza el polling asíncrono y guarda el resultado automáticamente en un archivo `resultado_api_X.json` en la misma carpeta.
+- **`scripts/audit_openai_variance.py`**: Herramienta de auditoría forense que compara los resultados de esta API directamente contra la versión en crudo del código fuente original del cliente para garantizar la paridad matemática.
+- **`scripts/debug_single_comment.py`**: Script ultra rápido para probar el ciclo de vida síncrono de un único comentario de texto por consola.
+- **`scripts/run_metrics_benchmark.py`**: Valida exclusivamente la estabilidad del servidor midiendo consumo de RAM y CPU durante simulaciones de carga.
 
 ---
 
 ## ⚙️ Requisitos y Despliegue
 
-* Python 3.10+
-* **2GB de RAM Mínimo** en el servidor (Requerido para montar el modelo PyTorch local en memoria).
-* Archivo `.env` en la raíz con: 
+- Python 3.10+
+- **2GB de RAM Mínimo** en el servidor (Requerido para montar el modelo PyTorch local en memoria).
+- Archivo `.env` en la raíz con:
   - `OPENAI_API_KEY=sk-...`
   - `API_SECRET_KEY=tu_contraseña_secreta_aqui`
-* Diseñado y optimizado para despliegue ininterrumpido en entornos como **Coolify / VPS / Docker**.
+- Diseñado y optimizado para despliegue ininterrumpido en entornos como **Coolify / VPS / Docker**.

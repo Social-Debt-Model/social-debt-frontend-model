@@ -148,7 +148,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
 
   return (
     <div className="glass-panel flex flex-col rounded-bl-none w-full h-full overflow-hidden border border-white/40 shadow-xl">
-      <div className="bg-white/50 p-6 border-b border-white/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-white/50 p-4 md:p-6 border-b border-white/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-blue-600" />
@@ -159,7 +159,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col w-full md:w-auto gap-3 flex-shrink-0">
           {hasOrphanComments && (
             <button
               onClick={() => setSelectedIssue("individuales")}
@@ -177,7 +177,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className={`glass-panel px-4 py-2 flex items-center justify-between gap-3 w-auto outline-none text-sm font-medium transition-shadow cursor-pointer ${
+                className={`glass-panel w-full md:w-64 px-4 py-2 flex items-center justify-between gap-3 outline-none text-sm font-medium transition-shadow cursor-pointer ${
                   selectedIssue !== "individuales"
                     ? "border-indigo-300 ring-1 ring-indigo-200 text-indigo-800"
                     : "text-slate-700 hover:shadow-md"
@@ -247,9 +247,9 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
         {currentMetrics && (
-          <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <div className="flex flex-col gap-6">
               <div
                 className={`p-5 rounded-2xl border flex items-center justify-between shadow-sm ${sdiColor}`}
@@ -266,7 +266,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
               </div>
 
               <div className="bg-white/60 p-4 rounded-2xl shadow-sm border border-white">
-                <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-4 flex items-center gap-2">
                   <Layers className="w-4 h-4" /> Distribución de Macrocausas
                 </h3>
                 <div className="h-48 w-full">
@@ -319,36 +319,40 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
 
               {currentMetrics.macro_diversity !== undefined && (
                 <div className="bg-white/60 p-4 rounded-2xl shadow-sm border border-white">
-                  <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2">
                     <PieChart className="w-4 h-4 text-emerald-500" /> Métricas
                     de Diversidad
                   </h3>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                      <span className="text-xs text-slate-600">
+                      <span className="text-xs md:text-sm text-slate-600">
                         Macrocausas
                       </span>
-                      <span className="text-sm font-bold text-slate-800">
+                      <span className="text-sm md:text-base font-bold text-slate-800">
                         {currentMetrics.macro_diversity}
                       </span>
                     </div>
                     <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                      <span className="text-xs text-slate-600">
+                      <span className="text-xs md:text-sm text-slate-600">
                         Microcausas
                       </span>
-                      <span className="text-sm font-bold text-slate-800">
+                      <span className="text-sm md:text-base font-bold text-slate-800">
                         {currentMetrics.micro_diversity}
                       </span>
                     </div>
                     <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                      <span className="text-xs text-slate-600">Riesgos</span>
-                      <span className="text-sm font-bold text-slate-800">
+                      <span className="text-xs md:text-sm text-slate-600">
+                        Riesgos
+                      </span>
+                      <span className="text-sm md:text-base font-bold text-slate-800">
                         {currentMetrics.risk_diversity}
                       </span>
                     </div>
                     <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                      <span className="text-xs text-slate-600">Smells</span>
-                      <span className="text-sm font-bold text-slate-800">
+                      <span className="text-xs md:text-sm text-slate-600">
+                        Smells
+                      </span>
+                      <span className="text-sm md:text-base font-bold text-slate-800">
                         {currentMetrics.smell_diversity}
                       </span>
                     </div>
@@ -357,7 +361,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
               )}
 
               <div className="bg-white/60 p-4 rounded-2xl shadow-sm border border-white flex-1">
-                <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2">
                   <Users className="w-4 h-4 text-purple-600" /> Community Smells
                 </h3>
                 <ul className="space-y-2">
@@ -365,7 +369,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                     (s: [string, number], idx: number) => (
                       <li
                         key={idx}
-                        className="text-xs bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
+                        className="text-xs md:text-sm bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
                       >
                         <span className="text-slate-700 pr-2">{s[0]}</span>
                         <span className="font-semibold text-slate-500 bg-white px-2 py-0.5 rounded shadow-sm flex-shrink-0">
@@ -380,7 +384,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
 
             <div className="flex flex-col gap-4">
               <div className="bg-white/60 p-4 rounded-2xl shadow-sm border border-white flex-1">
-                <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-orange-500" /> Riesgos
                 </h3>
                 <ul className="space-y-2">
@@ -388,7 +392,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                     (r: [string, number], idx: number) => (
                       <li
                         key={idx}
-                        className="text-xs bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
+                        className="text-xs md:text-sm bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
                       >
                         <span className="text-slate-700 pr-2">
                           {r[0].replace(/_/g, " ")}
@@ -403,7 +407,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
               </div>
 
               <div className="bg-white/60 p-4 rounded-2xl shadow-sm border border-white flex-1">
-                <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2">
                   <ListFilter className="w-4 h-4 text-indigo-500" /> Microcausas
                 </h3>
                 <ul className="space-y-2">
@@ -411,7 +415,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
                     (m: [string, number], idx: number) => (
                       <li
                         key={idx}
-                        className="text-xs bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
+                        className="text-xs md:text-sm bg-slate-50/80 p-2 rounded-md flex justify-between items-center border border-slate-100"
                       >
                         <span className="text-slate-700 pr-2" title={m[0]}>
                           {m[0]}
@@ -429,7 +433,7 @@ export const BatchDashboard = ({ resultData }: BatchDashboardProps) => {
         )}
 
         {selectedIssue === "individuales" && (
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-slate-800 mb-1">
                 Comentarios Individuales

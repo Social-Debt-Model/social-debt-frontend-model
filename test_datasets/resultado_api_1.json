@@ -32,13 +32,8 @@
             "RSK-011_KnowledgeLossRisk",
             "RSK-013_TechnicalMaintenanceRisk"
           ],
-          "community_smells": [
-            "Knowledge Silos",
-            "Truck Factor"
-          ],
-          "preventive_strategies": [
-            "PS-027_TechnicalDocumentationPractices"
-          ],
+          "community_smells": ["Knowledge Silos", "Truck Factor"],
+          "preventive_strategies": ["PS-027_TechnicalDocumentationPractices"],
           "effects": [
             "GEF-003_DifficultyInKnowledgeSharing",
             "TEF-012_DifficultyUnderstandingSystemBehavior"
@@ -47,70 +42,43 @@
             "STR-G-005_SharedKnowledgeSessions",
             "STR-G-006_PeerMentoring"
           ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "ADM-003_LackOfStandardsOrBestPractices",
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of standards or best practices",
           "similarity": 0.2888360321521759,
-          "risks": [
-            "RSK-023_KnowledgeFragmentationRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-023_KnowledgeFragmentationRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_DefineDocumentationAndReviewStandards"
           ],
-          "effects": [
-            "AEF-020_InconsistentDocumentationPractices"
-          ],
-          "corrective_strategies": [
-            "CS-023_UpdateStandardsAndDocs"
-          ],
-          "indicators": [
-            "IND-023_DocumentationStandardMentions"
-          ],
-          "metrics": [
-            "MTR-023_DocumentationStandardCompliance"
-          ]
+          "effects": ["AEF-020_InconsistentDocumentationPractices"],
+          "corrective_strategies": ["CS-023_UpdateStandardsAndDocs"],
+          "indicators": ["IND-023_DocumentationStandardMentions"],
+          "metrics": ["MTR-023_DocumentationStandardCompliance"]
         },
         {
           "ontology_id": "CA-004_NoKnowledgeTransferPolicy",
           "cause_type": "AdministrativeCause",
           "cause_name": "No Knowledge Transfer Policy in Communication Activities",
           "similarity": 0.2613738775253296,
-          "risks": [
-            "RSK-001_Knowledge_Loss_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-001_Knowledge_Loss_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-005_FrequentLeadershipConflicts"
-          ],
+          "effects": ["AEF-005_FrequentLeadershipConflicts"],
           "corrective_strategies": [
             "STR-009_LeadershipConflictMediation",
             "STR-010_LeadershipDevelopmentProgram"
           ],
-          "indicators": [
-            "IND-003_Knowledge_Sharing_Level"
-          ],
-          "metrics": [
-            "MTR-001_Knowledge_Transfer_Efficiency"
-          ]
+          "indicators": ["IND-003_Knowledge_Sharing_Level"],
+          "metrics": ["MTR-001_Knowledge_Transfer_Efficiency"]
         }
       ]
     },
@@ -154,16 +122,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.6596163511276245,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -174,25 +138,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.5860483050346375,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -206,46 +161,31 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.5642380714416504,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -265,12 +205,8 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.502295732498169,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -287,12 +223,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COG-008_CompatibilityConstraints",
@@ -303,9 +235,7 @@
             "RSK-013_TechnicalMaintenanceRisk",
             "RSK-021_BackwardCompatibilityRisk"
           ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
+          "community_smells": ["Socio-Technical Congruence Gap"],
           "preventive_strategies": [
             "PS-021_CompatibilityImpactAnalysis",
             "PS-026_CompatibilityManagement"
@@ -314,43 +244,25 @@
             "TEF-011_CompatibilityProblems",
             "TEF-021_CompatibilityFailure"
           ],
-          "corrective_strategies": [
-            "CS-021_TargetedCompatibilityValidation"
-          ],
-          "indicators": [
-            "IND-021_CompatibilityMentions"
-          ],
-          "metrics": [
-            "MTR-021_CompatibilityIssueFrequency"
-          ]
+          "corrective_strategies": ["CS-021_TargetedCompatibilityValidation"],
+          "indicators": ["IND-021_CompatibilityMentions"],
+          "metrics": ["MTR-021_CompatibilityIssueFrequency"]
         },
         {
           "ontology_id": "COG-007_TechnicalComplexityDueToDependencies",
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.4126508831977844,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         }
       ]
     },
@@ -370,84 +282,42 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Inefficient or inadequate tools",
           "similarity": 0.4899479150772095,
-          "risks": [
-            "RSK-026_ToolingRisk"
-          ],
+          "risks": ["RSK-026_ToolingRisk"],
           "community_smells": [
             "Organizational Silo",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-026_ToolingReadinessReview"
-          ],
-          "effects": [
-            "PME-022_ToolingConstraint"
-          ],
-          "corrective_strategies": [
-            "CS-026_ImproveToolingSupport"
-          ],
-          "indicators": [
-            "IND-026_ToolingLimitationMentions"
-          ],
-          "metrics": [
-            "MTR-026_ToolingLimitationFrequency"
-          ]
+          "preventive_strategies": ["PS-026_ToolingReadinessReview"],
+          "effects": ["PME-022_ToolingConstraint"],
+          "corrective_strategies": ["CS-026_ImproveToolingSupport"],
+          "indicators": ["IND-026_ToolingLimitationMentions"],
+          "metrics": ["MTR-026_ToolingLimitationFrequency"]
         },
         {
           "ontology_id": "CA-012_RepositoryAccessLimitation",
           "cause_type": "AdministrativeCause",
           "cause_name": "Repository access limitation",
           "similarity": 0.4579576253890991,
-          "risks": [
-            "RSK-025_AccessBottleneckRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
-          "preventive_strategies": [
-            "PS-025_AccessPlanning"
-          ],
-          "effects": [
-            "PME-021_BlockedProgressDueToAccessLimitation"
-          ],
-          "corrective_strategies": [
-            "CS-025_RequestRepositoryAccess"
-          ],
-          "indicators": [
-            "IND-025_AccessDependencyMentions"
-          ],
-          "metrics": [
-            "MTR-025_AccessDependencyFrequency"
-          ]
+          "risks": ["RSK-025_AccessBottleneckRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
+          "preventive_strategies": ["PS-025_AccessPlanning"],
+          "effects": ["PME-021_BlockedProgressDueToAccessLimitation"],
+          "corrective_strategies": ["CS-025_RequestRepositoryAccess"],
+          "indicators": ["IND-025_AccessDependencyMentions"],
+          "metrics": ["MTR-025_AccessDependencyFrequency"]
         },
         {
           "ontology_id": "CA-011_RequestForTechnicalValidationSupport",
           "cause_type": "AdministrativeCause",
           "cause_name": "Request for Technical Validation Support",
           "similarity": 0.43496978282928467,
-          "risks": [
-            "RSK-024_ValidationBottleneckRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Truck Factor"
-          ],
-          "preventive_strategies": [
-            "PS-024_PreplanValidationOwnership"
-          ],
-          "effects": [
-            "PME-020_BlockedProgressDueToValidationDependency"
-          ],
-          "corrective_strategies": [
-            "CS-024_RequestMaintainerValidation"
-          ],
-          "indicators": [
-            "IND-024_ValidationDependencyMentions"
-          ],
-          "metrics": [
-            "MTR-024_ValidationDependencyFrequency"
-          ]
+          "risks": ["RSK-024_ValidationBottleneckRisk"],
+          "community_smells": ["Missing Link", "Truck Factor"],
+          "preventive_strategies": ["PS-024_PreplanValidationOwnership"],
+          "effects": ["PME-020_BlockedProgressDueToValidationDependency"],
+          "corrective_strategies": ["CS-024_RequestMaintainerValidation"],
+          "indicators": ["IND-024_ValidationDependencyMentions"],
+          "metrics": ["MTR-024_ValidationDependencyFrequency"]
         }
       ]
     },
@@ -467,16 +337,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.6767280101776123,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -487,58 +353,39 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.6012786626815796,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         },
         {
           "ontology_id": "COO-002_RestrictedInformationFlow",
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.5677653551101685,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -554,12 +401,8 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -579,16 +422,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.5860206484794617,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -599,24 +438,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-002_RestrictedInformationFlow",
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.579463541507721,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -632,46 +463,31 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.5594475269317627,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -691,16 +507,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.3901480436325073,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -711,25 +523,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.33476975560188293,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -743,24 +546,16 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-002_RestrictedInformationFlow",
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.30435508489608765,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -776,12 +571,8 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -813,16 +604,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.5083217620849609,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -833,25 +620,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.454752117395401,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -865,46 +643,31 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.41522789001464844,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -924,12 +687,8 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.5673495531082153,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -945,59 +704,41 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COO-004_FrequentLeadershipConflicts",
           "cause_type": "CoordinationCause",
           "cause_name": "Frequent Leadership Conflicts",
           "similarity": 0.5619186758995056,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Prima Donnas"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Prima Donnas"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-024_AlignmentMeetings"
           ],
-          "effects": [
-            "AEF-005_FrequentLeadershipConflicts"
-          ],
+          "effects": ["AEF-005_FrequentLeadershipConflicts"],
           "corrective_strategies": [
             "STR-009_LeadershipConflictMediation",
             "STR-010_LeadershipDevelopmentProgram"
           ],
-          "indicators": [
-            "IND-005_Team_Engagement_Rate"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-005_Team_Engagement_Rate"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "COO-009_TaskReworkDueToMisalignment",
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.5138496160507202,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -1008,12 +749,8 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         }
       ]
     },
@@ -1033,16 +770,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.5027620196342468,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -1053,25 +786,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.45143741369247437,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -1085,46 +809,31 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.40751200914382935,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -1144,16 +853,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.4447472095489502,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -1164,56 +869,37 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-004_FrequentLeadershipConflicts",
           "cause_type": "CoordinationCause",
           "cause_name": "Frequent Leadership Conflicts",
           "similarity": 0.44229555130004883,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Prima Donnas"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Prima Donnas"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-024_AlignmentMeetings"
           ],
-          "effects": [
-            "AEF-005_FrequentLeadershipConflicts"
-          ],
+          "effects": ["AEF-005_FrequentLeadershipConflicts"],
           "corrective_strategies": [
             "STR-009_LeadershipConflictMediation",
             "STR-010_LeadershipDevelopmentProgram"
           ],
-          "indicators": [
-            "IND-005_Team_Engagement_Rate"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-005_Team_Engagement_Rate"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.41704586148262024,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -1227,12 +913,8 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         }
       ]
     },
@@ -1256,13 +938,8 @@
             "RSK-011_KnowledgeLossRisk",
             "RSK-013_TechnicalMaintenanceRisk"
           ],
-          "community_smells": [
-            "Knowledge Silos",
-            "Truck Factor"
-          ],
-          "preventive_strategies": [
-            "PS-027_TechnicalDocumentationPractices"
-          ],
+          "community_smells": ["Knowledge Silos", "Truck Factor"],
+          "preventive_strategies": ["PS-027_TechnicalDocumentationPractices"],
           "effects": [
             "GEF-003_DifficultyInKnowledgeSharing",
             "TEF-012_DifficultyUnderstandingSystemBehavior"
@@ -1271,70 +948,43 @@
             "STR-G-005_SharedKnowledgeSessions",
             "STR-G-006_PeerMentoring"
           ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "CA-004_NoKnowledgeTransferPolicy",
           "cause_type": "AdministrativeCause",
           "cause_name": "No Knowledge Transfer Policy in Communication Activities",
           "similarity": 0.380219429731369,
-          "risks": [
-            "RSK-001_Knowledge_Loss_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-001_Knowledge_Loss_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-005_FrequentLeadershipConflicts"
-          ],
+          "effects": ["AEF-005_FrequentLeadershipConflicts"],
           "corrective_strategies": [
             "STR-009_LeadershipConflictMediation",
             "STR-010_LeadershipDevelopmentProgram"
           ],
-          "indicators": [
-            "IND-003_Knowledge_Sharing_Level"
-          ],
-          "metrics": [
-            "MTR-001_Knowledge_Transfer_Efficiency"
-          ]
+          "indicators": ["IND-003_Knowledge_Sharing_Level"],
+          "metrics": ["MTR-001_Knowledge_Transfer_Efficiency"]
         },
         {
           "ontology_id": "ADM-003_LackOfStandardsOrBestPractices",
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of standards or best practices",
           "similarity": 0.3117518424987793,
-          "risks": [
-            "RSK-023_KnowledgeFragmentationRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-023_KnowledgeFragmentationRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_DefineDocumentationAndReviewStandards"
           ],
-          "effects": [
-            "AEF-020_InconsistentDocumentationPractices"
-          ],
-          "corrective_strategies": [
-            "CS-023_UpdateStandardsAndDocs"
-          ],
-          "indicators": [
-            "IND-023_DocumentationStandardMentions"
-          ],
-          "metrics": [
-            "MTR-023_DocumentationStandardCompliance"
-          ]
+          "effects": ["AEF-020_InconsistentDocumentationPractices"],
+          "corrective_strategies": ["CS-023_UpdateStandardsAndDocs"],
+          "indicators": ["IND-023_DocumentationStandardMentions"],
+          "metrics": ["MTR-023_DocumentationStandardCompliance"]
         }
       ]
     },
@@ -1354,16 +1004,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to approval requirements",
           "similarity": 0.3059180676937103,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-026_ApprovalWorkflowPredefinition"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-026_ApprovalWorkflowPredefinition"],
           "effects": [
             "AEF-006_InefficientTaskAssignment",
             "PME-003_DelaysInTaskDelivery"
@@ -1373,9 +1016,7 @@
             "STR-011_TaskAssignmentReview",
             "STR-012_DelegationTraining"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -1386,13 +1027,8 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Unclear roles and responsibilities",
           "similarity": 0.301325261592865,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Power Distance"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Missing Link", "Power Distance"],
           "preventive_strategies": [
             "PS-028_RoleAndResponsibilityClarification"
           ],
@@ -1406,42 +1042,28 @@
             "STR-001_ClarifyOrgStructure",
             "STR-002_RoleDefinitionWorkshops"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "CA-003_LackOfFeedbackChannels",
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of Feedback Channels in Communication Activities",
           "similarity": 0.24225735664367676,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership"
-          ],
+          "effects": ["AEF-007_LackOfLeadership"],
           "corrective_strategies": [
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Loop_Frequency"
-          ]
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-002_Feedback_Loop_Frequency"]
         }
       ]
     },
@@ -1461,16 +1083,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.47041499614715576,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -1481,25 +1099,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.4086526930332184,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -1513,46 +1122,31 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.32782623171806335,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -1620,16 +1214,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.5048458576202393,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -1640,25 +1230,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.38688963651657104,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -1672,46 +1253,31 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.3674405515193939,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -1791,16 +1357,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.6336385607719421,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -1811,59 +1373,39 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.5910331010818481,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.5894930958747864,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -1877,12 +1419,8 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         }
       ]
     },
@@ -1902,16 +1440,12 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.2958869934082031,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -1922,25 +1456,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.2867511510848999,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -1954,24 +1479,16 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-002_RestrictedInformationFlow",
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.28175660967826843,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -1987,12 +1504,8 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -2036,55 +1549,29 @@
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.4530738890171051,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-007_TechnicalComplexityDueToDependencies",
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.4280312657356262,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-008_CompatibilityConstraints",
@@ -2095,9 +1582,7 @@
             "RSK-013_TechnicalMaintenanceRisk",
             "RSK-021_BackwardCompatibilityRisk"
           ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
+          "community_smells": ["Socio-Technical Congruence Gap"],
           "preventive_strategies": [
             "PS-021_CompatibilityImpactAnalysis",
             "PS-026_CompatibilityManagement"
@@ -2106,15 +1591,9 @@
             "TEF-011_CompatibilityProblems",
             "TEF-021_CompatibilityFailure"
           ],
-          "corrective_strategies": [
-            "CS-021_TargetedCompatibilityValidation"
-          ],
-          "indicators": [
-            "IND-021_CompatibilityMentions"
-          ],
-          "metrics": [
-            "MTR-021_CompatibilityIssueFrequency"
-          ]
+          "corrective_strategies": ["CS-021_TargetedCompatibilityValidation"],
+          "indicators": ["IND-021_CompatibilityMentions"],
+          "metrics": ["MTR-021_CompatibilityIssueFrequency"]
         }
       ]
     },
@@ -2134,73 +1613,42 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of Feedback Channels in Communication Activities",
           "similarity": 0.34355777502059937,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership"
-          ],
+          "effects": ["AEF-007_LackOfLeadership"],
           "corrective_strategies": [
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Loop_Frequency"
-          ]
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-002_Feedback_Loop_Frequency"]
         },
         {
           "ontology_id": "CA-009_ConstraintDueToTicketStatusForReview",
           "cause_type": "AdministrativeCause",
           "cause_name": "Constraint due to ticket status for review",
           "similarity": 0.3051298260688782,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-001_StandardizedTaskHandoverProcess"
-          ],
-          "effects": [
-            "PME-003_DelaysInTaskDelivery"
-          ],
-          "corrective_strategies": [
-            "CS-028_TaskDeliveryRecoveryPlan"
-          ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Response_Time"
-          ]
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
+          "preventive_strategies": ["PS-001_StandardizedTaskHandoverProcess"],
+          "effects": ["PME-003_DelaysInTaskDelivery"],
+          "corrective_strategies": ["CS-028_TaskDeliveryRecoveryPlan"],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-002_Feedback_Response_Time"]
         },
         {
           "ontology_id": "CA-007_InefficientOrganizationalProcesses",
           "cause_type": "AdministrativeCause",
           "cause_name": "Inefficient organizational processes",
           "similarity": 0.2655956447124481,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Shared Villainy"
-          ],
-          "preventive_strategies": [
-            "PS-027_ProcessStandardizationGuidelines"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Organizational Silo", "Shared Villainy"],
+          "preventive_strategies": ["PS-027_ProcessStandardizationGuidelines"],
           "effects": [
             "AEF-002_InefficientStructure",
             "PME-004_InefficientUseOfResources"
@@ -2209,12 +1657,8 @@
             "STR-003_RestructureTeams",
             "STR-004_ProcessOptimization"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         }
       ]
     },
@@ -2234,15 +1678,9 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Preservation of prior system behavior",
           "similarity": 0.3411495089530945,
-          "risks": [
-            "RSK-006_Technical_Inconsistency_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo"
-          ],
-          "preventive_strategies": [
-            "PS-020_BackwardCompatibilityReview"
-          ],
+          "risks": ["RSK-006_Technical_Inconsistency_Risk"],
+          "community_smells": ["Organizational Silo"],
+          "preventive_strategies": ["PS-020_BackwardCompatibilityReview"],
           "effects": [
             "PME-004_InefficientTaskExecution",
             "TEF-001_TechnicalDebtIncrease"
@@ -2251,24 +1689,16 @@
             "CS-031_TechnicalDebtRemediation",
             "CS-032_TaskExecutionImprovement"
           ],
-          "indicators": [
-            "IND-005_Technical_Alignment_Index"
-          ],
-          "metrics": [
-            "MTR-004_Technical_Consistency_Score"
-          ]
+          "indicators": ["IND-005_Technical_Alignment_Index"],
+          "metrics": ["MTR-004_Technical_Consistency_Score"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.287181556224823,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -2285,12 +1715,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COG-008_CompatibilityConstraints",
@@ -2301,9 +1727,7 @@
             "RSK-013_TechnicalMaintenanceRisk",
             "RSK-021_BackwardCompatibilityRisk"
           ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
+          "community_smells": ["Socio-Technical Congruence Gap"],
           "preventive_strategies": [
             "PS-021_CompatibilityImpactAnalysis",
             "PS-026_CompatibilityManagement"
@@ -2312,15 +1736,9 @@
             "TEF-011_CompatibilityProblems",
             "TEF-021_CompatibilityFailure"
           ],
-          "corrective_strategies": [
-            "CS-021_TargetedCompatibilityValidation"
-          ],
-          "indicators": [
-            "IND-021_CompatibilityMentions"
-          ],
-          "metrics": [
-            "MTR-021_CompatibilityIssueFrequency"
-          ]
+          "corrective_strategies": ["CS-021_TargetedCompatibilityValidation"],
+          "indicators": ["IND-021_CompatibilityMentions"],
+          "metrics": ["MTR-021_CompatibilityIssueFrequency"]
         }
       ]
     },
@@ -2352,67 +1770,37 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.5159671306610107,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.5119326114654541,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.4516547620296478,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -2429,12 +1817,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -2454,12 +1838,8 @@
           "cause_type": "CommunicationCause",
           "cause_name": "Misinterpretation of information",
           "similarity": 0.29650869965553284,
-          "risks": [
-            "RSK-010_MiscommunicationRisk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-010_MiscommunicationRisk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-016_ClearCommunicationGuidelines",
             "PS-018_InformationClarificationPractice"
@@ -2473,9 +1853,7 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
           "metrics": [
             "MTR-003_Communication_Clarity_Index",
             "MTR-004_Communication_Response_Time"
@@ -2490,10 +1868,7 @@
             "RSK-010_MiscommunicationRisk",
             "RSK-020_MisinterpretationRisk"
           ],
-          "community_smells": [
-            "Missing Link",
-            "Power Distance"
-          ],
+          "community_smells": ["Missing Link", "Power Distance"],
           "preventive_strategies": [
             "PS-003_TransparentInformationChannels",
             "PS-016_ClearCommunicationGuidelines",
@@ -2524,12 +1899,8 @@
           "cause_type": "CommunicationCause",
           "cause_name": "Language Barriers",
           "similarity": 0.2223399579524994,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-016_ClearCommunicationGuidelines",
             "PS-018_InformationClarificationPractice",
@@ -2546,12 +1917,8 @@
             "STR-I-003_SelfAssessmentTools",
             "STR-I-004_PersonalCoaching"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-004_Language_Barrier_Impact"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-004_Language_Barrier_Impact"]
         }
       ]
     },
@@ -2571,12 +1938,8 @@
           "cause_type": "CommunicationCause",
           "cause_name": "Language Barriers",
           "similarity": 0.425886869430542,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-016_ClearCommunicationGuidelines",
             "PS-018_InformationClarificationPractice",
@@ -2593,24 +1956,16 @@
             "STR-I-003_SelfAssessmentTools",
             "STR-I-004_PersonalCoaching"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-004_Language_Barrier_Impact"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-004_Language_Barrier_Impact"]
         },
         {
           "ontology_id": "CO-005_MisinterpretationOfInformation",
           "cause_type": "CommunicationCause",
           "cause_name": "Misinterpretation of information",
           "similarity": 0.39509162306785583,
-          "risks": [
-            "RSK-010_MiscommunicationRisk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-010_MiscommunicationRisk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-016_ClearCommunicationGuidelines",
             "PS-018_InformationClarificationPractice"
@@ -2624,9 +1979,7 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
           "metrics": [
             "MTR-003_Communication_Clarity_Index",
             "MTR-004_Communication_Response_Time"
@@ -2641,10 +1994,7 @@
             "RSK-010_MiscommunicationRisk",
             "RSK-020_MisinterpretationRisk"
           ],
-          "community_smells": [
-            "Missing Link",
-            "Power Distance"
-          ],
+          "community_smells": ["Missing Link", "Power Distance"],
           "preventive_strategies": [
             "PS-003_TransparentInformationChannels",
             "PS-016_ClearCommunicationGuidelines",
@@ -2700,40 +2050,24 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.519756555557251,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.48067986965179443,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -2750,39 +2084,21 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.41973546147346497,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         }
       ]
     },
@@ -2802,12 +2118,8 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.6528601050376892,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -2823,77 +2135,52 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COO-004_FrequentLeadershipConflicts",
           "cause_type": "CoordinationCause",
           "cause_name": "Frequent Leadership Conflicts",
           "similarity": 0.5341888666152954,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Prima Donnas"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Prima Donnas"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-024_AlignmentMeetings"
           ],
-          "effects": [
-            "AEF-005_FrequentLeadershipConflicts"
-          ],
+          "effects": ["AEF-005_FrequentLeadershipConflicts"],
           "corrective_strategies": [
             "STR-009_LeadershipConflictMediation",
             "STR-010_LeadershipDevelopmentProgram"
           ],
-          "indicators": [
-            "IND-005_Team_Engagement_Rate"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-005_Team_Engagement_Rate"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.5202196836471558,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -2925,39 +2212,21 @@
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.5135547518730164,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.45392751693725586,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -2974,40 +2243,24 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COG-007_TechnicalComplexityDueToDependencies",
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.42105332016944885,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         }
       ]
     },
@@ -3027,16 +2280,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Inefficient organizational processes",
           "similarity": 0.5313652157783508,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Shared Villainy"
-          ],
-          "preventive_strategies": [
-            "PS-027_ProcessStandardizationGuidelines"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Organizational Silo", "Shared Villainy"],
+          "preventive_strategies": ["PS-027_ProcessStandardizationGuidelines"],
           "effects": [
             "AEF-002_InefficientStructure",
             "PME-004_InefficientUseOfResources"
@@ -3045,28 +2291,17 @@
             "STR-003_RestructureTeams",
             "STR-004_ProcessOptimization"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "CA-005_BlockageDueToApprovalRequirements",
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to approval requirements",
           "similarity": 0.5239962935447693,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-026_ApprovalWorkflowPredefinition"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-026_ApprovalWorkflowPredefinition"],
           "effects": [
             "AEF-006_InefficientTaskAssignment",
             "PME-003_DelaysInTaskDelivery"
@@ -3076,9 +2311,7 @@
             "STR-011_TaskAssignmentReview",
             "STR-012_DelegationTraining"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -3089,28 +2322,13 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to triage process",
           "similarity": 0.4700770676136017,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-001_StandardizedTaskHandoverProcess"
-          ],
-          "effects": [
-            "PME-003_DelaysInTaskDelivery"
-          ],
-          "corrective_strategies": [
-            "CS-028_TaskDeliveryRecoveryPlan"
-          ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Response_Time"
-          ]
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-001_StandardizedTaskHandoverProcess"],
+          "effects": ["PME-003_DelaysInTaskDelivery"],
+          "corrective_strategies": ["CS-028_TaskDeliveryRecoveryPlan"],
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-002_Feedback_Response_Time"]
         }
       ]
     },
@@ -3130,16 +2348,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to approval requirements",
           "similarity": 0.47137051820755005,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-026_ApprovalWorkflowPredefinition"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-026_ApprovalWorkflowPredefinition"],
           "effects": [
             "AEF-006_InefficientTaskAssignment",
             "PME-003_DelaysInTaskDelivery"
@@ -3149,9 +2360,7 @@
             "STR-011_TaskAssignmentReview",
             "STR-012_DelegationTraining"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -3162,12 +2371,8 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of Communication Plan",
           "similarity": 0.39397186040878296,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
@@ -3183,40 +2388,21 @@
             "STR-003_RestructureTeams",
             "STR-004_ProcessOptimization"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         },
         {
           "ontology_id": "CA-010_BlockageDueToTriageProcess",
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to triage process",
           "similarity": 0.3901633024215698,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-001_StandardizedTaskHandoverProcess"
-          ],
-          "effects": [
-            "PME-003_DelaysInTaskDelivery"
-          ],
-          "corrective_strategies": [
-            "CS-028_TaskDeliveryRecoveryPlan"
-          ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Response_Time"
-          ]
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-001_StandardizedTaskHandoverProcess"],
+          "effects": ["PME-003_DelaysInTaskDelivery"],
+          "corrective_strategies": ["CS-028_TaskDeliveryRecoveryPlan"],
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-002_Feedback_Response_Time"]
         }
       ]
     },
@@ -3236,67 +2422,37 @@
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.49597814679145813,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-007_TechnicalComplexityDueToDependencies",
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.4925607144832611,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.40968888998031616,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -3313,12 +2469,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -3342,9 +2494,7 @@
             "RSK-013_TechnicalMaintenanceRisk",
             "RSK-021_BackwardCompatibilityRisk"
           ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
+          "community_smells": ["Socio-Technical Congruence Gap"],
           "preventive_strategies": [
             "PS-021_CompatibilityImpactAnalysis",
             "PS-026_CompatibilityManagement"
@@ -3353,54 +2503,30 @@
             "TEF-011_CompatibilityProblems",
             "TEF-021_CompatibilityFailure"
           ],
-          "corrective_strategies": [
-            "CS-021_TargetedCompatibilityValidation"
-          ],
-          "indicators": [
-            "IND-021_CompatibilityMentions"
-          ],
-          "metrics": [
-            "MTR-021_CompatibilityIssueFrequency"
-          ]
+          "corrective_strategies": ["CS-021_TargetedCompatibilityValidation"],
+          "indicators": ["IND-021_CompatibilityMentions"],
+          "metrics": ["MTR-021_CompatibilityIssueFrequency"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.4727957546710968,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.4552505612373352,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -3417,12 +2543,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -3454,12 +2576,8 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.5546741485595703,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -3475,24 +2593,16 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "CR-001_LackOfTaskDiscussion",
           "cause_type": "CollaborationCause",
           "cause_name": "Lack of Task Discussion",
           "similarity": 0.5269829034805298,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-007_TaskDiscussionPlatform",
@@ -3515,46 +2625,31 @@
             "STR-I-017_CommunicationSkillsTraining",
             "STR-I-018_PublicSpeakingWorkshops"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.5085617303848267,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -3574,16 +2669,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to approval requirements",
           "similarity": 0.5088881850242615,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-026_ApprovalWorkflowPredefinition"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-026_ApprovalWorkflowPredefinition"],
           "effects": [
             "AEF-006_InefficientTaskAssignment",
             "PME-003_DelaysInTaskDelivery"
@@ -3593,9 +2681,7 @@
             "STR-011_TaskAssignmentReview",
             "STR-012_DelegationTraining"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -3606,46 +2692,29 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of Feedback Channels in Communication Activities",
           "similarity": 0.487482488155365,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership"
-          ],
+          "effects": ["AEF-007_LackOfLeadership"],
           "corrective_strategies": [
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Loop_Frequency"
-          ]
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-002_Feedback_Loop_Frequency"]
         },
         {
           "ontology_id": "CA-007_InefficientOrganizationalProcesses",
           "cause_type": "AdministrativeCause",
           "cause_name": "Inefficient organizational processes",
           "similarity": 0.4433795213699341,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Shared Villainy"
-          ],
-          "preventive_strategies": [
-            "PS-027_ProcessStandardizationGuidelines"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Organizational Silo", "Shared Villainy"],
+          "preventive_strategies": ["PS-027_ProcessStandardizationGuidelines"],
           "effects": [
             "AEF-002_InefficientStructure",
             "PME-004_InefficientUseOfResources"
@@ -3654,12 +2723,8 @@
             "STR-003_RestructureTeams",
             "STR-004_ProcessOptimization"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         }
       ]
     },
@@ -3715,12 +2780,8 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.47423139214515686,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -3737,67 +2798,37 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.4284760057926178,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-007_TechnicalComplexityDueToDependencies",
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.3972828686237335,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         }
       ]
     },
@@ -3817,25 +2848,12 @@
           "cause_type": "CommunicationCause",
           "cause_name": "Lack of timely feedback or response",
           "similarity": 0.42970430850982666,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silence"
-          ],
-          "preventive_strategies": [
-            "PS-017_TimelyFeedbackMechanism"
-          ],
-          "effects": [
-            "PME-003_DelaysInTaskDelivery",
-            "TEF-005_LackOfFeedback"
-          ],
-          "corrective_strategies": [
-            "CS-028_TaskDeliveryRecoveryPlan"
-          ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silence"],
+          "preventive_strategies": ["PS-017_TimelyFeedbackMechanism"],
+          "effects": ["PME-003_DelaysInTaskDelivery", "TEF-005_LackOfFeedback"],
+          "corrective_strategies": ["CS-028_TaskDeliveryRecoveryPlan"],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -3846,12 +2864,8 @@
           "cause_type": "CommunicationCause",
           "cause_name": "Delayed Communication",
           "similarity": 0.42438068985939026,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-017_TimelyFeedbackMechanism",
             "PS-104_CommunicationProtocols",
@@ -3867,24 +2881,16 @@
             "STR-G-003_TeamRecognitionPrograms",
             "STR-G-004_EngagementActivities"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-004_Language_Barrier_Impact"
-          ]
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-004_Language_Barrier_Impact"]
         },
         {
           "ontology_id": "CO-005_MisinterpretationOfInformation",
           "cause_type": "CommunicationCause",
           "cause_name": "Misinterpretation of information",
           "similarity": 0.4192333221435547,
-          "risks": [
-            "RSK-010_MiscommunicationRisk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-010_MiscommunicationRisk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-016_ClearCommunicationGuidelines",
             "PS-018_InformationClarificationPractice"
@@ -3898,9 +2904,7 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
           "metrics": [
             "MTR-003_Communication_Clarity_Index",
             "MTR-004_Communication_Response_Time"
@@ -3924,67 +2928,37 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.47805166244506836,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.4644204080104828,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.40903764963150024,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -4001,12 +2975,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -4026,67 +2996,37 @@
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.46023663878440857,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-007_TechnicalComplexityDueToDependencies",
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.4398069381713867,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.3783982992172241,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -4103,12 +3043,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -4152,67 +3088,37 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.4745999276638031,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.40747472643852234,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.40627676248550415,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -4229,12 +3135,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -4254,12 +3156,8 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.44123512506484985,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -4275,59 +3173,39 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COO-006_MiscommunicationInTaskHandover",
           "cause_type": "CoordinationCause",
           "cause_name": "Miscommunication In Task Handover",
           "similarity": 0.3941609263420105,
-          "risks": [
-            "RSK-004_Language_Miscommunication_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-004_Language_Miscommunication_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
             "PS-015_InterTeamLiaisonRoles",
             "PS-023_CoordinationProtocols"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership",
-            "PME-006_MisalignedEfforts"
-          ],
+          "effects": ["AEF-007_LackOfLeadership", "PME-006_MisalignedEfforts"],
           "corrective_strategies": [
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery",
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         },
         {
           "ontology_id": "COO-008_CoordinationMisalignmentForTechnicalValidation",
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.3815214931964874,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -4341,12 +3219,8 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         }
       ]
     },
@@ -4366,67 +3240,37 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.5117470622062683,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.4133691191673279,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.3781082034111023,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -4443,12 +3287,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -4468,40 +3308,24 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.4957350194454193,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.4064241349697113,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -4518,39 +3342,21 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.4030803143978119,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         }
       ]
     },
@@ -4570,67 +3376,37 @@
           "cause_type": "CongruenceCause",
           "cause_name": "Technical complexity due to dependencies",
           "similarity": 0.49375632405281067,
-          "risks": [
-            "RSK-013_TechnicalMaintenanceRisk"
-          ],
+          "risks": ["RSK-013_TechnicalMaintenanceRisk"],
           "community_smells": [
             "Socio-Technical Congruence Gap",
             "Truck Factor"
           ],
-          "preventive_strategies": [
-            "PS-025_DependencyManagement"
-          ],
-          "effects": [
-            "TEF-010_IncreasedTechnicalComplexity"
-          ],
-          "corrective_strategies": [
-            "CS-030_TechnicalComplexityReduction"
-          ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "preventive_strategies": ["PS-025_DependencyManagement"],
+          "effects": ["TEF-010_IncreasedTechnicalComplexity"],
+          "corrective_strategies": ["CS-030_TechnicalComplexityReduction"],
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "COG-011_SystemConfigurationConstraints",
           "cause_type": "CongruenceCause",
           "cause_name": "System configuration constraints",
           "similarity": 0.45885464549064636,
-          "risks": [
-            "RSK-022_ConfigurationRisk"
-          ],
-          "community_smells": [
-            "Socio-Technical Congruence Gap"
-          ],
-          "preventive_strategies": [
-            "PS-022_ConfigurationReview"
-          ],
-          "effects": [
-            "TEF-022_EnvironmentSpecificFailure"
-          ],
-          "corrective_strategies": [
-            "CS-022_ReproduceAndValidateEnvironment"
-          ],
-          "indicators": [
-            "IND-022_SystemSpecificFailureMentions"
-          ],
-          "metrics": [
-            "MTR-022_SystemSpecificFailureRate"
-          ]
+          "risks": ["RSK-022_ConfigurationRisk"],
+          "community_smells": ["Socio-Technical Congruence Gap"],
+          "preventive_strategies": ["PS-022_ConfigurationReview"],
+          "effects": ["TEF-022_EnvironmentSpecificFailure"],
+          "corrective_strategies": ["CS-022_ReproduceAndValidateEnvironment"],
+          "indicators": ["IND-022_SystemSpecificFailureMentions"],
+          "metrics": ["MTR-022_SystemSpecificFailureRate"]
         },
         {
           "ontology_id": "COG-006_LackOfInterfaceClarification",
           "cause_type": "CongruenceCause",
           "cause_name": "Lack of Interface Clarification",
           "similarity": 0.444598525762558,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Missing Link"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Missing Link"],
           "preventive_strategies": [
             "PS-004_InterfaceClarificationWorkshops",
             "PS-012_InterfaceDocumentationGuidelines",
@@ -4647,12 +3423,8 @@
             "STR-I-015_ChangeManagementTraining",
             "STR-I-016_ChangeChampions"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -4672,16 +3444,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to approval requirements",
           "similarity": 0.3284373879432678,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-026_ApprovalWorkflowPredefinition"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-026_ApprovalWorkflowPredefinition"],
           "effects": [
             "AEF-006_InefficientTaskAssignment",
             "PME-003_DelaysInTaskDelivery"
@@ -4691,9 +3456,7 @@
             "STR-011_TaskAssignmentReview",
             "STR-012_DelegationTraining"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -4704,16 +3467,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Inefficient organizational processes",
           "similarity": 0.3027750551700592,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Shared Villainy"
-          ],
-          "preventive_strategies": [
-            "PS-027_ProcessStandardizationGuidelines"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Organizational Silo", "Shared Villainy"],
+          "preventive_strategies": ["PS-027_ProcessStandardizationGuidelines"],
           "effects": [
             "AEF-002_InefficientStructure",
             "PME-004_InefficientUseOfResources"
@@ -4722,40 +3478,21 @@
             "STR-003_RestructureTeams",
             "STR-004_ProcessOptimization"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "CA-010_BlockageDueToTriageProcess",
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to triage process",
           "similarity": 0.2811826169490814,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-001_StandardizedTaskHandoverProcess"
-          ],
-          "effects": [
-            "PME-003_DelaysInTaskDelivery"
-          ],
-          "corrective_strategies": [
-            "CS-028_TaskDeliveryRecoveryPlan"
-          ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Response_Time"
-          ]
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-001_StandardizedTaskHandoverProcess"],
+          "effects": ["PME-003_DelaysInTaskDelivery"],
+          "corrective_strategies": ["CS-028_TaskDeliveryRecoveryPlan"],
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-002_Feedback_Response_Time"]
         }
       ]
     },
@@ -4899,13 +3636,8 @@
             "RSK-011_KnowledgeLossRisk",
             "RSK-013_TechnicalMaintenanceRisk"
           ],
-          "community_smells": [
-            "Knowledge Silos",
-            "Truck Factor"
-          ],
-          "preventive_strategies": [
-            "PS-027_TechnicalDocumentationPractices"
-          ],
+          "community_smells": ["Knowledge Silos", "Truck Factor"],
+          "preventive_strategies": ["PS-027_TechnicalDocumentationPractices"],
           "effects": [
             "GEF-003_DifficultyInKnowledgeSharing",
             "TEF-012_DifficultyUnderstandingSystemBehavior"
@@ -4914,70 +3646,43 @@
             "STR-G-005_SharedKnowledgeSessions",
             "STR-G-006_PeerMentoring"
           ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "ADM-003_LackOfStandardsOrBestPractices",
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of standards or best practices",
           "similarity": 0.44116148352622986,
-          "risks": [
-            "RSK-023_KnowledgeFragmentationRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-023_KnowledgeFragmentationRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_DefineDocumentationAndReviewStandards"
           ],
-          "effects": [
-            "AEF-020_InconsistentDocumentationPractices"
-          ],
-          "corrective_strategies": [
-            "CS-023_UpdateStandardsAndDocs"
-          ],
-          "indicators": [
-            "IND-023_DocumentationStandardMentions"
-          ],
-          "metrics": [
-            "MTR-023_DocumentationStandardCompliance"
-          ]
+          "effects": ["AEF-020_InconsistentDocumentationPractices"],
+          "corrective_strategies": ["CS-023_UpdateStandardsAndDocs"],
+          "indicators": ["IND-023_DocumentationStandardMentions"],
+          "metrics": ["MTR-023_DocumentationStandardCompliance"]
         },
         {
           "ontology_id": "CA-004_NoKnowledgeTransferPolicy",
           "cause_type": "AdministrativeCause",
           "cause_name": "No Knowledge Transfer Policy in Communication Activities",
           "similarity": 0.40984413027763367,
-          "risks": [
-            "RSK-001_Knowledge_Loss_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-001_Knowledge_Loss_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-005_FrequentLeadershipConflicts"
-          ],
+          "effects": ["AEF-005_FrequentLeadershipConflicts"],
           "corrective_strategies": [
             "STR-009_LeadershipConflictMediation",
             "STR-010_LeadershipDevelopmentProgram"
           ],
-          "indicators": [
-            "IND-003_Knowledge_Sharing_Level"
-          ],
-          "metrics": [
-            "MTR-001_Knowledge_Transfer_Efficiency"
-          ]
+          "indicators": ["IND-003_Knowledge_Sharing_Level"],
+          "metrics": ["MTR-001_Knowledge_Transfer_Efficiency"]
         }
       ]
     },
@@ -5037,13 +3742,8 @@
             "RSK-011_KnowledgeLossRisk",
             "RSK-013_TechnicalMaintenanceRisk"
           ],
-          "community_smells": [
-            "Knowledge Silos",
-            "Truck Factor"
-          ],
-          "preventive_strategies": [
-            "PS-027_TechnicalDocumentationPractices"
-          ],
+          "community_smells": ["Knowledge Silos", "Truck Factor"],
+          "preventive_strategies": ["PS-027_TechnicalDocumentationPractices"],
           "effects": [
             "GEF-003_DifficultyInKnowledgeSharing",
             "TEF-012_DifficultyUnderstandingSystemBehavior"
@@ -5052,70 +3752,43 @@
             "STR-G-005_SharedKnowledgeSessions",
             "STR-G-006_PeerMentoring"
           ],
-          "indicators": [
-            "IND-013_DocumentationCompleteness"
-          ],
-          "metrics": [
-            "MTR-013_DocumentationCoverage"
-          ]
+          "indicators": ["IND-013_DocumentationCompleteness"],
+          "metrics": ["MTR-013_DocumentationCoverage"]
         },
         {
           "ontology_id": "CA-004_NoKnowledgeTransferPolicy",
           "cause_type": "AdministrativeCause",
           "cause_name": "No Knowledge Transfer Policy in Communication Activities",
           "similarity": 0.4976511299610138,
-          "risks": [
-            "RSK-001_Knowledge_Loss_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-001_Knowledge_Loss_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-005_FrequentLeadershipConflicts"
-          ],
+          "effects": ["AEF-005_FrequentLeadershipConflicts"],
           "corrective_strategies": [
             "STR-009_LeadershipConflictMediation",
             "STR-010_LeadershipDevelopmentProgram"
           ],
-          "indicators": [
-            "IND-003_Knowledge_Sharing_Level"
-          ],
-          "metrics": [
-            "MTR-001_Knowledge_Transfer_Efficiency"
-          ]
+          "indicators": ["IND-003_Knowledge_Sharing_Level"],
+          "metrics": ["MTR-001_Knowledge_Transfer_Efficiency"]
         },
         {
           "ontology_id": "ADM-003_LackOfStandardsOrBestPractices",
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of standards or best practices",
           "similarity": 0.48562803864479065,
-          "risks": [
-            "RSK-023_KnowledgeFragmentationRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-023_KnowledgeFragmentationRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_DefineDocumentationAndReviewStandards"
           ],
-          "effects": [
-            "AEF-020_InconsistentDocumentationPractices"
-          ],
-          "corrective_strategies": [
-            "CS-023_UpdateStandardsAndDocs"
-          ],
-          "indicators": [
-            "IND-023_DocumentationStandardMentions"
-          ],
-          "metrics": [
-            "MTR-023_DocumentationStandardCompliance"
-          ]
+          "effects": ["AEF-020_InconsistentDocumentationPractices"],
+          "corrective_strategies": ["CS-023_UpdateStandardsAndDocs"],
+          "indicators": ["IND-023_DocumentationStandardMentions"],
+          "metrics": ["MTR-023_DocumentationStandardCompliance"]
         }
       ]
     },
@@ -5195,16 +3868,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to approval requirements",
           "similarity": 0.49024516344070435,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-026_ApprovalWorkflowPredefinition"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-026_ApprovalWorkflowPredefinition"],
           "effects": [
             "AEF-006_InefficientTaskAssignment",
             "PME-003_DelaysInTaskDelivery"
@@ -5214,9 +3880,7 @@
             "STR-011_TaskAssignmentReview",
             "STR-012_DelegationTraining"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -5227,16 +3891,9 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Inefficient organizational processes",
           "similarity": 0.434908390045166,
-          "risks": [
-            "RSK-003_Collaboration_Breakdown_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Shared Villainy"
-          ],
-          "preventive_strategies": [
-            "PS-027_ProcessStandardizationGuidelines"
-          ],
+          "risks": ["RSK-003_Collaboration_Breakdown_Risk"],
+          "community_smells": ["Organizational Silo", "Shared Villainy"],
+          "preventive_strategies": ["PS-027_ProcessStandardizationGuidelines"],
           "effects": [
             "AEF-002_InefficientStructure",
             "PME-004_InefficientUseOfResources"
@@ -5245,39 +3902,21 @@
             "STR-003_RestructureTeams",
             "STR-004_ProcessOptimization"
           ],
-          "indicators": [
-            "IND-004_Responsibility_Overlap_Index"
-          ],
-          "metrics": [
-            "MTR-005_Task_Assignment_Clarity_Score"
-          ]
+          "indicators": ["IND-004_Responsibility_Overlap_Index"],
+          "metrics": ["MTR-005_Task_Assignment_Clarity_Score"]
         },
         {
           "ontology_id": "CA-009_ConstraintDueToTicketStatusForReview",
           "cause_type": "AdministrativeCause",
           "cause_name": "Constraint due to ticket status for review",
           "similarity": 0.43225300312042236,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-001_StandardizedTaskHandoverProcess"
-          ],
-          "effects": [
-            "PME-003_DelaysInTaskDelivery"
-          ],
-          "corrective_strategies": [
-            "CS-028_TaskDeliveryRecoveryPlan"
-          ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Response_Time"
-          ]
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
+          "preventive_strategies": ["PS-001_StandardizedTaskHandoverProcess"],
+          "effects": ["PME-003_DelaysInTaskDelivery"],
+          "corrective_strategies": ["CS-028_TaskDeliveryRecoveryPlan"],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-002_Feedback_Response_Time"]
         }
       ]
     },
@@ -5297,46 +3936,29 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of Feedback Channels in Communication Activities",
           "similarity": 0.45090198516845703,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
             "PS-007_HandoverRoleAssignment"
           ],
-          "effects": [
-            "AEF-007_LackOfLeadership"
-          ],
+          "effects": ["AEF-007_LackOfLeadership"],
           "corrective_strategies": [
             "STR-013_LeadershipMentorship",
             "STR-014_LeadershipSuccessionPlanning"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
-          "metrics": [
-            "MTR-002_Feedback_Loop_Frequency"
-          ]
+          "indicators": ["IND-002_Feedback_Latency_Score"],
+          "metrics": ["MTR-002_Feedback_Loop_Frequency"]
         },
         {
           "ontology_id": "CA-005_BlockageDueToApprovalRequirements",
           "cause_type": "AdministrativeCause",
           "cause_name": "Blockage due to approval requirements",
           "similarity": 0.43419429659843445,
-          "risks": [
-            "RSK-003_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Organizational Silo",
-            "Power Distance"
-          ],
-          "preventive_strategies": [
-            "PS-026_ApprovalWorkflowPredefinition"
-          ],
+          "risks": ["RSK-003_Feedback_Delays_Risk"],
+          "community_smells": ["Organizational Silo", "Power Distance"],
+          "preventive_strategies": ["PS-026_ApprovalWorkflowPredefinition"],
           "effects": [
             "AEF-006_InefficientTaskAssignment",
             "PME-003_DelaysInTaskDelivery"
@@ -5346,9 +3968,7 @@
             "STR-011_TaskAssignmentReview",
             "STR-012_DelegationTraining"
           ],
-          "indicators": [
-            "IND-002_Feedback_Latency_Score"
-          ],
+          "indicators": ["IND-002_Feedback_Latency_Score"],
           "metrics": [
             "MTR-002_Feedback_Loop_Frequency",
             "MTR-002_Feedback_Response_Time"
@@ -5359,12 +3979,8 @@
           "cause_type": "AdministrativeCause",
           "cause_name": "Lack of Communication Plan",
           "similarity": 0.4331025183200836,
-          "risks": [
-            "RSK-002_Feedback_Delays_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-002_Feedback_Delays_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-001_StandardizedTaskHandoverProcess",
             "PS-006_DocumentedTaskHandoverChecklist",
@@ -5380,12 +3996,8 @@
             "STR-003_RestructureTeams",
             "STR-004_ProcessOptimization"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-003_Communication_Clarity_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-003_Communication_Clarity_Index"]
         }
       ]
     },
@@ -5525,13 +4137,8 @@
           "cause_type": "CoordinationCause",
           "cause_name": "Coordination misalignment for technical validation",
           "similarity": 0.6420508623123169,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
-          "community_smells": [
-            "Missing Link",
-            "Organizational Silo"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
+          "community_smells": ["Missing Link", "Organizational Silo"],
           "preventive_strategies": [
             "PS-023_CoordinationProtocols",
             "PS-024_AlignmentMeetings"
@@ -5545,28 +4152,20 @@
             "CS-029_EffortRealignmentReview",
             "CS-PM-006_EffortAlignmentRecovery"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-009_TaskReworkDueToMisalignment",
           "cause_type": "CoordinationCause",
           "cause_name": "Task rework due to misalignment",
           "similarity": 0.6317746639251709,
-          "risks": [
-            "RSK-012_ReworkRisk"
-          ],
+          "risks": ["RSK-012_ReworkRisk"],
           "community_smells": [
             "Missing Link",
             "Socio-Technical Congruence Gap"
           ],
-          "preventive_strategies": [
-            "PS-023_CoordinationProtocols"
-          ],
+          "preventive_strategies": ["PS-023_CoordinationProtocols"],
           "effects": [
             "PME-007_TaskRework",
             "TEF-006_DuplicationOfEffort",
@@ -5577,24 +4176,16 @@
             "CS-033_ReworkReductionReview",
             "CS-034_ResourceUseCorrection"
           ],
-          "indicators": [
-            "IND-012_TaskAlignmentLevel"
-          ],
-          "metrics": [
-            "MTR-012_TaskAlignmentScore"
-          ]
+          "indicators": ["IND-012_TaskAlignmentLevel"],
+          "metrics": ["MTR-012_TaskAlignmentScore"]
         },
         {
           "ontology_id": "COO-002_RestrictedInformationFlow",
           "cause_type": "CoordinationCause",
           "cause_name": "Restricted Information Flow",
           "similarity": 0.6223132014274597,
-          "risks": [
-            "RSK-005_Documentation_Gaps_Risk"
-          ],
-          "community_smells": [
-            "Power Distance"
-          ],
+          "risks": ["RSK-005_Documentation_Gaps_Risk"],
+          "community_smells": ["Power Distance"],
           "preventive_strategies": [
             "PS-005_CrossTeamCoordinationMeetings",
             "PS-014_SharedCoordinationCalendar",
@@ -5610,12 +4201,8 @@
             "STR-G-001_TrustBuildingWorkshops",
             "STR-G-002_TransparencyInitiatives"
           ],
-          "indicators": [
-            "IND-001_Communication_Breakdown_Index"
-          ],
-          "metrics": [
-            "MTR-006_Information_Disconnect_Index"
-          ]
+          "indicators": ["IND-001_Communication_Breakdown_Index"],
+          "metrics": ["MTR-006_Information_Disconnect_Index"]
         }
       ]
     },
@@ -5646,88 +4233,34 @@
       "top_smell_frequency": 10,
       "top_risk_frequency": 4,
       "dominant_macrocauses": [
-        [
-          "H",
-          29
-        ],
-        [
-          "D",
-          3
-        ],
-        [
-          "F",
-          2
-        ],
-        [
-          "B",
-          1
-        ]
+        ["H", 29],
+        ["D", 3],
+        ["F", 2],
+        ["B", 1]
       ],
       "dominant_microcauses": [
-        [
-          "Blockage due to approval requirements",
-          1.2528768479824066
-        ],
-        [
-          "Lack of technical documentation",
-          1.2427455186843872
-        ],
-        [
-          "Lack of standards or best practices",
-          0.9267895221710205
-        ],
+        ["Blockage due to approval requirements", 1.2528768479824066],
+        ["Lack of technical documentation", 1.2427455186843872],
+        ["Lack of standards or best practices", 0.9267895221710205],
         [
           "No Knowledge Transfer Policy in Communication Activities",
           0.9074952602386475
         ],
-        [
-          "Inefficient organizational processes",
-          0.7376834452152252
-        ]
+        ["Inefficient organizational processes", 0.7376834452152252]
       ],
       "dominant_community_smells": [
-        [
-          "Power Distance",
-          10
-        ],
-        [
-          "Organizational Silo",
-          9
-        ],
-        [
-          "Missing Link",
-          4
-        ],
-        [
-          "Shared Villainy",
-          2
-        ],
-        [
-          "Knowledge Silos",
-          2
-        ]
+        ["Power Distance", 10],
+        ["Organizational Silo", 9],
+        ["Missing Link", 4],
+        ["Shared Villainy", 2],
+        ["Knowledge Silos", 2]
       ],
       "dominant_risks": [
-        [
-          "RSK-002_Feedback_Delays_Risk",
-          4
-        ],
-        [
-          "RSK-003_Feedback_Delays_Risk",
-          3
-        ],
-        [
-          "RSK-003_Collaboration_Breakdown_Risk",
-          2
-        ],
-        [
-          "RSK-011_KnowledgeLossRisk",
-          2
-        ],
-        [
-          "RSK-013_TechnicalMaintenanceRisk",
-          2
-        ]
+        ["RSK-002_Feedback_Delays_Risk", 4],
+        ["RSK-003_Feedback_Delays_Risk", 3],
+        ["RSK-003_Collaboration_Breakdown_Risk", 2],
+        ["RSK-011_KnowledgeLossRisk", 2],
+        ["RSK-013_TechnicalMaintenanceRisk", 2]
       ]
     },
     "136028": {
@@ -5743,92 +4276,35 @@
       "top_smell_frequency": 36,
       "top_risk_frequency": 21,
       "dominant_macrocauses": [
-        [
-          "H",
-          15
-        ],
-        [
-          "B",
-          12
-        ],
-        [
-          "C",
-          3
-        ],
-        [
-          "F",
-          2
-        ],
-        [
-          "D",
-          2
-        ]
+        ["H", 15],
+        ["B", 12],
+        ["C", 3],
+        ["F", 2],
+        ["D", 2]
       ],
       "dominant_microcauses": [
-        [
-          "Task rework due to misalignment",
-          6.186980068683624
-        ],
+        ["Task rework due to misalignment", 6.186980068683624],
         [
           "Coordination misalignment for technical validation",
           3.9158400297164917
         ],
-        [
-          "Miscommunication In Task Handover",
-          3.834004044532776
-        ],
-        [
-          "Restricted Information Flow",
-          2.300690144300461
-        ],
-        [
-          "Compatibility Constraints",
-          1.1396908462047577
-        ]
+        ["Miscommunication In Task Handover", 3.834004044532776],
+        ["Restricted Information Flow", 2.300690144300461],
+        ["Compatibility Constraints", 1.1396908462047577]
       ],
       "dominant_community_smells": [
-        [
-          "Missing Link",
-          36
-        ],
-        [
-          "Socio-Technical Congruence Gap",
-          19
-        ],
-        [
-          "Organizational Silo",
-          16
-        ],
-        [
-          "Power Distance",
-          12
-        ],
-        [
-          "Truck Factor",
-          5
-        ]
+        ["Missing Link", 36],
+        ["Socio-Technical Congruence Gap", 19],
+        ["Organizational Silo", 16],
+        ["Power Distance", 12],
+        ["Truck Factor", 5]
       ],
       "dominant_risks": [
-        [
-          "RSK-012_ReworkRisk",
-          21
-        ],
-        [
-          "RSK-004_Language_Miscommunication_Risk",
-          8
-        ],
-        [
-          "RSK-013_TechnicalMaintenanceRisk",
-          7
-        ],
-        [
-          "RSK-005_Documentation_Gaps_Risk",
-          7
-        ],
-        [
-          "RSK-003_Collaboration_Breakdown_Risk",
-          4
-        ]
+        ["RSK-012_ReworkRisk", 21],
+        ["RSK-004_Language_Miscommunication_Risk", 8],
+        ["RSK-013_TechnicalMaintenanceRisk", 7],
+        ["RSK-005_Documentation_Gaps_Risk", 7],
+        ["RSK-003_Collaboration_Breakdown_Risk", 4]
       ]
     },
     "136207": {
@@ -5844,92 +4320,32 @@
       "top_smell_frequency": 24,
       "top_risk_frequency": 15,
       "dominant_macrocauses": [
-        [
-          "C",
-          12
-        ],
-        [
-          "H",
-          9
-        ],
-        [
-          "A",
-          3
-        ],
-        [
-          "B",
-          3
-        ],
-        [
-          "D",
-          3
-        ]
+        ["C", 12],
+        ["H", 9],
+        ["A", 3],
+        ["B", 3],
+        ["D", 3]
       ],
       "dominant_microcauses": [
-        [
-          "System configuration constraints",
-          5.449908584356308
-        ],
-        [
-          "Technical complexity due to dependencies",
-          5.240317523479462
-        ],
-        [
-          "Lack of Interface Clarification",
-          5.1482765674591064
-        ],
-        [
-          "Restricted Information Flow",
-          1.6487693786621094
-        ],
-        [
-          "Blockage due to approval requirements",
-          1.5042549967765808
-        ]
+        ["System configuration constraints", 5.449908584356308],
+        ["Technical complexity due to dependencies", 5.240317523479462],
+        ["Lack of Interface Clarification", 5.1482765674591064],
+        ["Restricted Information Flow", 1.6487693786621094],
+        ["Blockage due to approval requirements", 1.5042549967765808]
       ],
       "dominant_community_smells": [
-        [
-          "Socio-Technical Congruence Gap",
-          24
-        ],
-        [
-          "Missing Link",
-          21
-        ],
-        [
-          "Power Distance",
-          16
-        ],
-        [
-          "Truck Factor",
-          11
-        ],
-        [
-          "Organizational Silo",
-          8
-        ]
+        ["Socio-Technical Congruence Gap", 24],
+        ["Missing Link", 21],
+        ["Power Distance", 16],
+        ["Truck Factor", 11],
+        ["Organizational Silo", 8]
       ],
       "dominant_risks": [
-        [
-          "RSK-005_Documentation_Gaps_Risk",
-          15
-        ],
-        [
-          "RSK-013_TechnicalMaintenanceRisk",
-          12
-        ],
-        [
-          "RSK-022_ConfigurationRisk",
-          12
-        ],
-        [
-          "RSK-010_MiscommunicationRisk",
-          5
-        ],
-        [
-          "RSK-004_Language_Miscommunication_Risk",
-          5
-        ]
+        ["RSK-005_Documentation_Gaps_Risk", 15],
+        ["RSK-013_TechnicalMaintenanceRisk", 12],
+        ["RSK-022_ConfigurationRisk", 12],
+        ["RSK-010_MiscommunicationRisk", 5],
+        ["RSK-004_Language_Miscommunication_Risk", 5]
       ]
     }
   }

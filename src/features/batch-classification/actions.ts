@@ -80,7 +80,6 @@ export async function checkOpenAILimits(): Promise<OpenAILimitsResponse> {
     }
     return (await res.json()) as OpenAILimitsResponse;
   } catch (error: unknown) {
-    console.error("checkOpenAILimits error:", error);
     const msg = error instanceof Error ? error.message : String(error);
     return { error: true, code: 500, details: msg };
   }
@@ -93,7 +92,6 @@ export async function startBatchJob(
   const apiKey = process.env.API_SECRET_KEY || "";
 
   try {
-    // fetch will automatically set the correct multipart/form-data boundary when body is FormData
     const res = await fetch(`${apiUrl}/classify/batch`, {
       method: "POST",
       headers: { "X-API-Key": apiKey },
@@ -108,7 +106,6 @@ export async function startBatchJob(
     return (await res.json()) as StartBatchResponse;
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error("startBatchJob error:", msg);
     return { error: true, message: msg };
   }
 }
@@ -141,7 +138,6 @@ export async function checkBatchStatus(
     return (await res.json()) as BatchStatusResponse;
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error("checkBatchStatus error:", msg);
     return { error: true, message: msg };
   }
 }
@@ -172,7 +168,6 @@ export async function cancelBatchJob(jobId: string) {
     return (await res.json()) as BatchStatusResponse;
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error("cancelBatchJob error:", msg);
     return { error: true, message: msg };
   }
 }

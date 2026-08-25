@@ -76,7 +76,6 @@ export const BatchProgressCard = ({
         setProgressMsg("Reanudando conexión con el lote...");
         setProgressPercent(20);
       } else if (file) {
-        // 1. Verificación silenciosa
         const limitsRes = await checkOpenAILimits();
         if (isCancelledRef.current) return;
         if (limitsRes?.error) {
@@ -89,7 +88,6 @@ export const BatchProgressCard = ({
           return;
         }
 
-        // 2. Upload file
         setStep("uploading");
         setProgressMsg(`Enviando archivo ${file.name} al servidor...`);
         setProgressPercent(10);
@@ -116,7 +114,6 @@ export const BatchProgressCard = ({
         setProgressMsg("Procesando (0%)");
         setProgressPercent(20);
 
-        // Guardar como trabajo pendiente inmediatamente
         await savePendingJob({
           jobId: newJobId!,
           filename: file.name,
@@ -132,7 +129,6 @@ export const BatchProgressCard = ({
 
       if (!newJobId) return;
 
-      // 3. Polling
       const pollStatus = async () => {
         if (isCancelledRef.current) return;
         const statusRes = await checkBatchStatus(newJobId!);
@@ -201,7 +197,6 @@ export const BatchProgressCard = ({
         }
 
         try {
-          // Si el backend ya nos envía los campos, usémoslos:
           let extractedPercent = null;
 
           if (
@@ -240,14 +235,12 @@ export const BatchProgressCard = ({
           } else {
             setEstimatedTime(null);
           }
-        } catch (err) {
+        } catch {
           setProgressPercent((prev) => Math.min(prev + 5, 95));
-          console.error("Error parseando progreso:", err);
         }
       };
 
       if (resumeJobId) {
-        // En reanudación, consultar inmediatamente sin esperar 3s
         await pollStatus();
       }
 
@@ -270,9 +263,7 @@ export const BatchProgressCard = ({
     setProgressMsg("Cancelando...");
     try {
       await cancelBatchJob(jobId);
-    } catch (e) {
-      console.error("Error cancelling job on server", e);
-    }
+    } catch {}
     await deletePendingJob(jobId);
     if (onCancelled) onCancelled(jobId);
   };
@@ -300,8 +291,8 @@ export const BatchProgressCard = ({
           <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
         )}
 
-        <div className="flex-1">
-          <h3 className="font-semibold text-slate-800">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-slate-800 truncate">
             {step === "completed"
               ? "Análisis Finalizado"
               : step === "error"
@@ -320,7 +311,7 @@ export const BatchProgressCard = ({
         {(step === "uploading" || step === "processing") && jobId && (
           <button
             onClick={handleCancel}
-            className="text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
+            className="flex-shrink-0 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
           >
             Cancelar
           </button>
@@ -329,7 +320,7 @@ export const BatchProgressCard = ({
         {step === "error" && jobId && (
           <button
             onClick={handleDiscardError}
-            className="text-xs text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
+            className="flex-shrink-0 text-xs text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
           >
             Descartar
           </button>

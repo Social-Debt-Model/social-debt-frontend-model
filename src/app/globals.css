@@ -29,7 +29,6 @@ body {
       transparent 50%
     ),
     radial-gradient(at 0% 100%, hsla(40, 100%, 65%, 0.7) 0px, transparent 50%);
-  background-attachment: fixed;
   background-size: cover;
   min-height: 100vh;
 }

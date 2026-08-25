@@ -44,6 +44,7 @@ export default function Home() {
 
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [focusedJobId, setFocusedJobId] = useState<string | null>(null);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -63,15 +64,11 @@ export default function Home() {
     const items = await getAllHistoryItems();
     setHistoryItems(items);
 
-    // Check for pending jobs
     const pendingJobs = await getPendingJobs();
     if (pendingJobs.length > 0) {
-      // Create fake messages for pending jobs to resume them
-      // In this version, we assume only ONE pending job at a time per user requirement
       const pending = pendingJobs[0];
 
       setMessages((prev) => {
-        // Only add if not already in messages
         const exists = prev.some((m) => m.batchJobId === pending.jobId);
         if (exists) return prev;
 
@@ -183,17 +180,18 @@ export default function Home() {
 
   const handleSelectHistory = (jobId: string) => {
     setFocusedJobId(jobId);
+    setIsMobileSidebarOpen(false);
   };
 
   const handleNewChat = () => {
     setFocusedJobId(null);
+    setIsMobileSidebarOpen(false);
   };
 
   const focusedItem = focusedJobId
     ? historyItems.find((i) => i.jobId === focusedJobId)
     : null;
 
-  // Determinar si el chat debe estar bloqueado (hay un trabajo de batch activo en pantalla)
   const isChatDisabled = messages.some(
     (msg) =>
       (msg.batchFile || msg.batchJobId) &&
@@ -206,6 +204,8 @@ export default function Home() {
   return (
     <ChatLayout
       isFocusMode={!!focusedItem}
+      isSidebarOpen={isMobileSidebarOpen}
+      onToggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
       sidebar={
         <HistorySidebar
           items={historyItems}
@@ -213,16 +213,25 @@ export default function Home() {
           onSelect={handleSelectHistory}
           onNewChat={handleNewChat}
           onDelete={handleDeleteHistory}
+          onClose={() => setIsMobileSidebarOpen(false)}
         />
       }
+      headerAction={!focusedItem && <OpenAILimitsBadge />}
+      footer={
+        !focusedItem && (
+          <ChatInput
+            onSendMessage={handleSendMessage}
+            onSendFile={handleSendFile}
+            isChatDisabled={isChatDisabled}
+          />
+        )
+      }
     >
-      {!focusedItem && (
-        <div className="absolute top-[108px] right-4 z-20">
-          <OpenAILimitsBadge />
-        </div>
-      )}
+      <div className="hidden md:block absolute top-[108px] right-4 z-50">
+        {!focusedItem && <OpenAILimitsBadge />}
+      </div>
       {focusedItem ? (
-        <div className="w-full h-full pb-4 fade-in">
+        <div className="w-full h-full pb-0 md:pb-2 fade-in">
           <BatchDashboard resultData={focusedItem.resultData} />
         </div>
       ) : messages.length === 0 ? (
@@ -299,14 +308,6 @@ export default function Home() {
           ))}
           <div ref={messagesEndRef} />
         </div>
-      )}
-
-      {!focusedItem && (
-        <ChatInput
-          onSendMessage={handleSendMessage}
-          onSendFile={handleSendFile}
-          isChatDisabled={isChatDisabled}
-        />
       )}
     </ChatLayout>
   );

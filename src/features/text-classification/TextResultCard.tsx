@@ -102,31 +102,31 @@ const MicrocauseCard = ({
       }`}
     >
       <div
-        className="flex justify-between items-start cursor-pointer"
+        className="cursor-pointer"
         onClick={() => hasDetails && setIsOpen(!isOpen)}
       >
-        <div className="flex-1 pr-2">
-          <span className="font-bold text-lg text-indigo-900">
+        <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center gap-2 mb-1.5">
+          <span className="font-bold text-lg text-indigo-900 flex-1 pr-0 md:pr-2">
             {microDesc.name}
           </span>
-          <span className="text-base text-indigo-900/80 leading-relaxed block mt-1">
-            {microDesc.description}
-          </span>
+          <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-2 flex-shrink-0">
+            <span className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-md">
+              {Math.round(mc.similarity * 100)}% sim
+            </span>
+            {hasDetails && (
+              <button className="text-indigo-400 hover:text-indigo-600 transition bg-indigo-50/50 p-1 rounded-full">
+                {isOpen ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
+                )}
+              </button>
+            )}
+          </div>
         </div>
-        <div className="flex flex-col items-end gap-2 flex-shrink-0">
-          <span className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-md">
-            {Math.round(mc.similarity * 100)}% sim
-          </span>
-          {hasDetails && (
-            <button className="text-indigo-400 hover:text-indigo-600 transition bg-indigo-50/50 p-1 rounded-full">
-              {isOpen ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
-            </button>
-          )}
-        </div>
+        <span className="text-base text-indigo-900/80 leading-relaxed block">
+          {microDesc.description}
+        </span>
       </div>
 
       {isOpen && hasDetails && (
@@ -261,7 +261,7 @@ export const TextResultCard = ({
 
   return (
     <div
-      className={`p-5 flex flex-col gap-4 rounded-bl-none border-l-4 border-indigo-500 transition-all ${
+      className={`p-4 md:p-5 flex flex-col gap-3 md:gap-4 rounded-bl-none border-l-4 border-indigo-500 transition-all ${
         isDashboardMode
           ? "bg-white border border-slate-200 shadow-sm"
           : "glass-panel"
@@ -299,15 +299,15 @@ export const TextResultCard = ({
         )}
 
         <div
-          className={`flex justify-between items-start ${result.cleaned_text ? "mt-4" : ""}`}
+          className={`grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 md:gap-y-0.5 ${result.cleaned_text ? "mt-4" : ""}`}
         >
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-indigo-900/70 mb-1">
-              Macrocausa Principal ({result.macro_cause_code})
-            </p>
-            <h3 className="text-xl font-bold text-indigo-900">{macroDesc}</h3>
-          </div>
-          <div className="flex items-center gap-2">
+          <p className="col-start-1 row-start-1 text-sm font-semibold uppercase tracking-wider text-indigo-900/70 self-center md:self-end">
+            Macrocausa Principal ({result.macro_cause_code})
+          </p>
+          <h3 className="col-span-2 md:col-span-1 col-start-1 row-start-2 text-xl font-bold text-indigo-900 leading-tight">
+            {macroDesc}
+          </h3>
+          <div className="col-start-2 row-start-1 md:row-span-2 flex items-center justify-end gap-2 self-center md:self-start md:mt-1">
             <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm">
               <CheckCircle className="w-4 h-4 opacity-75" />
               <span className="font-medium">{confidencePercent}%</span>
