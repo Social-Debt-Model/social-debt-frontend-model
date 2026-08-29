@@ -1,0 +1,11 @@
+Titulo falto adaptativo
+Dashboard numero de issue que tiene ese dataset
+Contador de descartados del dataset que no se ejecutaron por ruido
+Descargar comentarios limpios (Clean comment)
+3 tipos de ruido, nos quedamos suceful(sociotecnico)
+Trazabilidad mas de 7000 de entrada y pasa a mas de 4000
+Distribución de macrocausas, esta mal, porque no debe aparecer H en topk campos principales, se elimina h antes de la integración semantica.
+Indicar, cual es el mejor modelo, metricas.
+Agregar la causa dentro de la microcausa, 5 categorias.
+Resaltar en un color o hacer algo para resaltar las tarjetas que son desplegables y tambien podria hacerse algo para desresaltar o que sean claros lo comentarios que estan descartados.
+Agregar
