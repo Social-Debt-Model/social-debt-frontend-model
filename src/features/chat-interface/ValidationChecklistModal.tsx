@@ -11,12 +11,15 @@ import {
   AlertTriangle,
   UploadCloud,
   Loader2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   ValidationReport,
   VALID_COMMENT_HEADERS,
   VALID_ISSUE_HEADERS,
   VALID_ID_HEADERS,
+  VALID_AUTHOR_HEADERS,
 } from "../file-validation/useFileValidation";
 
 type ValidationModalProps = {
@@ -42,6 +45,7 @@ export const ValidationChecklistModal = ({
     "group" | "individual" | "discard" | undefined
   >();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeSlide, setActiveSlide] = useState(0);
 
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   if (isOpen !== prevIsOpen) {
@@ -106,51 +110,82 @@ export const ValidationChecklistModal = ({
               </div>
             </div>
 
-            <div className="p-4 rounded-xl border bg-slate-50/50 border-slate-200 h-full">
-              <h4 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                <HelpCircle className="w-5 h-5 text-blue-500" /> Campos
-                Opcionales
-              </h4>
-              <div className="flex flex-col gap-6">
-                <div className="flex items-start gap-2">
-                  <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
-                  <div className="flex flex-col gap-3">
-                    <p className="text-base font-semibold text-slate-700">
-                      Identificador de comentario (ID)
-                    </p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {VALID_ID_HEADERS.map((h) => (
-                        <span
-                          key={h}
-                          className="font-mono text-base bg-white text-slate-600 px-2 py-0.5 rounded border border-slate-200 shadow-sm text-center"
-                        >
-                          {h}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="text-base text-slate-500">
-                      (Si no existe, generaremos IDs automáticos)
-                    </p>
-                  </div>
+            <div className="p-4 rounded-xl border bg-slate-50/50 border-slate-200 h-full flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                  <HelpCircle className="w-5 h-5 text-blue-500" /> Opcionales
+                </h4>
+                <div className="flex items-center gap-1 bg-white rounded-lg border border-slate-200 p-0.5 shadow-sm">
+                  <button
+                    onClick={() => setActiveSlide(Math.max(0, activeSlide - 1))}
+                    disabled={activeSlide === 0}
+                    className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed rounded"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-xs font-medium text-slate-500 min-w-[32px] text-center">
+                    {activeSlide + 1}/3
+                  </span>
+                  <button
+                    onClick={() => setActiveSlide(Math.min(2, activeSlide + 1))}
+                    disabled={activeSlide === 2}
+                    className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed rounded"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
-                  <div className="flex flex-col gap-3">
-                    <p className="text-base font-semibold text-slate-700">
-                      Agrupación (Issue / Ticket)
-                    </p>
-                    <p className="text-base text-slate-500">
-                      Usado para agrupar hilos de comentarios.
-                    </p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {VALID_ISSUE_HEADERS.map((h) => (
-                        <span
-                          key={h}
-                          className="font-mono text-base bg-white text-slate-600 px-2 py-0.5 rounded border border-slate-200 shadow-sm text-center"
-                        >
-                          {h}
-                        </span>
-                      ))}
+              </div>
+
+              <div className="relative flex-1 overflow-hidden min-h-[160px]">
+                <div 
+                  className="flex transition-transform duration-300 ease-in-out h-full"
+                  style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+                >
+                  {/* Slide 1: Autor */}
+                  <div className="w-full shrink-0 px-1">
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="flex flex-col gap-3 w-full">
+                        <p className="text-base font-semibold text-slate-700">Autor</p>
+                        <p className="text-sm text-slate-500">Mantiene trazabilidad original.</p>
+                        <div className="grid grid-cols-2 gap-2 mt-1">
+                          {VALID_AUTHOR_HEADERS.map((h) => (
+                            <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Slide 2: ID */}
+                  <div className="w-full shrink-0 px-1">
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="flex flex-col gap-3 w-full">
+                        <p className="text-base font-semibold text-slate-700">ID Comentario</p>
+                        <p className="text-sm text-slate-500">Si no existe, se generará.</p>
+                        <div className="grid grid-cols-2 gap-2 mt-1">
+                          {VALID_ID_HEADERS.map((h) => (
+                            <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Slide 3: Issue */}
+                  <div className="w-full shrink-0 px-1">
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
+                      <div className="flex flex-col gap-3 w-full">
+                        <p className="text-base font-semibold text-slate-700">Issue / Ticket</p>
+                        <p className="text-sm text-slate-500">Agrupa los comentarios.</p>
+                        <div className="grid grid-cols-2 gap-2 mt-1">
+                          {VALID_ISSUE_HEADERS.map((h) => (
+                            <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -237,11 +272,18 @@ export const ValidationChecklistModal = ({
         </p>
 
         <div className="space-y-3">
-          <h4 className="text-base font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-            <Columns className="w-4 h-4" /> Resumen de Columnas
-          </h4>
+          <div className="flex items-center justify-between">
+            <h4 className="text-base font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+              <Columns className="w-4 h-4" /> Resumen de Columnas
+            </h4>
+            {report.totalRows !== undefined && (
+              <span className="text-sm font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                {report.totalRows.toLocaleString()} registros cargados
+              </span>
+            )}
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <div
               className={`p-3 rounded-xl border flex flex-col gap-2 ${report.hasCommentColumn ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
             >
@@ -362,6 +404,43 @@ export const ValidationChecklistModal = ({
                   <div className="inline-flex items-center gap-1 text-slate-600 bg-white border border-slate-200 px-2 py-1 rounded-md shadow-sm text-base w-full">
                     <AlertTriangle className="w-4 h-4 text-orange-500 shrink-0" />
                     <span className="truncate">Falta la columna</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div
+              className={`p-3 rounded-xl border flex flex-col gap-2 ${report.hasAuthorColumn ? "bg-emerald-50/50 border-emerald-200" : "bg-slate-50 border-slate-200"}`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-base font-bold text-slate-800 flex items-center gap-1 group relative">
+                  Autor{" "}
+                  <span className="text-sm font-normal text-slate-500">
+                    (Opc)
+                  </span>
+                  <HelpCircle className="w-3 h-3 text-slate-400 cursor-help" />
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 w-48 p-2 bg-slate-800 text-white text-[11px] leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[150] font-normal normal-case pointer-events-none text-center">
+                    Si la columna existe pero está 100% vacía, se descartará automáticamente.
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                  </div>
+                </span>
+                {report.hasAuthorColumn ? (
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                ) : (
+                  <div className="w-4 h-4 rounded-full border-2 border-slate-300" />
+                )}
+              </div>
+              <div className="mt-auto">
+                {report.hasAuthorColumn ? (
+                  <div className="inline-flex items-center gap-1 text-slate-700 bg-white border border-slate-200 px-2 py-1 rounded-md shadow-sm text-base w-full">
+                    <Check className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span className="font-mono font-semibold truncate">
+                      {report.matchedAuthorColumn}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-1 text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded-md shadow-sm text-base w-full">
+                    <span className="truncate">No requerido</span>
                   </div>
                 )}
               </div>

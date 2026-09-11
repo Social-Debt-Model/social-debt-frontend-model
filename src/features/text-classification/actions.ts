@@ -24,6 +24,10 @@ export type ClassifyTextResponse = {
   error?: string;
   issue_number?: number | string;
   comment_id?: number | string;
+  author?: string;
+  raw_text?: string;
+  macro_cause_clean?: string;
+  rule_applied?: string;
 };
 
 export async function classifyText(
@@ -48,7 +52,7 @@ export async function classifyText(
 
     const data = (await res.json()) as ClassifyTextResponse;
     return data;
-  } catch (err: unknown) {
+  } catch {
     return {
       cleaned_text: text,
       is_noise: false,

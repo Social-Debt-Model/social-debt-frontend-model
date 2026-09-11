@@ -28,6 +28,7 @@ export type StartBatchResponse = {
 export type MetricsData = {
   dominant_macrocauses?: [string, number][];
   dominant_microcauses?: [string, number][];
+  dominant_microcause_types?: [string, number][];
   dominant_risks?: [string, number][];
   dominant_community_smells?: [string, number][];
   social_debt_index?: number;
@@ -43,6 +44,7 @@ export type BatchResultData = {
   comments: ClassifyTextResponse[];
   social_debt_metrics?: Record<string, MetricsData>;
   issues_metrics?: Record<string, MetricsData>;
+  exports?: Record<string, string>;
 };
 
 export type BatchStatusResponse = {

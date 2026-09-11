@@ -11,6 +11,8 @@ import { TextResultCard } from "@/features/text-classification/TextResultCard";
 import { BatchProgressCard } from "@/features/batch-classification/BatchProgressCard";
 import { BatchResultData } from "@/features/batch-classification/actions";
 import { BatchDashboard } from "@/features/metrics-dashboard/BatchDashboard";
+import { downloadFinalExcel } from "@/features/metrics-dashboard/AlgorithmAuditTrail";
+
 import { BatchResultSummaryCard } from "@/features/batch-classification/BatchResultSummaryCard";
 import { OpenAILimitsBadge } from "@/features/chat-interface/OpenAILimitsBadge";
 import { HistorySidebar } from "@/features/chat-interface/HistorySidebar";
@@ -45,6 +47,10 @@ export default function Home() {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [focusedJobId, setFocusedJobId] = useState<string | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  const handleDownload = (item: HistoryItem) => {
+    downloadFinalExcel(item.resultData, item.filename);
+  };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -214,6 +220,7 @@ export default function Home() {
           onNewChat={handleNewChat}
           onDelete={handleDeleteHistory}
           onClose={() => setIsMobileSidebarOpen(false)}
+          onDownload={handleDownload}
         />
       }
       headerAction={!focusedItem && <OpenAILimitsBadge />}
@@ -232,7 +239,11 @@ export default function Home() {
       </div>
       {focusedItem ? (
         <div className="w-full h-full pb-0 md:pb-2 fade-in">
-          <BatchDashboard resultData={focusedItem.resultData} />
+          <BatchDashboard 
+            resultData={focusedItem.resultData} 
+            filename={focusedItem.filename}
+            onDownload={() => handleDownload(focusedItem)}
+          />
         </div>
       ) : messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-slate-400">

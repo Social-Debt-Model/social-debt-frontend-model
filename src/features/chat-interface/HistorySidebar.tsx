@@ -1,6 +1,6 @@
 import React from "react";
 import { HistoryItem } from "@/lib/historyDB";
-import { FileText, MessageSquarePlus, Trash2, Clock, X } from "lucide-react";
+import { FileText, MessageSquarePlus, Trash2, Clock, X, Download } from "lucide-react";
 
 type HistorySidebarProps = {
   items: HistoryItem[];
@@ -9,6 +9,7 @@ type HistorySidebarProps = {
   onNewChat: () => void;
   onDelete: (jobId: string) => void;
   onClose?: () => void;
+  onDownload?: (item: HistoryItem) => void;
 };
 
 export const HistorySidebar = ({
@@ -18,6 +19,7 @@ export const HistorySidebar = ({
   onNewChat,
   onDelete,
   onClose,
+  onDownload,
 }: HistorySidebarProps) => {
   return (
     <div className="w-80 md:w-96 h-full bg-white/95 md:bg-white/30 backdrop-blur-xl border border-white/40 shadow-lg rounded-3xl text-slate-700 flex flex-col flex-shrink-0 overflow-hidden">
@@ -88,16 +90,28 @@ export const HistorySidebar = ({
                   </div>
                 </div>
 
-                <button
-                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all flex-shrink-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(item.jobId);
-                  }}
-                  title="Eliminar análisis"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
+                <div className="flex gap-0.5 flex-shrink-0">
+                  <button
+                    className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if(onDownload) onDownload(item);
+                    }}
+                    title="Descargar resultados"
+                  >
+                    <Download className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(item.jobId);
+                    }}
+                    title="Eliminar análisis"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
             );
           })

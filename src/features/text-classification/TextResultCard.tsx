@@ -41,6 +41,9 @@ const MicrocauseCard = ({
     getStrategyDetails,
     getEffectDetails,
     getGenericDetails,
+    getRiskDetails,
+    getIndicatorDetails,
+    getMetricDetails,
   } = useOntology();
   const microDesc = getMicroCauseDetails(mc.ontology_id);
 
@@ -62,7 +65,7 @@ const MicrocauseCard = ({
   ) => {
     if (!items || items.length === 0) return null;
     return (
-      <div className="mb-4 last:mb-0">
+      <div className="break-inside-avoid mb-6 last:mb-0 inline-block w-full">
         <h4
           className={`text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5 ${colorClass}`}
         >
@@ -114,11 +117,17 @@ const MicrocauseCard = ({
               {Math.round(mc.similarity * 100)}% sim
             </span>
             {hasDetails && (
-              <button className="text-indigo-400 hover:text-indigo-600 transition bg-indigo-50/50 p-1 rounded-full">
+              <button className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 transition px-2 py-0.5 rounded-md flex items-center gap-1 whitespace-nowrap">
                 {isOpen ? (
-                  <ChevronUp className="w-4 h-4" />
+                  <>
+                    <ChevronUp className="w-3.5 h-3.5" />
+                    Ocultar detalles
+                  </>
                 ) : (
-                  <ChevronDown className="w-4 h-4" />
+                  <>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                    Ver detalles
+                  </>
                 )}
               </button>
             )}
@@ -130,7 +139,7 @@ const MicrocauseCard = ({
       </div>
 
       {isOpen && hasDetails && (
-        <div className="mt-4 pt-4 border-t border-indigo-100/50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="mt-4 pt-4 border-t border-indigo-100/50 animate-in fade-in slide-in-from-top-2 duration-200 columns-1 md:columns-2 gap-6">
           {renderList(
             "Community Smells",
             mc.community_smells,
@@ -141,7 +150,7 @@ const MicrocauseCard = ({
           {renderList(
             "Riesgos",
             mc.risks,
-            getGenericDetails,
+            getRiskDetails,
             Shield,
             "text-red-500",
           )}
@@ -169,14 +178,14 @@ const MicrocauseCard = ({
           {renderList(
             "Indicadores",
             mc.indicators,
-            getGenericDetails,
+            getIndicatorDetails,
             Activity,
             "text-indigo-500",
           )}
           {renderList(
             "Métricas",
             mc.metrics,
-            getGenericDetails,
+            getMetricDetails,
             TrendingUp,
             "text-slate-600",
           )}
@@ -313,11 +322,17 @@ export const TextResultCard = ({
               <span className="font-medium">{confidencePercent}%</span>
             </div>
             {hasMicrocauses && (
-              <button className="text-indigo-400 group-hover:text-indigo-600 transition bg-indigo-50/50 p-1.5 rounded-full ml-1">
+              <button className="flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-1">
                 {isCardOpen ? (
-                  <ChevronUp className="w-5 h-5" />
+                  <>
+                    <ChevronUp className="w-4 h-4" />
+                    Ocultar detalles
+                  </>
                 ) : (
-                  <ChevronDown className="w-5 h-5" />
+                  <>
+                    <ChevronDown className="w-4 h-4" />
+                    Ver detalles
+                  </>
                 )}
               </button>
             )}

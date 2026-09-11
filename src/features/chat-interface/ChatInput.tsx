@@ -84,6 +84,12 @@ export const ChatInput = ({
         const originalIssueCol = validResult.issueColumnName;
         const originalIdCol = validReport.matchedIdColumn;
         const originalCommentCol = validReport.matchedCommentColumn!;
+        const originalAuthorCol = validReport.matchedAuthorColumn;
+        
+        let hasValidAuthorData = false;
+        if (originalAuthorCol) {
+            hasValidAuthorData = finalData.some(row => row[originalAuthorCol] && String(row[originalAuthorCol]).trim() !== "");
+        }
 
         const tempIssueCol = originalIssueCol || "issue_number";
 
@@ -108,11 +114,15 @@ export const ChatInput = ({
         }
 
         const mappedData = finalData.map((row) => {
-          return {
+          const mappedRow: Record<string, unknown> = {
             comment_id: row[originalIdCol || "comment_id"],
             comment: row[originalCommentCol],
             issue_number: row[tempIssueCol] || "",
           };
+          if (hasValidAuthorData && originalAuthorCol) {
+            mappedRow.author = row[originalAuthorCol];
+          }
+          return mappedRow;
         });
 
         if (mappedData.length === 0) {

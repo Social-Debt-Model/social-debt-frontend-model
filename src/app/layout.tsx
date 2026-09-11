@@ -5,7 +5,7 @@ import "./globals.css";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Social Debt Model",
+  title: "Social Debt Adaptive Model",
   description: "Detect and classify communication breakdowns",
 };
 

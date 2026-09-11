@@ -125,19 +125,92 @@ El Frontend debe consultar este endpoint cada 2-3 segundos para actualizar la ba
   "status": "completed",
   "progress": "100 de 100 comentarios procesados (100%)",
   "result": {
-    "comments": [ ... ],
+    "comments": [
+      {
+        "issue_number": 136207,
+        "comment_id": 98453,
+        "author": "dev-juan",
+        "raw_text": "> This is a quote\nI agree.",
+        "cleaned_text": "I agree.",
+        "is_noise": false,
+        "noise_level": "operational_noise",
+        "macro_cause_code": "C",
+        "macro_cause_clean": "CongruenceCause",
+        "rule_applied": "The text shows misalignment...",
+        "confidence": 0.89,
+        "microcauses": [
+          {
+            "cause_name": "Technical complexity due to dependencies",
+            "similarity": 0.95,
+            "cause_type": ["CongruenceCause"],
+            "risks": ["RSK-013_TechnicalMaintenanceRisk"],
+            "community_smells": ["Socio-Technical Congruence Gap"],
+            "preventive_strategies": ["Define modular architecture"],
+            "corrective_strategies": ["Refactor monolith"],
+            "effects": ["Delayed feature release"],
+            "indicators": ["IND-005"],
+            "metrics": ["MTR-010"]
+          }
+        ]
+      }
+    ],
     "issues_metrics": {
-      "135664": {
-        "social_debt_index": 0.8542,
-        "social_debt_level": "High Social Debt",
-        "comment_count": 32,
-        "macro_diversity": 5,
-        "micro_diversity": 3
+      "136207": {
+        "social_debt_index": 0.645833,
+        "social_debt_level": "Medium Social Debt",
+        "comment_count": 15,
+        "clean_comment_count": 11,
+        "macro_diversity": 3,
+        "micro_diversity": 5,
+        "smell_diversity": 5,
+        "risk_diversity": 5,
+        "top_macro_frequency": 9,
+        "top_micro_score": 4.4350675,
+        "top_smell_frequency": 18,
+        "top_risk_frequency": 9,
+        "dominant_macrocauses": [
+          ["C", 9],
+          ["A", 1]
+        ],
+        "dominant_microcauses": [
+          ["Technical complexity due to dependencies", 4.4350675]
+        ],
+        "dominant_microcause_types": [["CongruenceCause", 27]],
+        "dominant_community_smells": [["Socio-Technical Congruence Gap", 18]],
+        "dominant_risks": [["RSK-013_TechnicalMaintenanceRisk", 9]]
       }
     }
   }
 }
 ```
+
+> [!TIP]
+> **Generación de Excels (Frontend-Side)**
+> Para optimizar el uso de CPU y el ancho de banda, la API **ya no retorna archivos Excel en Base64**. El objeto JSON maestro (`comments` e `issues_metrics`) es la única fuente de verdad.
+> El Frontend debe utilizar este JSON, cruzarlo con su copia local de la ontología (`data/frontend_ontology_dictionary.json`), y usar una librería como `xlsx` (SheetJS) para iterar y construir los archivos `.xlsx` de los 5 pasos localmente en el navegador del cliente al momento de descargar.
+
+#### 5. Cancelar un Trabajo (Batch Cancel)
+
+`POST /classify/batch/cancel`
+Si enviaste un lote gigantesco por error y quieres abortarlo para no agotar tu cuota de OpenAI, puedes cancelarlo.
+
+- **Body:**
+
+```json
+{
+  "job_id": "A1B2C3"
+}
+```
+
+- **Respuesta Exitosa:**
+
+```json
+{
+  "message": "Job cancelled successfully"
+}
+```
+
+El trabajo cambiará su estado a `cancelled` y detendrá instantáneamente las llamadas a la API de OpenAI en segundo plano.
 
 ---
 

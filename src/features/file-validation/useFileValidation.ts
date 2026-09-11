@@ -18,11 +18,14 @@ export const VALID_ISSUE_HEADERS = [
   "issue_id",
 ];
 export const VALID_ID_HEADERS = ["comment_id", "id", "uuid", "message_id"];
+export const VALID_AUTHOR_HEADERS = ["author", "user", "creator", "usuario", "creador", "autor", "username", "nombre", "comment_author", "author_name", "author_login", "user_id"];
 
 export type ValidationReport = {
   detectedColumns: string[];
   hasCommentColumn: boolean;
   matchedCommentColumn?: string;
+  matchedAuthorColumn?: string;
+  hasAuthorColumn?: boolean;
   hasIssueColumn: boolean;
   matchedIssueColumn?: string;
   hasIdColumn: boolean;
@@ -54,6 +57,11 @@ export const useFileValidation = () => {
       VALID_ISSUE_HEADERS.includes(h.toLowerCase().trim()),
     );
 
+
+    const matchedAuthorColumn = headers.find((h) =>
+      VALID_AUTHOR_HEADERS.includes(h.toLowerCase().trim()),
+    );
+
     const matchedIdColumn = headers.find((h) =>
       VALID_ID_HEADERS.includes(h.toLowerCase().trim()),
     );
@@ -64,6 +72,8 @@ export const useFileValidation = () => {
       matchedCommentColumn,
       hasIssueColumn: !!matchedIssueColumn,
       matchedIssueColumn,
+      hasAuthorColumn: !!matchedAuthorColumn,
+      matchedAuthorColumn,
       hasIdColumn: !!matchedIdColumn,
       matchedIdColumn,
       isValid: !!matchedCommentColumn,

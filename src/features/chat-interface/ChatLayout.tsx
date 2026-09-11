@@ -53,7 +53,7 @@ export const ChatLayout = ({
           </div>
 
           <h1 className="text-md md:text-xl font-black tracking-widest uppercase text-slate-700 text-center flex-1 mx-3 md:mx-0 truncate">
-            Social Debt Model
+            Social Debt Adaptive Model
           </h1>
 
           <div className="flex-shrink-0 w-[40px] flex justify-end md:hidden">
