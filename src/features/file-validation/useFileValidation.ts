@@ -183,7 +183,7 @@ export const useFileValidation = () => {
 
             const jsonData = XLSX.utils.sheet_to_json(worksheet, {
               defval: "",
-              raw: false,
+              raw: true,
             }) as Record<string, unknown>[];
             let hasOrphans = false;
             let missingIssueCount = 0;
