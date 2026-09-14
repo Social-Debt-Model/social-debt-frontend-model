@@ -19,7 +19,6 @@ import {
   VALID_COMMENT_HEADERS,
   VALID_ISSUE_HEADERS,
   VALID_ID_HEADERS,
-  VALID_AUTHOR_HEADERS,
 } from "../file-validation/useFileValidation";
 
 type ValidationModalProps = {
@@ -124,11 +123,11 @@ export const ValidationChecklistModal = ({
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <span className="text-xs font-medium text-slate-500 min-w-[32px] text-center">
-                    {activeSlide + 1}/3
+                    {activeSlide + 1}/2
                   </span>
                   <button
-                    onClick={() => setActiveSlide(Math.min(2, activeSlide + 1))}
-                    disabled={activeSlide === 2}
+                    onClick={() => setActiveSlide(Math.min(1, activeSlide + 1))}
+                    disabled={activeSlide === 1}
                     className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed rounded"
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -141,23 +140,7 @@ export const ValidationChecklistModal = ({
                   className="flex transition-transform duration-300 ease-in-out h-full"
                   style={{ transform: `translateX(-${activeSlide * 100}%)` }}
                 >
-                  {/* Slide 1: Autor */}
-                  <div className="w-full shrink-0 px-1">
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
-                      <div className="flex flex-col gap-3 w-full">
-                        <p className="text-base font-semibold text-slate-700">Autor</p>
-                        <p className="text-sm text-slate-500">Mantiene trazabilidad original.</p>
-                        <div className="grid grid-cols-2 gap-2 mt-1">
-                          {VALID_AUTHOR_HEADERS.map((h) => (
-                            <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Slide 2: ID */}
+                  {/* Slide 1: ID */}
                   <div className="w-full shrink-0 px-1">
                     <div className="flex items-start gap-2">
                       <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
@@ -283,7 +266,7 @@ export const ValidationChecklistModal = ({
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <div
               className={`p-3 rounded-xl border flex flex-col gap-2 ${report.hasCommentColumn ? "bg-emerald-50/50 border-emerald-200" : "bg-red-50/50 border-red-200"}`}
             >
@@ -409,43 +392,7 @@ export const ValidationChecklistModal = ({
               </div>
             </div>
 
-            <div
-              className={`p-3 rounded-xl border flex flex-col gap-2 ${report.hasAuthorColumn ? "bg-emerald-50/50 border-emerald-200" : "bg-slate-50 border-slate-200"}`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-base font-bold text-slate-800 flex items-center gap-1 group relative">
-                  Autor{" "}
-                  <span className="text-sm font-normal text-slate-500">
-                    (Opc)
-                  </span>
-                  <HelpCircle className="w-3 h-3 text-slate-400 cursor-help" />
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 w-48 p-2 bg-slate-800 text-white text-[11px] leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[150] font-normal normal-case pointer-events-none text-center">
-                    Si la columna existe pero está 100% vacía, se descartará automáticamente.
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
-                  </div>
-                </span>
-                {report.hasAuthorColumn ? (
-                  <CheckCircle className="w-4 h-4 text-emerald-500" />
-                ) : (
-                  <div className="w-4 h-4 rounded-full border-2 border-slate-300" />
-                )}
-              </div>
-              <div className="mt-auto">
-                {report.hasAuthorColumn ? (
-                  <div className="inline-flex items-center gap-1 text-slate-700 bg-white border border-slate-200 px-2 py-1 rounded-md shadow-sm text-base w-full">
-                    <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                    <span className="font-mono font-semibold truncate">
-                      {report.matchedAuthorColumn}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="inline-flex items-center gap-1 text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded-md shadow-sm text-base w-full">
-                    <span className="truncate">No requerido</span>
-                  </div>
-                )}
-              </div>
             </div>
-          </div>
         </div>
 
         {report.isValid && hasOrphans && (

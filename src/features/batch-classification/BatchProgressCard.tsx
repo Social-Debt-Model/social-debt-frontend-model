@@ -94,6 +94,9 @@ export const BatchProgressCard = ({
 
         const formData = new FormData();
         formData.append("file", file);
+        if ((file as File & { _instructions?: Record<string, unknown> })._instructions) {
+          formData.append("instructions", JSON.stringify((file as File & { _instructions?: Record<string, unknown> })._instructions));
+        }
 
         const uploadRes = await startBatchJob(formData);
         if (isCancelledRef.current) return;

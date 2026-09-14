@@ -32,7 +32,7 @@ export const ChatInput = ({
   const [isProcessingFile, setIsProcessingFile] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { processFile, regenerateCsvFile, error, setError, clearError } =
+  const { processFile,  error,  clearError } =
     useFileValidation();
 
   const handleAttachmentClick = () => {
@@ -79,62 +79,23 @@ export const ChatInput = ({
     setTimeout(() => {
       try {
         const start = Date.now();
-        let finalData = [...validResult.parsedData!];
-
-        const originalIssueCol = validResult.issueColumnName;
-        const originalIdCol = validReport.matchedIdColumn;
-        const originalCommentCol = validReport.matchedCommentColumn!;
-        const originalAuthorCol = validReport.matchedAuthorColumn;
         
-        let hasValidAuthorData = false;
-        if (originalAuthorCol) {
-            hasValidAuthorData = finalData.some(row => row[originalAuthorCol] && String(row[originalAuthorCol]).trim() !== "");
-        }
-
-        const tempIssueCol = originalIssueCol || "issue_number";
-
-        if (validResult.hasOrphans && decision && decision !== "individual") {
-          if (decision === "group") {
-            finalData = finalData.map((row) => {
-              const newRow = { ...row };
-              if (
-                !newRow[tempIssueCol] ||
-                String(newRow[tempIssueCol]).trim() === ""
-              ) {
-                newRow[tempIssueCol] = "UNGROUPED-COMMENTS";
-              }
-              return newRow;
-            });
-          } else if (decision === "discard") {
-            finalData = finalData.filter(
-              (row) =>
-                row[tempIssueCol] && String(row[tempIssueCol]).trim() !== "",
-            );
+        const instructions = {
+          orphan_decision: decision || "individual",
+          mapping: {
+            comment_col: validReport.matchedCommentColumn,
+            issue_col: validReport.matchedIssueColumn,
+            id_col: validReport.matchedIdColumn
           }
-        }
+        };
+        
+        // Attach instructions as a new property on the file object temporarily 
+        // so we can access it in the parent component
+        const fileToUpload = validResult.file! as File & { _instructions?: Record<string, unknown> };
+        fileToUpload._instructions = instructions;
 
-        const mappedData = finalData.map((row) => {
-          const mappedRow: Record<string, unknown> = {
-            comment_id: row[originalIdCol || "comment_id"],
-            comment: row[originalCommentCol],
-            issue_number: row[tempIssueCol] || "",
-          };
-          if (hasValidAuthorData && originalAuthorCol) {
-            mappedRow.author = row[originalAuthorCol];
-          }
-          return mappedRow;
-        });
+        setSelectedFile(fileToUpload);
 
-        if (mappedData.length === 0) {
-          setError(
-            "Al descartar los comentarios huérfanos, el archivo quedó completamente vacío. Por favor, sube otro archivo o escoge agruparlos.",
-          );
-          setPendingFileResult(null);
-          return;
-        }
-
-        const newFile = regenerateCsvFile(mappedData, validResult.file!.name);
-        setSelectedFile(newFile);
         setPendingFileResult(null);
 
         const finishProcessing = () => {

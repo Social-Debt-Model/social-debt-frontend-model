@@ -18,7 +18,6 @@ export const VALID_ISSUE_HEADERS = [
   "issue_id",
 ];
 export const VALID_ID_HEADERS = ["comment_id", "id", "uuid", "message_id"];
-export const VALID_AUTHOR_HEADERS = ["author", "user", "creator", "usuario", "creador", "autor", "username", "nombre", "comment_author", "author_name", "author_login", "user_id"];
 
 export type ValidationReport = {
   detectedColumns: string[];
@@ -56,12 +55,6 @@ export const useFileValidation = () => {
     const matchedIssueColumn = headers.find((h) =>
       VALID_ISSUE_HEADERS.includes(h.toLowerCase().trim()),
     );
-
-
-    const matchedAuthorColumn = headers.find((h) =>
-      VALID_AUTHOR_HEADERS.includes(h.toLowerCase().trim()),
-    );
-
     const matchedIdColumn = headers.find((h) =>
       VALID_ID_HEADERS.includes(h.toLowerCase().trim()),
     );
@@ -72,8 +65,6 @@ export const useFileValidation = () => {
       matchedCommentColumn,
       hasIssueColumn: !!matchedIssueColumn,
       matchedIssueColumn,
-      hasAuthorColumn: !!matchedAuthorColumn,
-      matchedAuthorColumn,
       hasIdColumn: !!matchedIdColumn,
       matchedIdColumn,
       isValid: !!matchedCommentColumn,
@@ -136,24 +127,11 @@ export const useFileValidation = () => {
             report.missingIssueCount = missingIssueCount;
             report.missingIdCount = missingIdCount;
 
-            const finalData = data.map((row, idx) => {
-              const newRow = { ...row };
-              if (!report.matchedIdColumn) {
-                newRow.comment_id = `auto-id-${idx + 1}`;
-              } else if (
-                !newRow[report.matchedIdColumn] ||
-                String(newRow[report.matchedIdColumn]).trim() === ""
-              ) {
-                newRow[report.matchedIdColumn] = `auto-id-${idx + 1}`;
-              }
-              return newRow;
-            });
-
             resolve({
               valid: true,
               file,
               hasOrphans,
-              parsedData: finalData,
+              parsedData: data,
               issueColumnName: report.matchedIssueColumn,
               report,
             });
@@ -221,24 +199,11 @@ export const useFileValidation = () => {
             report.missingIssueCount = missingIssueCount;
             report.missingIdCount = missingIdCount;
 
-            const finalData = jsonData.map((row, idx) => {
-              const newRow = { ...row };
-              if (!report.matchedIdColumn) {
-                newRow.comment_id = `auto-id-${idx + 1}`;
-              } else if (
-                !newRow[report.matchedIdColumn] ||
-                String(newRow[report.matchedIdColumn]).trim() === ""
-              ) {
-                newRow[report.matchedIdColumn] = `auto-id-${idx + 1}`;
-              }
-              return newRow;
-            });
-
             resolve({
               valid: true,
               file,
               hasOrphans,
-              parsedData: finalData,
+              parsedData: jsonData,
               issueColumnName: report.matchedIssueColumn,
               report,
             });
@@ -257,27 +222,8 @@ export const useFileValidation = () => {
     });
   };
 
-  const regenerateCsvFile = (
-    data: Record<string, unknown>[],
-    originalFileName: string,
-  ): File => {
-    const keys = new Set<string>();
-    data.forEach((row) => {
-      Object.keys(row).forEach((key) => keys.add(key));
-    });
-
-    const csv = Papa.unparse(data, {
-      columns: Array.from(keys),
-    });
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const newName =
-      originalFileName.replace(/\.(xlsx|xls|csv)$/i, "") + "_prc.csv";
-    return new File([blob], newName, { type: "text/csv" });
-  };
-
   return {
     processFile,
-    regenerateCsvFile,
     error,
     setError,
     clearError: () => setError(null),
