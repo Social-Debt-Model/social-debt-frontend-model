@@ -8,8 +8,7 @@ export const VALID_COMMENT_HEADERS = [
   "body",
   "text",
   "content",
-  "description",
-  "comentario",
+    "comentario",
 ];
 export const VALID_ISSUE_HEADERS = [
   "issue_number",
@@ -215,7 +214,7 @@ export const useFileValidation = () => {
         reader.readAsArrayBuffer(file);
       } else {
         setError(
-          "Formato de archivo no soportado. Sube un CSV o Excel (.xlsx, .xls).",
+          "Formato de archivo no soportado. Cargue un archivo CSV o Excel (.xlsx, .xls).",
         );
         resolve({ valid: false });
       }

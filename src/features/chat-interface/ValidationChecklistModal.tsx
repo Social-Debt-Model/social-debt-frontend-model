@@ -44,7 +44,7 @@ export const ValidationChecklistModal = ({
     "group" | "individual" | "discard" | undefined
   >();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeSlide, setActiveSlide] = useState(0);
+  
 
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   if (isOpen !== prevIsOpen) {
@@ -75,8 +75,8 @@ export const ValidationChecklistModal = ({
           </div>
 
           <p className="text-lg text-slate-600 mb-6">
-            Antes de subir tu dataset, asegúrate de que contenga las siguientes
-            columnas para que podamos procesarlo correctamente.
+            Antes de subir el dataset, asegúrese que contenga las siguientes
+            columnas para poder procesarlo correctamente.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -110,65 +110,36 @@ export const ValidationChecklistModal = ({
             </div>
 
             <div className="p-4 rounded-xl border bg-slate-50/50 border-slate-200 h-full flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                  <HelpCircle className="w-5 h-5 text-blue-500" /> Opcionales
-                </h4>
-                <div className="flex items-center gap-1 bg-white rounded-lg border border-slate-200 p-0.5 shadow-sm">
-                  <button
-                    onClick={() => setActiveSlide(Math.max(0, activeSlide - 1))}
-                    disabled={activeSlide === 0}
-                    className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed rounded"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <span className="text-xs font-medium text-slate-500 min-w-[32px] text-center">
-                    {activeSlide + 1}/2
-                  </span>
-                  <button
-                    onClick={() => setActiveSlide(Math.min(1, activeSlide + 1))}
-                    disabled={activeSlide === 1}
-                    className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed rounded"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="relative flex-1 overflow-hidden min-h-[160px]">
-                <div 
-                  className="flex transition-transform duration-300 ease-in-out h-full"
-                  style={{ transform: `translateX(-${activeSlide * 100}%)` }}
-                >
-                  {/* Slide 1: ID */}
-                  <div className="w-full shrink-0 px-1">
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
-                      <div className="flex flex-col gap-3 w-full">
-                        <p className="text-base font-semibold text-slate-700">ID Comentario</p>
-                        <p className="text-sm text-slate-500">Si no existe, se generará.</p>
-                        <div className="grid grid-cols-2 gap-2 mt-1">
-                          {VALID_ID_HEADERS.map((h) => (
-                            <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
-                          ))}
-                        </div>
-                      </div>
+              <h4 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-6">
+                <HelpCircle className="w-5 h-5 text-blue-500" /> Opcionales
+              </h4>
+              <div className="flex flex-col gap-5 flex-1">
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
+                  <div className="flex flex-col gap-2 w-full">
+                    <div>
+                      <p className="text-base font-semibold text-slate-700">ID Comentario</p>
+                      <p className="text-sm text-slate-500 leading-tight mt-0.5">Si no existe, se generará.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {VALID_ID_HEADERS.map((h) => (
+                        <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
+                      ))}
                     </div>
                   </div>
+                </div>
 
-                  {/* Slide 3: Issue */}
-                  <div className="w-full shrink-0 px-1">
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
-                      <div className="flex flex-col gap-3 w-full">
-                        <p className="text-base font-semibold text-slate-700">Issue / Ticket</p>
-                        <p className="text-sm text-slate-500">Agrupa los comentarios.</p>
-                        <div className="grid grid-cols-2 gap-2 mt-1">
-                          {VALID_ISSUE_HEADERS.map((h) => (
-                            <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
-                          ))}
-                        </div>
-                      </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
+                  <div className="flex flex-col gap-2 w-full">
+                    <div>
+                      <p className="text-base font-semibold text-slate-700">Issue / Ticket</p>
+                      <p className="text-sm text-slate-500 leading-tight mt-0.5">Agrupa los comentarios.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {VALID_ISSUE_HEADERS.map((h) => (
+                        <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -200,7 +171,7 @@ export const ValidationChecklistModal = ({
               <>
                 <UploadCloud className="w-8 h-8 text-blue-500 mb-3" />
                 <span className="text-base font-semibold text-blue-900">
-                  Haz clic o arrastra tu archivo aquí
+                  Haga clic o arrastre el archivo aquí
                 </span>
                 <span className="text-sm text-blue-600/70 mt-1">
                   Soporta formatos .CSV y .XLSX
@@ -250,8 +221,8 @@ export const ValidationChecklistModal = ({
 
         <p className="text-base text-slate-600 mb-4">
           {report.isValid
-            ? "Las columnas de tu archivo cumplen con la estructura necesaria para procesar los datos."
-            : "Faltan columnas requeridas. Por favor, corrige tu archivo y vuelve a subirlo."}
+            ? "Las columnas del archivo cumplen con la estructura necesaria para procesar los datos."
+            : "Faltan columnas requeridas. Por favor, corrija el archivo y vuelva a subirlo."}
         </p>
 
         <div className="space-y-3">
@@ -364,7 +335,7 @@ export const ValidationChecklistModal = ({
                     </span>
                     <div className="absolute bottom-full right-0 mb-2 w-56 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-left">
                       {report.hasIssueColumn
-                        ? `Falta el número de Issue en ${report.missingIssueCount} de los ${report.totalRows} comentarios existentes. Deberás decidir qué hacer con ellos más abajo.`
+                        ? `Falta el número de Issue en ${report.missingIssueCount} de los ${report.totalRows} comentarios existentes. Se deberá decidir qué hacer con ellos más abajo.`
                         : `Falta el número de Issue en los ${report.totalRows} comentarios existentes. Deberás decidir qué hacer con ellos más abajo.`}
                       <div className="absolute top-full right-4 border-4 border-transparent border-t-slate-800"></div>
                     </div>

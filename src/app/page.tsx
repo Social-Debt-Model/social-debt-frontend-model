@@ -23,6 +23,7 @@ import {
   deleteHistoryItem,
   HistoryItem,
   getPendingJobs,
+  getHistoryItem,
 } from "@/lib/historyDB";
 
 type Message = {
@@ -173,10 +174,32 @@ export default function Home() {
     await saveHistoryItem(historyItem);
 
     await loadHistory();
-    setFocusedJobId(jobId);
+
+    // SOLUCIÓN AL BUG:
+    // Solo forzar el salto al dashboard si el usuario está en el chat (focusedJobId es null).
+    // Si el usuario está viendo el dashboard de otro archivo, usamos una función de callback del setter
+    // para verificar el estado actual y no interrumpir su vista.
+    setFocusedJobId((currentFocused) => {
+      if (currentFocused === null) {
+        return jobId;
+      }
+      return currentFocused;
+    });
   };
 
   const handleDeleteHistory = async (jobId: string) => {
+    try {
+      // Usar directamente IndexedDB para evitar bugs por variables de estado cacheadas (closures)
+      const itemToDelete = await getHistoryItem(jobId);
+      if (itemToDelete && itemToDelete.filename && typeof window !== "undefined") {
+        const storageKey = itemToDelete.jobId || itemToDelete.filename;
+        sessionStorage.removeItem(`batchDashboard_selectedIssue_${storageKey}`);
+        sessionStorage.removeItem(`batchDashboard_activeTab_${storageKey}`);
+      }
+    } catch(err) {
+      console.error("Error clearing session storage on delete", err);
+    }
+
     await deleteHistoryItem(jobId);
     if (focusedJobId === jobId) {
       setFocusedJobId(null);
@@ -239,9 +262,10 @@ export default function Home() {
       </div>
       {focusedItem ? (
         <div className="w-full h-full pb-0 md:pb-2 fade-in">
-          <BatchDashboard 
-            resultData={focusedItem.resultData} 
+          <BatchDashboard
+            resultData={focusedItem.resultData}
             filename={focusedItem.filename}
+            jobId={focusedItem.jobId}
             onDownload={() => handleDownload(focusedItem)}
           />
         </div>

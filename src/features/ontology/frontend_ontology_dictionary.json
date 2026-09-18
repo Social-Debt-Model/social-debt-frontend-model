@@ -304,7 +304,7 @@
       "name": "Request repository or CI access",
       "description": "Request the permissions, branch access, or CI access needed to unblock work."
     },
-    "STR-I-001_StressManagementWorkshops": {
+    "STR-I-01_StressManagementWorkshops": {
       "name": "Stress Management Workshops",
       "description": "Organize workshops on stress management techniques for individual team members."
     },
@@ -1179,6 +1179,74 @@
     "RSK-006_Technical_Inconsistency_Risk": {
       "name": "RSK-006_Technical_Inconsistency_Risk",
       "description": "Risk of introducing inconsistent technical behavior due to unresolved dependencies, incompatible components, configuration constraints, or misaligned implementation decisions."
+    }
+  },
+  "community_smells": {
+    "CS-001_PowerDistance": {
+      "name": "Power Distance",
+      "description": "The perceptions, acceptance, and expectations of team members with lower levels of power or responsibility regarding leaders’ behavior, communication practices, decision-making processes, assignment of responsibilities, and distribution of work within the team."
+    },
+    "CS-002_PrimaDonnas": {
+      "name": "Prima Donnas",
+      "description": "Occurs when a community member adopts an egocentric attitude and seeks to become the center of attention, behaving individualistically, showing limited collaboration with other team members, and constantly demanding recognition."
+    },
+    "CS-003_TruckFactor": {
+      "name": "Truck Factor",
+      "description": "The risk faced by a software development community when critical knowledge is concentrated in a single person or a small group of individuals. If a significant number of these members leave the team, serious problems may arise."
+    },
+    "CS-004_MissingLink": {
+      "name": "Missing Link",
+      "description": "Occurs when, despite existing collaboration among members of a software development team, effective communication is lacking. This hinders mutual understanding and may lead to misinterpretation of information."
+    },
+    "CS-005_SharedVillainy": {
+      "name": "Shared Villainy",
+      "description": "Occurs when a member of the software development community possesses knowledge or has access to important information and deliberately withholds it, preventing other community members from accessing it."
+    },
+    "CS-006_KnowledgeSilos": {
+      "name": "Knowledge Silos",
+      "description": "Occurs when technical knowledge, expertise, and project information are isolated within specific individuals or subgroups, preventing the wider team from accessing crucial details and creating collaboration bottlenecks."
+    },
+    "CS-007_OrganizationalSilence": {
+      "name": "Organizational Silence",
+      "description": "Refers to situations where team members withhold their opinions, concerns, or feedback about project issues or technical decisions due to fear of negative repercussions or a lack of psychological safety."
+    },
+    "CS-008_OrganizationalSilo": {
+      "name": "Organizational Silo",
+      "description": "Arises when different teams, departments, or subgroups within a project work in isolation, failing to share information, goals, or processes, which hinders cross-functional alignment."
+    },
+    "CS-009_SocioTechnicalCongruenceGap": {
+      "name": "Socio-Technical Congruence Gap",
+      "description": "Occurs when the communication and coordination structures of the development team do not align with the technical dependencies of the software architecture they are building, leading to integration issues."
+    },
+    "CS-010_SolutionDefiance": {
+      "name": "Solution Defiance",
+      "description": "Situations in which a team member insists on using their own solution, displaying an inflexible attitude and resistance to considering alternatives proposed by others."
+    },
+    "CS-011_NotApplicable": {
+      "name": "Not applicable",
+      "description": "Indicates that no specific community smell could be identified or that the concept does not apply to the current context or discussion."
+    }
+  },
+  "microcause_types": {
+    "AdministrativeCause": {
+      "name": "Administrative Cause",
+      "description": "Causas vinculadas a procesos administrativos, políticas, flujos de revisión, soporte y herramientas organizacionales."
+    },
+    "CongruenceCause": {
+      "name": "Congruence Cause",
+      "description": "Causas relacionadas con la congruencia socio-técnica, silos de conocimiento, complejidad técnica de dependencias y restricciones del sistema."
+    },
+    "CollaborationCause": {
+      "name": "Collaboration Cause",
+      "description": "Causas sobre dinámicas de trabajo en equipo, confianza, apoyo entre pares y transferencia/socialización del conocimiento."
+    },
+    "CoordinationCause": {
+      "name": "Coordination Cause",
+      "description": "Causas de desalineación en coordinación, toma de decisiones, flujo de información, traspaso de tareas y gestión de liderazgo."
+    },
+    "CommunicationCause": {
+      "name": "Communication Cause",
+      "description": "Causas sobre barreras idiomáticas, retroalimentación tardía, comunicación ambigua o malentendidos."
     }
   }
 }

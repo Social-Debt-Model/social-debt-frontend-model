@@ -6,6 +6,7 @@ import {
   AlertTriangle,
   CheckCircle,
   HelpCircle,
+  Info,
   ChevronDown,
   ChevronUp,
   AlertCircle,
@@ -25,6 +26,7 @@ const MicrocauseCard = ({
   mc: {
     ontology_id: string;
     similarity: number;
+    cause_type?: string;
     risks?: string[];
     community_smells?: string[];
     preventive_strategies?: string[];
@@ -36,15 +38,19 @@ const MicrocauseCard = ({
   isDashboardMode?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  // SOLUCIÓN PUNTO 7: Importar el getter específico para los Community Smells
   const {
     getMicroCauseDetails,
     getStrategyDetails,
+    getMicrocauseTypeDetails,
     getEffectDetails,
-    getGenericDetails,
+    getCommunitySmellDetails,
     getRiskDetails,
     getIndicatorDetails,
     getMetricDetails,
   } = useOntology();
+
   const microDesc = getMicroCauseDetails(mc.ontology_id);
 
   const hasDetails =
@@ -109,12 +115,20 @@ const MicrocauseCard = ({
         onClick={() => hasDetails && setIsOpen(!isOpen)}
       >
         <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center gap-2 mb-1.5">
-          <span className="font-bold text-lg text-indigo-900 flex-1 pr-0 md:pr-2">
-            {microDesc.name}
-          </span>
+          <div className="flex flex-row items-center flex-wrap gap-2 flex-1 pr-0 md:pr-2">
+            <span className="font-bold text-lg text-indigo-900">
+              {microDesc.name}
+            </span>
+            {mc.cause_type && (
+              <span className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-md">
+                {getMicrocauseTypeDetails(mc.cause_type).name}
+              </span>
+            )}
+          </div>
           <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-2 flex-shrink-0">
-            <span className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-md">
-              {Math.round(mc.similarity * 100)}% sim
+            <span className="flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm" title="Nivel de similitud / confianza">
+              <CheckCircle className="w-4 h-4 opacity-75" />
+              {Math.round(mc.similarity * 100)}% sim.
             </span>
             {hasDetails && (
               <button className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 transition px-2 py-0.5 rounded-md flex items-center gap-1 whitespace-nowrap">
@@ -143,7 +157,7 @@ const MicrocauseCard = ({
           {renderList(
             "Community Smells",
             mc.community_smells,
-            getGenericDetails,
+            getCommunitySmellDetails, // <-- SOLUCIÓN PUNTO 7: Usamos el getter de la ontología
             Users,
             "text-purple-600",
           )}
@@ -227,17 +241,17 @@ export const TextResultCard = ({
       >
         {result.cleaned_text && (
           <div
-            className={`p-4 rounded-xl shadow-sm relative border ${
+            className={`p-4 rounded-xl shadow-sm border ${
               isDashboardMode
                 ? "bg-slate-50 border-slate-200"
                 : "bg-white/60 border-slate-200"
             }`}
           >
-            <div className="absolute top-0 left-0 w-1 h-full bg-slate-300 rounded-l-xl" />
+            
             <div className="flex justify-between items-center mb-1">
               {index !== undefined && (
                 <span className="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">
-                  #{index}
+                  Comentario {index}
                 </span>
               )}
               {result.issue_number && (
@@ -252,14 +266,14 @@ export const TextResultCard = ({
           </div>
         )}
 
-        <div className="flex items-center gap-2 text-slate-500">
-          <HelpCircle className="w-5 h-5" />
+        <div className="flex items-center gap-1.5 text-slate-500 relative group cursor-help w-max mt-1">
           <span className="font-semibold text-base">Ruido Operativo</span>
+          <Info className="w-4 h-4" />
+          <div className="absolute bottom-full left-0 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] pointer-events-none font-normal normal-case tracking-normal">
+            Este comentario ha sido clasificado como ruido operativo (Ej. logs de bots o mensajes automáticos) y no representa deuda social genuina.
+            <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+          </div>
         </div>
-        <p className="text-sm text-slate-500">
-          Este comentario ha sido clasificado como ruido operativo (Ej. logs de
-          bots o mensajes automáticos) y no representa deuda social genuina.
-        </p>
       </div>
     );
   }
@@ -274,25 +288,23 @@ export const TextResultCard = ({
         isDashboardMode
           ? "bg-white border border-slate-200 shadow-sm"
           : "glass-panel"
-      }`}
+      } ${hasMicrocauses ? "cursor-pointer hover:bg-slate-50" : ""}`}
+      onClick={() => hasMicrocauses && setIsCardOpen(!isCardOpen)}
     >
-      <div
-        className={hasMicrocauses ? "cursor-pointer group" : ""}
-        onClick={() => hasMicrocauses && setIsCardOpen(!isCardOpen)}
-      >
+      <div>
         {result.cleaned_text && (
           <div
-            className={`p-4 rounded-xl shadow-sm relative border transition-colors ${
+            className={`p-4 rounded-xl shadow-sm border transition-colors ${
               isDashboardMode
-                ? "bg-slate-50 border-slate-200 group-hover:bg-slate-100"
-                : "bg-white/60 border-indigo-100 group-hover:bg-white/80"
+                ? "bg-slate-50 border-slate-200"
+                : "bg-white/60 border-indigo-100"
             }`}
           >
-            <div className="absolute top-0 left-0 w-1 h-full bg-indigo-300 rounded-l-xl" />
+            
             <div className="flex justify-between items-center mb-1">
               {index !== undefined && (
                 <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md">
-                  #{index}
+                  Comentario {index}
                 </span>
               )}
               {result.issue_number && (
@@ -317,9 +329,9 @@ export const TextResultCard = ({
             {macroDesc}
           </h3>
           <div className="col-start-2 row-start-1 md:row-span-2 flex items-center justify-end gap-2 self-center md:self-start md:mt-1">
-            <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm">
+            <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm" title="Nivel de similitud / confianza">
               <CheckCircle className="w-4 h-4 opacity-75" />
-              <span className="font-medium">{confidencePercent}%</span>
+              <span className="font-medium">{confidencePercent}% sim.</span>
             </div>
             {hasMicrocauses && (
               <button className="flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-1">
@@ -341,7 +353,10 @@ export const TextResultCard = ({
       </div>
 
       {isCardOpen && hasMicrocauses && (
-        <div className="mt-2 space-y-3 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div 
+          className="mt-2 space-y-3 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-200 cursor-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
           <p className="text-sm font-semibold uppercase tracking-wider mb-2 text-indigo-900/70">
             Microcausas Encontradas
           </p>

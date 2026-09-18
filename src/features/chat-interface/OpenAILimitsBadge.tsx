@@ -24,6 +24,7 @@ export const OpenAILimitsBadge = () => {
       const res = await checkOpenAILimits();
       if (res?.error) {
         setErrorObj({ isError: true, code: res.code });
+        console.error(`[Social Debt API] Error de conexión (${res.code}). ${res.code === 401 ? "Verifica la API_SECRET_KEY en el backend." : "Servidor inalcanzable."}`);
       } else if (res?.limits) {
         setLimits(res.limits);
         setErrorObj({ isError: false });
@@ -118,12 +119,10 @@ export const OpenAILimitsBadge = () => {
             {errorObj.isError ? (
               <>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-red-500 mb-2">
-                  {isAuthError ? "Acceso Denegado (401)" : "Fallo de Red"}
+                  Sin Conexión
                 </h4>
                 <p className="text-xs text-red-700/80 leading-relaxed">
-                  {isAuthError
-                    ? "La API rechazó la conexión. Por favor, asegúrate de haber colocado tu API_SECRET_KEY correctamente en el archivo .env.local."
-                    : "No se pudo conectar con la API de Social Debt en la URL configurada. Verifica que el servidor remoto esté encendido."}
+                  El sistema se encuentra desconectado. Las funciones de análisis pueden no estar disponibles en este momento.
                 </p>
               </>
             ) : (
@@ -132,7 +131,7 @@ export const OpenAILimitsBadge = () => {
                   Cuota de Red OpenAI
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                  Número estimado de comentarios restantes que puedes analizar
+                  Número estimado de comentarios restantes que se pueden analizar
                   antes de alcanzar el límite dinámico de la API.
                 </p>
                 <div className="flex items-center gap-2 text-lg font-bold text-slate-800">

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import ontology_dictionary from "../ontology/frontend_ontology_dictionary.json";
 
 interface Step4Row {
@@ -36,7 +36,105 @@ type OntDictType = Record<
 import { Download, Info } from "lucide-react";
 import { BatchResultData, MetricsData } from "../batch-classification/actions";
 
-export const downloadFinalExcel = (
+
+
+const getSmellCode = (smellName: string): string => {
+  const cleanName = typeof smellName === "string" ? smellName.trim() : "";
+  const smells = (ontology_dictionary as OntDictType)["community_smells"] || {};
+  for (const [code, data] of Object.entries(smells)) {
+    if (typeof data !== "string" && data.name === cleanName) {
+      return code;
+    }
+  }
+  return smellName;
+};
+
+const addDataToSheet = (
+  worksheet: ExcelJS.Worksheet,
+  data: any[],
+  tableName: string,
+) => {
+  if (!data || data.length === 0) return;
+
+  const keys = Array.from(new Set(data.flatMap(Object.keys)));
+
+  const columns = keys.map((key) => ({
+    name: key,
+    filterButton: true,
+  }));
+
+  const rows = data.map((item) => keys.map((key) => item[key] ?? ""));
+
+  const safeTableName =
+    tableName.replace(/[^a-zA-Z0-9_]/g, "") + Math.floor(Math.random() * 1000);
+
+  worksheet.addTable({
+    name: safeTableName,
+    ref: "A1",
+    headerRow: true,
+    totalsRow: false,
+    style: {
+      showRowStripes: true,
+    },
+    columns: columns,
+    rows: rows,
+  });
+
+  const softBorder: Partial<ExcelJS.Borders> = {
+    top: { style: "thin", color: { argb: "FFCBD5E1" } },
+    left: { style: "thin", color: { argb: "FFCBD5E1" } },
+    bottom: { style: "thin", color: { argb: "FFCBD5E1" } },
+    right: { style: "thin", color: { argb: "FFCBD5E1" } },
+  };
+
+  const headerRow = worksheet.getRow(1);
+  headerRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
+    const isEven = colNumber % 2 === 0;
+    cell.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: isEven ? "FF4F81BD" : "FF385D8A" },
+    };
+    cell.font = {
+      color: { argb: "FFFFFFFF" },
+      bold: true,
+    };
+    cell.alignment = {
+      vertical: "middle",
+      horizontal: "center",
+      wrapText: false,
+    };
+    cell.border = softBorder;
+  });
+
+  worksheet.columns.forEach((column) => {
+    let maxLength = 0;
+    let headerLength = 0;
+
+    column.eachCell!({ includeEmpty: true }, (cell, rowNumber) => {
+      const columnLength = cell.value ? cell.value.toString().length : 0;
+
+      if (rowNumber === 1) {
+        headerLength = columnLength + 8;
+      } else {
+        if (columnLength > maxLength) {
+          maxLength = columnLength;
+        }
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: "left",
+          wrapText: true,
+        };
+        cell.border = softBorder;
+      }
+    });
+
+    const calculatedWidth = Math.max(headerLength, Math.min(maxLength + 2, 60));
+    column.width = calculatedWidth;
+  });
+};
+
+export const downloadFinalExcel = async (
   resultData: BatchResultData,
   filename: string,
 ) => {
@@ -80,7 +178,7 @@ export const downloadFinalExcel = (
 
         const mSmells = (m as Record<string, unknown>).community_smells;
         row[`microcause_${i}_smells`] = Array.isArray(mSmells)
-          ? mSmells.join(" | ")
+          ? mSmells.map((s) => getSmellCode(s as string)).join(" | ")
           : "";
 
         const mPrev = (m as Record<string, unknown>).preventive_strategies;
@@ -112,57 +210,67 @@ export const downloadFinalExcel = (
     return row;
   });
 
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.json_to_sheet(dataStep4),
-    "Comentarios",
-  );
+  const workbook = new ExcelJS.Workbook();
+  const sheetComments = workbook.addWorksheet("Comentarios");
+  addDataToSheet(sheetComments, dataStep4, "TablaComentarios");
 
-  const formatTupleList = (lst: unknown): string | unknown => {
+  const formatTupleList = (
+    lst: unknown,
+    nameMapper?: (n: string) => string,
+  ): string | unknown => {
     if (Array.isArray(lst)) {
       return lst
         .map((item: unknown) => {
           if (Array.isArray(item) && item.length >= 2) {
             const val = item[1] as number;
-            return `${item[0]} (${Number.isInteger(val) ? val : typeof val === "number" ? val.toFixed(2) : val})`;
+            const name =
+              typeof item[0] === "string" && nameMapper
+                ? nameMapper(item[0])
+                : item[0];
+            return `${name} (${Number.isInteger(val) ? val : typeof val === "number" ? val.toFixed(2) : val})`;
           }
-          return String(item);
+          return typeof item === "string" && nameMapper
+            ? nameMapper(item)
+            : String(item);
         })
         .join(" | ");
     }
     return lst;
   };
 
-  const sdiArray = Object.keys(issues_metrics).map((issue_number) => {
-    const metrics = issues_metrics[issue_number] as Record<string, unknown>;
-    const row: SDIArrayRow = {
-      issue_number: issue_number,
-      ...metrics,
-      dominant_macrocauses: formatTupleList(
-        metrics.dominant_macrocauses,
-      ) as string,
-      dominant_microcauses: formatTupleList(
-        metrics.dominant_microcauses,
-      ) as string,
-      dominant_microcause_types: formatTupleList(
-        metrics.dominant_microcause_types,
-      ) as string,
-      dominant_community_smells: formatTupleList(
-        metrics.dominant_community_smells,
-      ) as string,
-      dominant_risks: formatTupleList(metrics.dominant_risks) as string,
-    };
-    return row;
-  });
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.json_to_sheet(sdiArray),
-    "Metricas SDI",
-  );
+  const sdiArray = Object.keys(issues_metrics)
+    .map((issue_number) => {
+      const metrics = issues_metrics[issue_number] as Record<string, unknown>;
+      const row: SDIArrayRow = {
+        issue_number: issue_number,
+        ...metrics,
+        dominant_macrocauses: formatTupleList(
+          metrics.dominant_macrocauses,
+        ) as string,
+        dominant_microcauses: formatTupleList(
+          metrics.dominant_microcauses,
+        ) as string,
+        dominant_microcause_types: formatTupleList(
+          metrics.dominant_microcause_types,
+        ) as string,
+        dominant_community_smells: formatTupleList(
+          metrics.dominant_community_smells,
+          getSmellCode,
+        ) as string,
+        dominant_risks: formatTupleList(metrics.dominant_risks) as string,
+      };
+      return row;
+    })
+    .sort(
+      (a, b) =>
+        (Number(b.social_debt_index) || 0) - (Number(a.social_debt_index) || 0),
+    );
+
+  const sheetSDI = workbook.addWorksheet("Metricas SDI");
+  addDataToSheet(sheetSDI, sdiArray, "TablaMetricasSDI");
 
   const ontDict = ontology_dictionary as OntDictType;
-  Object.keys(ontDict).forEach((category) => {
+  Object.keys(ontDict).forEach((category, idx) => {
     const categoryItems = ontDict[category];
     const flatOnt = Object.keys(categoryItems).map((id) => {
       const item = categoryItems[id];
@@ -177,16 +285,12 @@ export const downloadFinalExcel = (
     });
 
     const sheetName = `Ontologia - ${category}`.substring(0, 31);
-    XLSX.utils.book_append_sheet(
-      workbook,
-      XLSX.utils.json_to_sheet(flatOnt),
-      sheetName,
-    );
+    const sheetOnt = workbook.addWorksheet(sheetName);
+    addDataToSheet(sheetOnt, flatOnt, `TablaOntologia${idx}`);
   });
 
-  XLSX.writeFile(workbook, `${baseName}_resultados_deuda.xlsx`, {
-    compression: true,
-  });
+  const buffer = await workbook.xlsx.writeBuffer();
+  saveAs(new Blob([buffer]), `${baseName}_resultados_deuda.xlsx`);
 };
 
 export const AlgorithmAuditTrail = ({
@@ -196,7 +300,6 @@ export const AlgorithmAuditTrail = ({
   resultData: BatchResultData;
   filename: string;
 }) => {
-  // Calculate dynamic stats
   const stats = useMemo(() => {
     const {
       comments = [],
@@ -209,6 +312,50 @@ export const AlgorithmAuditTrail = ({
     >;
 
     const totalComments = comments.length;
+    
+    // Paso 2: Noise levels
+    const noiseLevels: Record<string, number> = { "Hard noise": 0, "Operational noise": 0, "Useful": 0 };
+    comments.forEach(c => {
+      const level = (c.noise_level || "").toLowerCase();
+      if (level.includes("hard")) noiseLevels["Hard noise"]++;
+      else if (level.includes("operational")) noiseLevels["Operational noise"]++;
+      else noiseLevels["Useful"]++;
+    });
+
+    // Paso 4: Unicas macro y micro
+    // Paso 4: Distribucion macrocausas
+    let macroDistribution: Record<string, number> = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0 };
+    comments.forEach((c) => {
+      if (c.macro_cause_code && c.macro_cause_code !== "none") {
+        const m = c.macro_cause_code.toUpperCase();
+        if (macroDistribution[m] !== undefined) {
+          macroDistribution[m]++;
+        }
+      }
+    });
+    const distStr = Object.entries(macroDistribution)
+      .filter(([_, count]) => count > 0)
+      .sort((a, b) => b[1] - a[1])
+      .map(([macro, count]) => `${macro}: ${count}`)
+      .join(" | ") || "Ninguna";
+
+    // Paso 5: Max y Min SDI
+    let maxSdiValue = -1;
+    let minSdiValue = Infinity;
+
+    Object.entries(metrics).forEach(([issue, m]) => {
+      if (typeof m.social_debt_index === "number") {
+        if (m.social_debt_index > maxSdiValue) {
+          maxSdiValue = m.social_debt_index;
+        }
+        if (m.social_debt_index < minSdiValue) {
+          minSdiValue = m.social_debt_index;
+        }
+      }
+    });
+    
+    const maxSdiDisplay = maxSdiValue >= 0 ? maxSdiValue.toFixed(2) : "N/A";
+    const minSdiDisplay = minSdiValue !== Infinity ? minSdiValue.toFixed(2) : "N/A";
     const discardedNoise = comments.filter((c) => c.is_noise).length;
     const cleanComments = totalComments - discardedNoise;
 
@@ -235,8 +382,11 @@ export const AlgorithmAuditTrail = ({
     const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
     const topTypes =
       sortedTypes
-        .slice(0, 2)
-        .map((t) => t[0].replace("Cause", ""))
+        .slice(0, 1)
+        .map((t) => {
+          const dict = (ontology_dictionary as any).microcause_types;
+          return dict && dict[t[0]] ? dict[t[0]].name : t[0].replace("Cause", "");
+        })
         .join(", ") || "Ninguno";
 
     const totalIssues = Object.keys(metrics).length;
@@ -274,6 +424,11 @@ export const AlgorithmAuditTrail = ({
       topTypes,
       totalIssues,
       avgSdi,
+      noiseLevels,
+      distStr,
+      
+      maxSdiDisplay,
+      minSdiDisplay
     };
   }, [resultData]);
 
@@ -281,84 +436,95 @@ export const AlgorithmAuditTrail = ({
     {
       title: "Paso 1: Limpieza de Texto Crudo",
       description:
-        "En esta etapa inicial, se ejecuta un proceso de depuración sobre el texto crudo de los comentarios. Se remueven elementos estructurales y técnicos como bloques de código fuente, imágenes, URLs, firmas y artefactos de Markdown. El objetivo es aislar el texto plano susceptible a análisis semántico.",
+        "En esta etapa inicial se procesa el texto crudo de los comentarios para remover elementos que no aportan valor semántico, tales como bloques de código, imágenes, URLs, firmas y artefactos de Markdown. El objetivo es aislar y extraer únicamente el texto plano que pasará a la fase de análisis.",
       exportKey: "step1_b64",
       stats: [
-        { label: "Total comentarios procesados", value: stats.totalComments },
+        { label: "Comentarios procesados", value: stats.totalComments },
       ],
     },
     {
-      title: "Paso 2: Filtro de Ruido Operativo (Bots y Patrones)",
+      title: "Paso 2: Filtro de Ruido Operativo (Clasificador)",
       description:
-        "El sistema aplica reglas heurísticas sobre el texto depurado para filtrar el \'ruido operativo\'. Se identifican y descartan comentarios generados por automatizaciones (ej. dependabot, flujos de CI/CD) e intervenciones humanas rutinarias (ej. \'LGTM\', \'thanks\') que carecen de contexto relevante sobre deuda social.",
+        "Se analiza el texto limpio para filtrar y descartar el ruido operativo. Se identifican los comentarios generados por bots, integraciones automatizadas (ej. flujos de CI/CD) o intervenciones humanas rutinarias (ej. 'LGTM', 'thanks') que carecen de contexto sobre deuda social, conservando únicamente los comentarios útiles.",
       exportKey: "step2_b64",
       stats: [
-        {
-          label: "Descartados por ruido (Bots/Operativos)",
-          value: stats.discardedNoise,
-        },
-        {
-          label: "Comentarios válidos para análisis de IA",
-          value: stats.cleanComments,
-        },
+        { label: "Hard noise (Ruido Absoluto)", value: stats.noiseLevels["Hard noise"] },
+        { label: "Operational noise (Ruido Operativo)", value: stats.noiseLevels["Operational noise"] },
+        { label: "Useful (Útiles para análisis)", value: stats.noiseLevels["Useful"] },
       ],
     },
     {
-      title: "Paso 3: Razonamiento Complejo (LLM - Macrocausas)",
+      title: "Paso 3: Clasificación de Macrocausas (LLM)",
       description:
-        "Los comentarios filtrados son procesados mediante modelos de lenguaje (LLM) para evaluar su semántica. El sistema clasifica cada comentario dentro de las 7 Macrocausas de deuda social. Posteriormente, un motor de priorización valida la inferencia del modelo basándose en la coincidencia de patrones en el texto.",
+        "Los comentarios útiles son procesados por un modelo de lenguaje (LLM) que evalúa la semántica de la conversación. Cada comentario se analiza y clasifica para determinar si pertenece a alguna de las 7 macrocausas de deuda social (A-G) o si se trata de una conversación normal y/o no identificable (Causa H).",
       exportKey: "step3_b64",
       stats: [
         {
-          label: "Conversaciones normales (Descartadas - Causa H)",
+          label: "Comentarios efectivos a evaluar",
+          value: stats.normalConversations + stats.debtComments,
+        },
+        {
+          label: "No identificable (Macrocausa H)",
           value: stats.normalConversations,
         },
         {
-          label: "Comentarios confirmados con Deuda Social (A-G)",
+          label: "Deuda Social (Causas A-G)",
           value: stats.debtComments,
         },
       ],
     },
     {
-      title: "Paso 4: Emparejamiento Semántico (NLP - Microcausas)",
+      title: "Paso 4: Asignación de Microcausas (NLP)",
       description:
-        "Los comentarios identificados con deuda social se procesan mediante un modelo de Natural Language Processing (NLP) basado en embeddings vectoriales. El algoritmo calcula la similitud semántica en un espacio multidimensional para extraer las 3 Microcausas más afines según la ontología, proporcionando un análisis multicausal estructurado.",
+        "Los comentarios identificados con deuda social (A-G) se procesan mediante un modelo de Natural Language Processing (NLP) basado en embeddings vectoriales. Se calcula la similitud semántica para emparejar y extraer las microcausas específicas de la ontología, logrando una mayor granularidad analítica.",
       exportKey: "step4_b64",
       stats: [
         {
-          label: "Microcausas totales identificadas",
+          label: "Microcausas identificadas",
           value: stats.totalMicrocauses,
         },
-        { label: "Tipos de Causa principales", value: stats.topTypes },
+        {
+          label: "Tipo de microcausa más frecuente",
+          value: stats.topTypes,
+        },
       ],
     },
     {
-      title: "Paso 5: Reporte Final Maestro e Índice SDI",
+      title: "Paso 5: Agrupamiento y Cálculo del Índice SDI",
       description:
-        "Los resultados a nivel de comentario se consolidan y agrupan por hilo de conversación (Issue). Se calcula el Índice de Deuda Social (SDI) empleando un algoritmo que pondera la frecuencia y la diversidad causal, proporcionando una métrica cuantitativa de la criticidad sociotécnica en cada discusión.",
+        "Los resultados obtenidos se consolidan y agrupan por hilo de conversación (Issue). Se calcula el Índice de Deuda Social (SDI) utilizando un algoritmo que pondera tanto la criticidad como la variedad de las causas detectadas, entregando una métrica cuantitativa de la deuda técnica y social del Issue.",
       exportKey: "final_excel_b64",
       stats: [
         {
-          label: "Issues (Hilos) únicos consolidados",
+          label: "Issues (Hilos)",
           value: stats.totalIssues,
         },
-        { label: "Puntaje SDI Promedio del Lote", value: stats.avgSdi },
+        {
+          label: "SDI Máximo",
+          value: stats.maxSdiDisplay,
+        },
+        {
+          label: "SDI Mínimo",
+          value: stats.minSdiDisplay,
+        },
       ],
     },
   ];
 
-  const downloadExcel = (
+  const downloadExcelAsync = async (
     dataArray: object[],
     sheetName: string,
     fileName: string,
   ) => {
-    const worksheet = XLSX.utils.json_to_sheet(dataArray);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-    XLSX.writeFile(workbook, fileName, { compression: true });
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(sheetName);
+    addDataToSheet(worksheet, dataArray, "TablaExportacion");
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), fileName);
   };
 
-  const handleDownload = (stepIndex: number) => {
+  const handleDownload = async (stepIndex: number) => {
     let baseName = filename;
     if (baseName.includes(".")) {
       baseName = baseName.substring(0, baseName.lastIndexOf("."));
@@ -374,7 +540,11 @@ export const AlgorithmAuditTrail = ({
         raw_text: c.raw_text,
         cleaned_text: c.cleaned_text,
       }));
-      downloadExcel(dataStep1, "Paso 1", `${baseName}_auditoria_paso1.xlsx`);
+      await downloadExcelAsync(
+        dataStep1,
+        "Paso 1",
+        `${baseName}_auditoria_paso1.xlsx`,
+      );
     } else if (stepIndex === 1) {
       const dataStep2 = comments.map((c) => ({
         issue_number: c.issue_number,
@@ -385,7 +555,11 @@ export const AlgorithmAuditTrail = ({
         is_noise: c.is_noise,
         noise_level: c.noise_level,
       }));
-      downloadExcel(dataStep2, "Paso 2", `${baseName}_auditoria_paso2.xlsx`);
+      await downloadExcelAsync(
+        dataStep2,
+        "Paso 2",
+        `${baseName}_auditoria_paso2.xlsx`,
+      );
     } else if (stepIndex === 2) {
       const dataStep3 = comments
         .filter((c) => c.is_noise === false)
@@ -402,7 +576,11 @@ export const AlgorithmAuditTrail = ({
           rule_applied: c.rule_applied,
           confidence: c.confidence,
         }));
-      downloadExcel(dataStep3, "Paso 3", `${baseName}_auditoria_paso3.xlsx`);
+      await downloadExcelAsync(
+        dataStep3,
+        "Paso 3",
+        `${baseName}_auditoria_paso3.xlsx`,
+      );
     } else if (stepIndex === 3 || stepIndex === 4) {
       const dataStep4 = comments
         .filter((c) => c.is_noise === false && c.macro_cause_code !== "H")
@@ -442,7 +620,7 @@ export const AlgorithmAuditTrail = ({
 
               const mSmells = (m as Record<string, unknown>).community_smells;
               row[`microcause_${i}_smells`] = Array.isArray(mSmells)
-                ? mSmells.join(" | ")
+                ? mSmells.map((s) => getSmellCode(s as string)).join(" | ")
                 : "";
 
               const mPrev = (m as Record<string, unknown>)
@@ -481,62 +659,77 @@ export const AlgorithmAuditTrail = ({
         });
 
       if (stepIndex === 3) {
-        downloadExcel(dataStep4, "Paso 4", `${baseName}_auditoria_paso4.xlsx`);
-      } else {
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(
-          workbook,
-          XLSX.utils.json_to_sheet(dataStep4),
-          "Comentarios",
+        await downloadExcelAsync(
+          dataStep4,
+          "Paso 4",
+          `${baseName}_auditoria_paso4.xlsx`,
         );
+      } else {
+        const workbook = new ExcelJS.Workbook();
+        const sheetComments = workbook.addWorksheet("Comentarios");
+        addDataToSheet(sheetComments, dataStep4, "TablaComentariosPaso5");
 
-        const formatTupleList = (lst: unknown): string | unknown => {
+        const formatTupleList = (
+          lst: unknown,
+          nameMapper?: (n: string) => string,
+        ): string | unknown => {
           if (Array.isArray(lst)) {
             return lst
               .map((item: unknown) => {
                 if (Array.isArray(item) && item.length >= 2) {
                   const val = item[1] as number;
-                  return `${item[0]} (${Number.isInteger(val) ? val : typeof val === "number" ? val.toFixed(2) : val})`;
+                  const name =
+                    typeof item[0] === "string" && nameMapper
+                      ? nameMapper(item[0])
+                      : item[0];
+                  return `${name} (${Number.isInteger(val) ? val : typeof val === "number" ? val.toFixed(2) : val})`;
                 }
-                return String(item);
+                return typeof item === "string" && nameMapper
+                  ? nameMapper(item)
+                  : String(item);
               })
               .join(" | ");
           }
           return lst;
         };
 
-        const sdiArray = Object.keys(issues_metrics).map((issue_number) => {
-          const metrics = issues_metrics[issue_number] as Record<
-            string,
-            unknown
-          >;
-          const row: SDIArrayRow = {
-            issue_number: issue_number,
-            ...metrics,
-            dominant_macrocauses: formatTupleList(
-              metrics.dominant_macrocauses,
-            ) as string,
-            dominant_microcauses: formatTupleList(
-              metrics.dominant_microcauses,
-            ) as string,
-            dominant_microcause_types: formatTupleList(
-              metrics.dominant_microcause_types,
-            ) as string,
-            dominant_community_smells: formatTupleList(
-              metrics.dominant_community_smells,
-            ) as string,
-            dominant_risks: formatTupleList(metrics.dominant_risks) as string,
-          };
-          return row;
-        });
-        XLSX.utils.book_append_sheet(
-          workbook,
-          XLSX.utils.json_to_sheet(sdiArray),
-          "Metricas SDI",
-        );
+        const sdiArray = Object.keys(issues_metrics)
+          .map((issue_number) => {
+            const metrics = issues_metrics[issue_number] as Record<
+              string,
+              unknown
+            >;
+            const row: SDIArrayRow = {
+              issue_number: issue_number,
+              ...metrics,
+              dominant_macrocauses: formatTupleList(
+                metrics.dominant_macrocauses,
+              ) as string,
+              dominant_microcauses: formatTupleList(
+                metrics.dominant_microcauses,
+              ) as string,
+              dominant_microcause_types: formatTupleList(
+                metrics.dominant_microcause_types,
+              ) as string,
+              dominant_community_smells: formatTupleList(
+                metrics.dominant_community_smells,
+                getSmellCode,
+              ) as string,
+              dominant_risks: formatTupleList(metrics.dominant_risks) as string,
+            };
+            return row;
+          })
+          .sort(
+            (a, b) =>
+              (Number(b.social_debt_index) || 0) -
+              (Number(a.social_debt_index) || 0),
+          );
+
+        const sheetSDI = workbook.addWorksheet("Metricas SDI");
+        addDataToSheet(sheetSDI, sdiArray, "TablaMetricasSDIPaso5");
 
         const ontDict = ontology_dictionary as OntDictType;
-        Object.keys(ontDict).forEach((category) => {
+        Object.keys(ontDict).forEach((category, idx) => {
           const categoryItems = ontDict[category];
           const flatOnt = Object.keys(categoryItems).map((id) => {
             const item = categoryItems[id];
@@ -551,16 +744,12 @@ export const AlgorithmAuditTrail = ({
           });
 
           const sheetName = `Ontologia - ${category}`.substring(0, 31);
-          XLSX.utils.book_append_sheet(
-            workbook,
-            XLSX.utils.json_to_sheet(flatOnt),
-            sheetName,
-          );
+          const sheetOnt = workbook.addWorksheet(sheetName);
+          addDataToSheet(sheetOnt, flatOnt, `TablaOntologiaPaso5_${idx}`);
         });
 
-        XLSX.writeFile(workbook, `${baseName}_auditoria_paso5.xlsx`, {
-          compression: true,
-        });
+        const buffer = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buffer]), `${baseName}_auditoria_paso5.xlsx`);
       }
     }
   };
@@ -604,7 +793,7 @@ export const AlgorithmAuditTrail = ({
                   className="px-5 py-2.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors w-full md:w-auto whitespace-nowrap text-sm"
                 >
                   <Download className="w-4 h-4" />
-                Descargar Paso {index + 1}
+                  Descargar Paso {index + 1}
                 </button>
               </div>
 
@@ -618,13 +807,16 @@ export const AlgorithmAuditTrail = ({
                 {step.stats.map((stat, idx) => (
                   <div
                     key={idx}
-                    className="bg-indigo-50/50 p-3 rounded-lg border border-indigo-50 flex flex-col gap-0.5"
+                    className="relative overflow-hidden bg-white p-3 rounded-lg border border-slate-200/60 shadow-sm flex flex-col gap-0.5 hover:border-indigo-100 hover:shadow-md transition-shadow duration-300 group"
                   >
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider leading-tight">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-indigo-50/50 to-transparent rounded-bl-full opacity-50 pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
+                    <div className="absolute bottom-0 left-0 w-1 h-full bg-indigo-300 rounded-l-lg"></div>
+                    
+                    <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider pl-2 relative z-10">
                       {stat.label}
                     </span>
                     <span
-                      className="text-lg font-bold text-indigo-700 leading-snug"
+                      className="text-lg font-bold text-slate-700 pl-2 relative z-10"
                       title={
                         typeof stat.value === "string" ||
                         typeof stat.value === "number"

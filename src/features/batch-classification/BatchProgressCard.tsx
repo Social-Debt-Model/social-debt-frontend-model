@@ -280,7 +280,7 @@ export const BatchProgressCard = ({
   };
 
   return (
-    <div className="glass-panel p-6 flex flex-col gap-4 rounded-bl-none max-w-md w-full relative overflow-hidden">
+    <div className="glass-panel p-6 flex flex-col rounded-bl-none max-w-md w-full relative overflow-hidden h-[180px]">
       <div className="flex items-center gap-3">
         {step === "completed" ? (
           <CheckCircle className="w-6 h-6 text-emerald-500" />
@@ -330,29 +330,33 @@ export const BatchProgressCard = ({
         )}
       </div>
 
-      <p className="text-sm text-slate-600 font-medium">{progressMsg}</p>
-      {estimatedTime && step === "processing" && (
-        <p className="text-xs text-slate-500 -mt-2 font-medium">
-          {estimatedTime}
-        </p>
-      )}
-
-      {step !== "error" && (
-        <div className="w-full bg-slate-200 rounded-full h-3 mt-2 overflow-hidden shadow-inner">
-          <motion.div
-            className="bg-blue-600 h-3 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progressPercent}%` }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          />
+      <div className="flex flex-col flex-1 justify-end pb-1">
+        <div className="mb-3">
+          <p className="text-sm text-slate-600 font-medium truncate">{progressMsg || "Iniciando..."}</p>
+          <div className="min-h-[16px] mt-1">
+            {estimatedTime && step === "processing" ? (
+              <p className="text-xs text-slate-500 font-medium truncate">
+                {estimatedTime}
+              </p>
+            ) : step === "completed" ? (
+              <p className="text-xs text-emerald-600 font-medium truncate">
+                Generando métricas y dashboard...
+              </p>
+            ) : null}
+          </div>
         </div>
-      )}
 
-      {step === "completed" && (
-        <p className="text-xs text-emerald-600 font-medium mt-2">
-          Generando métricas y dashboard...
-        </p>
-      )}
+        <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden shadow-inner">
+          {step !== "error" && step !== "cancelled" && (
+            <motion.div
+              className="bg-blue-600 h-3 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercent}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

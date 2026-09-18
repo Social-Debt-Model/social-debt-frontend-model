@@ -63,7 +63,7 @@ export const BatchResultSummaryCard = ({
         ) : (
           <>
             <BarChart2 className="w-4 h-4" />
-            Ver Dashboard
+            Ver Resultados
           </>
         )}
       </button>

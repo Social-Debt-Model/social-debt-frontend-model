@@ -94,7 +94,12 @@ export const ChatInput = ({
         const fileToUpload = validResult.file! as File & { _instructions?: Record<string, unknown> };
         fileToUpload._instructions = instructions;
 
-        setSelectedFile(fileToUpload);
+        if (onSendFile) {
+          onSendFile(fileToUpload);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        } else {
+          setSelectedFile(fileToUpload);
+        }
 
         setPendingFileResult(null);
 
