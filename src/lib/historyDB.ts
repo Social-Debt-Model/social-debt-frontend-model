@@ -1,11 +1,13 @@
 import { get, set, keys, del } from "idb-keyval";
 import { BatchResultData } from "../features/batch-classification/actions";
+import { PrecalculatedEdaData } from "../features/metrics-dashboard/edaUtils";
 
 export type HistoryItem = {
   jobId: string;
   filename: string;
   timestamp: number;
   resultData: BatchResultData;
+  edaStats?: PrecalculatedEdaData;
 };
 
 export type PendingJob = {

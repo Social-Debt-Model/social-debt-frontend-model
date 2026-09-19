@@ -12,6 +12,7 @@ import {
   PieChart as RechartsPieChart,
   Pie,
   Legend,
+  LabelList,
 } from "recharts";
 import { useOntology } from "../ontology/useOntology";
 import {
@@ -26,14 +27,19 @@ import {
   ChevronDown,
   Search,
   HelpCircle,
+  TrendingUp,
 } from "lucide-react";
 import { TextResultCard } from "../text-classification/TextResultCard";
 
 import { BatchResultData, MetricsData } from "../batch-classification/actions";
+import { PrecalculatedEdaData } from "./edaUtils";
 import { AlgorithmAuditTrail } from "./AlgorithmAuditTrail";
+import { flattenAndAggregateMetrics } from "./utils";
+import { GlobalEdaDashboard } from "./GlobalEdaDashboard";
 
 type BatchDashboardProps = {
   resultData: BatchResultData;
+  edaStats?: PrecalculatedEdaData;
   filename?: string;
   jobId?: string;
   onDownload?: () => void;
@@ -63,8 +69,41 @@ const parseListString = (str: string): string[] => {
   return cleaned ? [cleaned] : [];
 };
 
+const MetricBarChart = ({ data, colorClass }: { data: any[]; colorClass: string }) => {
+  if (data.length === 0) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center">
+        <p className="text-slate-400 text-sm italic">No se detectaron datos</p>
+      </div>
+    );
+  }
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={data} layout="vertical" margin={{ top: 0, right: 40, left: 0, bottom: 0 }}>
+        <XAxis type="number" hide />
+        <YAxis type="category" dataKey="name" width={320} tick={{ fontSize: 13, fill: "#334155", fontWeight: 500 }} axisLine={false} tickLine={false} interval={0} />
+        <Tooltip wrapperStyle={{ zIndex: 999 }} cursor={{ fill: "rgba(0,0,0,0.05)" }} content={({ active, payload }) => {
+          if (active && payload && payload.length) {
+            return (
+              <div className="bg-white p-2 rounded shadow border border-slate-100 text-xs z-[999]">
+                <p className="font-bold text-slate-800 mb-1 max-w-[200px] whitespace-normal">{payload[0].payload.name}</p>
+                <p className={`${colorClass} font-medium`}>Valor: {payload[0].value}</p>
+              </div>
+            );
+          } return null;
+        }} />
+        <Bar isAnimationActive={false} dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={30}>
+          <LabelList dataKey="value" position="right" fill="#334155" fontSize={15} fontWeight={700} />
+          {data.map((entry: any, idx: number) => (<Cell key={`cell-${idx}`} fill={entry.color} />))}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
+
 export const BatchDashboard = ({
   resultData,
+  edaStats,
   filename = "Analisis",
   jobId,
   onDownload,
@@ -75,14 +114,14 @@ export const BatchDashboard = ({
     {}) as Record<string, MetricsData>;
   const issueKeys = Object.keys(metrics);
   const storageKey = jobId || filename;
-  const [activeTab, setActiveTab] = useState<"audit" | "dashboard">(() => {
+  const [activeTab, setActiveTab] = useState<"global" | "audit" | "dashboard">(() => {
     if (typeof window !== "undefined") {
       const saved = sessionStorage.getItem(
         `batchDashboard_activeTab_${storageKey}`,
       );
-      if (saved === "audit" || saved === "dashboard") return saved;
+      if (saved === "global" || saved === "audit" || saved === "dashboard") return saved;
     }
-    return "dashboard";
+    return "global";
   });
 
   React.useEffect(() => {
@@ -205,6 +244,10 @@ export const BatchDashboard = ({
     getCommunitySmellDetails,
     getRiskDetails,
     getMicrocauseTypeDetails,
+    getMetricDetails,
+    getStrategyDetails,
+    getEffectDetails,
+    getIndicatorDetails,
   } = useOntology();
 
   const currentMetrics = selectedIssue
@@ -230,20 +273,144 @@ export const BatchDashboard = ({
 
   const microChartData = useMemo(() => {
     if (!currentMetrics?.dominant_microcauses) return [];
-    return currentMetrics.dominant_microcauses.map(
+    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_microcauses as [string, number][]);
+    return flattened.slice(0, 3).map(
       (item: [string, number], index: number) => ({
         name: getMicroCauseDetails(item[0])?.name || item[0],
         value: parseFloat(item[1].toFixed(2)),
-        color: CHART_PALETTE[index % CHART_PALETTE.length],
+        color: PIE_PALETTE[(index + 8) % PIE_PALETTE.length],
       }),
     );
-  }, [currentMetrics]);
+  }, [currentMetrics, getMicroCauseDetails]);
+
+  const smellChartData = useMemo(() => {
+    if (!currentMetrics?.dominant_community_smells) return [];
+    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_community_smells as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getCommunitySmellDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[index % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getCommunitySmellDetails]);
+
+  const riskChartData = useMemo(() => {
+    if (!currentMetrics?.dominant_risks) return [];
+    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_risks as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getRiskDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[(index + 3) % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getRiskDetails]);
+
+  const typeChartData = useMemo(() => {
+    if (!currentMetrics?.dominant_microcause_types) return [];
+    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_microcause_types as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getMicrocauseTypeDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[(index + 5) % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getMicrocauseTypeDetails]);
+
+  const aggregateFromComments = React.useCallback(
+    (key: 'metrics' | 'indicators' | 'preventive_strategies' | 'corrective_strategies' | 'effects') => {
+      const counts: Record<string, number> = {};
+      issueComments.forEach((comment) => {
+        if (!comment.is_noise && comment.microcauses) {
+          comment.microcauses.forEach((mc: any) => {
+            const items = mc[key];
+            if (Array.isArray(items)) {
+              items.forEach((item) => {
+                counts[item] = (counts[item] || 0) + 1;
+              });
+            }
+          });
+        }
+      });
+      const arr = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      return arr.length > 0 ? arr : null;
+    },
+    [issueComments]
+  );
+
+  const metricsChartData = useMemo(() => {
+    const raw = currentMetrics?.dominant_metrics || (currentMetrics as any)?.metrics || aggregateFromComments("metrics");
+    if (!raw) return [];
+    const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getMetricDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[(index + 7) % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getMetricDetails, aggregateFromComments]);
+
+  const indicatorChartData = useMemo(() => {
+    const raw = currentMetrics?.dominant_indicators || (currentMetrics as any)?.indicators || aggregateFromComments("indicators");
+    if (!raw) return [];
+    const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getIndicatorDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[(index + 1) % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getIndicatorDetails, aggregateFromComments]);
+
+  const preventiveChartData = useMemo(() => {
+    const raw = currentMetrics?.dominant_preventive_strategies || (currentMetrics as any)?.preventive_strategies || aggregateFromComments("preventive_strategies");
+    if (!raw) return [];
+    const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getStrategyDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[(index + 2) % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getStrategyDetails, aggregateFromComments]);
+
+  const correctiveChartData = useMemo(() => {
+    const raw = currentMetrics?.dominant_corrective_strategies || (currentMetrics as any)?.corrective_strategies || aggregateFromComments("corrective_strategies");
+    if (!raw) return [];
+    const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getStrategyDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[(index + 4) % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getStrategyDetails, aggregateFromComments]);
+
+  const effectsChartData = useMemo(() => {
+    const raw = currentMetrics?.dominant_effects || (currentMetrics as any)?.effects || aggregateFromComments("effects");
+    if (!raw) return [];
+    const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
+    return flattened.slice(0, 3).map(
+      (item: [string, number], index: number) => ({
+        name: getEffectDetails(item[0])?.name || item[0],
+        value: Math.round(item[1]),
+        color: PIE_PALETTE[(index + 6) % PIE_PALETTE.length],
+      }),
+    );
+  }, [currentMetrics, getEffectDetails, aggregateFromComments]);
+
 
   const chartData = useMemo(() => {
     if (!currentMetrics?.dominant_macrocauses) return [];
     let colorIndex = 0;
-    return [...currentMetrics.dominant_macrocauses]
-      .sort((a, b) => b[1] - a[1])
+    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_macrocauses as [string, number][]);
+    return flattened.slice(0, 3)
       .map((item: [string, number]) => {
         const code = item[0];
         const color =
@@ -337,7 +504,23 @@ export const BatchDashboard = ({
 
   return (
     <div className="glass-panel flex flex-col rounded-bl-none w-full h-full overflow-hidden border border-slate-100/40 shadow-xl">
-      <div className="flex border-b border-slate-200/50 bg-white/40 relative z-30">
+      <div className="flex flex-col md:flex-row border-b border-slate-200/50 bg-white/40 relative z-30 items-stretch md:items-center justify-between">
+        <div className="flex flex-1 overflow-x-auto">
+          <button
+          onClick={() => {
+            setActiveTab("global");
+            setTimeout(
+              () =>
+                document
+                  .getElementById("dashboard-scroll-container")
+                  ?.scrollTo({ top: 0, behavior: "smooth" }),
+              50,
+            );
+          }}
+          className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "global" ? "text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
+        >
+          <PieChart className="w-4 h-4" /> Dashboard General
+        </button>
         <button
           onClick={() => {
             setActiveTab("dashboard");
@@ -349,7 +532,7 @@ export const BatchDashboard = ({
               50,
             );
           }}
-          className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors ${activeTab === "dashboard" ? "text-blue-700 border-b-2 border-blue-500 bg-blue-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
+          className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "dashboard" ? "text-blue-700 border-b-2 border-blue-500 bg-blue-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
         >
           <BarChart3 className="w-4 h-4" /> Dashboard por Issue
         </button>
@@ -364,16 +547,34 @@ export const BatchDashboard = ({
               50,
             );
           }}
-          className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors ${activeTab === "audit" ? "text-indigo-700 border-b-2 border-indigo-500 bg-indigo-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
+          className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "audit" ? "text-indigo-700 border-b-2 border-indigo-500 bg-indigo-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
         >
-          <Search className="w-4 h-4" /> Trazabilidad del Modelo
+          <Search className="w-4 h-4" /> Trazabilidad
         </button>
+        </div>
+        
+        {onDownload && (
+          <div className="px-4 py-3 md:py-0 flex items-center justify-center border-t md:border-t-0 border-slate-200/50 bg-slate-50/50 md:bg-transparent">
+            <button
+              onClick={onDownload}
+              className="px-5 py-2.5 bg-white text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 hover:border-emerald-200 font-bold text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all w-full md:w-auto whitespace-nowrap"
+            >
+              <Download className="w-4 h-4" />
+              Descargar Resultados
+            </button>
+          </div>
+        )}
       </div>
 
       <div
         id="dashboard-scroll-container"
         className="flex-1 overflow-y-auto overflow-x-hidden relative"
       >
+        {activeTab === "global" && (
+          <div className="p-4 md:p-6 w-full max-w-[1400px] mx-auto min-h-[500px]">
+            <GlobalEdaDashboard resultData={resultData} precalculatedStats={edaStats} />
+          </div>
+        )}
         {activeTab === "audit" && (
           <div className="p-4 md:p-6 w-full max-w-5xl mx-auto">
             <AlgorithmAuditTrail resultData={resultData} filename={filename} />
@@ -410,15 +611,7 @@ export const BatchDashboard = ({
               </div>
 
               <div className="flex flex-col md:flex-row items-stretch md:items-end w-full md:w-auto gap-4 flex-shrink-0">
-                {onDownload && selectedIssue !== null && (
-                  <button
-                    onClick={onDownload}
-                    className="px-5 py-2.5 bg-white text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 hover:border-emerald-200 font-bold text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all w-full md:w-auto whitespace-nowrap"
-                  >
-                    <Download className="w-4 h-4" />
-                    Descargar Resultados
-                  </button>
-                )}
+
 
                 {hasOrphanComments && (
                   <div className="relative flex flex-col items-start md:items-end gap-1">
@@ -539,6 +732,33 @@ export const BatchDashboard = ({
                 <>
                   {currentMetrics && (
                     <div className="flex flex-col w-full">
+                      <div className="px-4 md:px-6 pt-4">
+                          {/* BANNER SDI */}
+                          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative mb-4">
+                            <div>
+                              <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-1 flex items-center gap-1.5 relative group cursor-help w-max">
+                                Índice de Deuda Social (SDI)
+                                <Info className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] pointer-events-none font-normal text-center normal-case tracking-normal">
+                                  {isSingleIssue
+                                    ? "El SDI es un índice de ranking relativo. Requiere el análisis simultáneo de al menos 2 Issues distintos para poder calcular y comparar la varianza de la deuda social."
+                                    : "El SDI (Social Debt Index) es un índice relativo. Se calcula comparando el volumen y severidad de este Issue con respecto a todos los demás Issues analizados en este lote."}
+                                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                                </div>
+                              </div>
+                              <p className={`text-lg font-semibold ${isSingleIssue ? "text-slate-500" : sdiColor}`}>
+                                {isSingleIssue ? "No Calculable" : currentMetrics.social_debt_level}
+                              </p>
+                            </div>
+                            <div className={`text-4xl md:text-5xl font-black ${sdiColor}`}>
+                              {isSingleIssue ? "N/A" : sdiPercent}
+                              {!isSingleIssue && (
+                                <span className="text-lg md:text-xl text-slate-400 font-bold ml-1">/100</span>
+                              )}
+                            </div>
+                          </div>
+
+</div>
                       <div className="px-4 md:px-6 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
@@ -592,356 +812,168 @@ export const BatchDashboard = ({
                         </div>
                       ) : (
                         <div className="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                          <div className="flex flex-col gap-6">
-                            <div
-                              className={
-                                "bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative "
-                              }
-                            >
-                              <div>
-                                <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-1 flex items-center gap-1.5 relative group cursor-help w-max">
-                                  Índice de Deuda Social (SDI)
-                                  <Info className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] pointer-events-none font-normal text-center normal-case tracking-normal">
-                                    {isSingleIssue
-                                      ? "El SDI es un índice de ranking relativo. Requiere el análisis simultáneo de al menos 2 Issues distintos para poder calcular y comparar la varianza de la deuda social."
-                                      : "El SDI (Social Debt Index) es un índice relativo. Se calcula comparando el volumen y severidad de este Issue con respecto a todos los demás Issues analizados en este lote."}
-                                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
-                                  </div>
-                                </div>
-                                {/* SOLUCIÓN PUNTO 3: Título pintado del mismo color que el número */}
-                                <p
-                                  className={`text-lg font-semibold ${isSingleIssue ? "text-slate-500" : sdiColor}`}
-                                >
-                                  {isSingleIssue
-                                    ? "No Calculable"
-                                    : currentMetrics.social_debt_level}
-                                </p>
-                              </div>
-                              <div
-                                className={`text-4xl md:text-5xl font-black ${sdiColor}`}
-                              >
-                                {isSingleIssue ? "N/A" : sdiPercent}
-                                {!isSingleIssue && (
-                                  <span className="text-lg md:text-xl text-slate-400 font-bold ml-1">
-                                    /100
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative ">
-                              <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                                <Layers className="w-4 h-4" /> Distribución de
-                                Macrocausas
-                              </h3>
-                              <div className="w-full">
-                                <ResponsiveContainer width="100%" height={240}>
-                                  <RechartsPieChart
-                                    margin={{
-                                      top: 0,
-                                      right: 0,
-                                      left: 0,
-                                      bottom: 0,
-                                    }}
-                                  >
-                                    <Pie
-                                      data={chartData}
-                                      cx="35%"
-                                      cy="50%"
-                                      innerRadius={60}
-                                      outerRadius={90}
-                                      paddingAngle={2}
-                                      dataKey="count"
-                                      nameKey="label"
-                                      stroke="none"
-                                    >
-                                      {chartData.map((entry, index) => (
-                                        <Cell
-                                          key={`cell-${index}`}
-                                          fill={entry.color}
-                                        />
-                                      ))}
-                                    </Pie>
-                                    <Tooltip
-                                      wrapperStyle={{ zIndex: 999 }}
-                                      content={({ active, payload }) => {
-                                        if (
-                                          active &&
-                                          payload &&
-                                          payload.length
-                                        ) {
-                                          return (
-                                            <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
-                                              <p className="font-bold text-slate-800 mb-1">
-                                                {payload[0].payload.name}:{" "}
-                                                {payload[0].payload.desc}
-                                              </p>
-                                              <p className="text-blue-600 font-medium">
-                                                Frecuencia: {payload[0].value}
-                                              </p>
-                                            </div>
-                                          );
-                                        }
-                                        return null;
-                                      }}
-                                    />
-                                    <Legend
-                                      layout="vertical"
-                                      verticalAlign="middle"
-                                      align="right"
-                                      wrapperStyle={{
-                                        fontSize: "15px",
-                                        lineHeight: "22px",
-                                        width: "55%",
-                                        right: 0,
-                                      }}
-                                    />
-                                  </RechartsPieChart>
-                                </ResponsiveContainer>
-                              </div>
-                            </div>
-
-                            {currentMetrics.macro_diversity !== undefined && (
-                              <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative ">
-                                <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                                  <PieChart className="w-4 h-4 text-emerald-500" />{" "}
-                                  Métricas de Diversidad
-                                  <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                                  <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                    Cuantifica cuántos tipos distintos de
-                                    causas, riesgos o patrones nocivos están
-                                    ocurriendo de forma simultánea en este hilo.
-                                    <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                                  </div>
-                                </h3>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                                    <span className="text-xs md:text-sm text-slate-600">
-                                      Macrocausas
-                                    </span>
-                                    <span className="text-sm md:text-base font-bold text-slate-800">
-                                      {currentMetrics.macro_diversity}
-                                    </span>
-                                  </div>
-                                  <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                                    <span className="text-xs md:text-sm text-slate-600">
-                                      Microcausas
-                                    </span>
-                                    <span className="text-sm md:text-base font-bold text-slate-800">
-                                      {currentMetrics.micro_diversity}
-                                    </span>
-                                  </div>
-                                  <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                                    <span className="text-xs md:text-sm text-slate-600">
-                                      Riesgos
-                                    </span>
-                                    <span className="text-sm md:text-base font-bold text-slate-800">
-                                      {currentMetrics.risk_diversity}
-                                    </span>
-                                  </div>
-                                  <div className="bg-slate-50/80 p-2 rounded-md border border-slate-100 flex justify-between items-center">
-                                    <span className="text-xs md:text-sm text-slate-600">
-                                      Smells
-                                    </span>
-                                    <span className="text-sm md:text-base font-bold text-slate-800">
-                                      {currentMetrics.smell_diversity}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                              <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                                <Users className="w-4 h-4 text-purple-600" />{" "}
-                                Community Smells
-                                <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                  Patrones de comportamiento tóxico o
-                                  ineficiente en la comunidad. El número entero
-                                  indica la frecuencia absoluta de apariciones
-                                  de este patrón a lo largo de todo el hilo.
-                                  <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                                </div>
-                              </h3>
-                              <ul className="space-y-2">
-                                {currentMetrics.dominant_community_smells?.map(
-                                  (s: [string, number], idx: number) => (
-                                    <li
-                                      key={idx}
-                                      className="text-xs md:text-sm py-1.5 flex justify-between items-center border-b border-slate-100/50 last:border-0"
-                                    >
-                                      <span className="text-slate-700 pr-2">
-                                        {parseListString(s[0])
-                                          .map(
-                                            (id) =>
-                                              getCommunitySmellDetails(id).name,
-                                          )
-                                          .join(" | ")}
-                                      </span>
-                                      <span className="font-bold text-slate-700 flex-shrink-0">
-                                        {Math.round(s[1])}
-                                      </span>
-                                    </li>
-                                  ),
-                                )}
-                              </ul>
+                          {/* ROW 1: MACROCAUSAS | TIPOS DE MICROCAUSA */}
+                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                              <Layers className="w-4 h-4" /> Distribución de Macrocausas (Top 3)
+                            </h3>
+                            <div className="w-full">
+                              <ResponsiveContainer width="100%" height={240}>
+                                <RechartsPieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                                  <Pie data={chartData} cx="35%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="count" nameKey="label" stroke="none" label={({ value }) => value}>
+                                    {chartData.map((entry, index) => (
+                                      <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                  </Pie>
+                                  <Tooltip wrapperStyle={{ zIndex: 999 }} content={({ active, payload }) => {
+                                    if (active && payload && payload.length) {
+                                      return (
+                                        <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
+                                          <p className="font-bold text-slate-800 mb-1">{payload[0].payload.name}: {payload[0].payload.desc}</p>
+                                          <p className="text-blue-600 font-medium">Frecuencia: {payload[0].value}</p>
+                                        </div>
+                                      );
+                                    }
+                                    return null;
+                                  }} />
+                                  <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{ fontSize: "15px", lineHeight: "22px", width: "55%", right: 0 }} />
+                                </RechartsPieChart>
+                              </ResponsiveContainer>
                             </div>
                           </div>
 
-                          <div className="flex flex-col gap-4">
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex-[2] flex flex-col">
-                              <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                                <ListFilter className="w-4 h-4 text-indigo-500" />{" "}
-                                Microcausas
-                                <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                  Lista de los problemas sociales o técnicos
-                                  específicos más graves detectados. El valor
-                                  representa la masa acumulada de certeza de la
-                                  IA; es decir, la suma de las probabilidades
-                                  semánticas cada vez que este problema fue
-                                  detectado en el hilo. Un valor alto indica que
-                                  el problema se discutió repetidamente y con
-                                  mucha evidencia.
-                                  <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                                </div>
-                              </h3>
-                              <div className="w-full mt-2 flex-1 relative min-h-[250px]">
-                                <ResponsiveContainer width="100%" height="100%">
-                                  <BarChart
-                                    data={microChartData}
-                                    layout="vertical"
-                                    margin={{
-                                      top: 0,
-                                      right: 20,
-                                      left: 0,
-                                      bottom: 0,
-                                    }}
-                                  >
-                                    <XAxis type="number" hide />
-                                    <YAxis
-                                      type="category"
-                                      dataKey="name"
-                                      width={230}
-                                      tick={{ fontSize: 14, fill: "#334155" }}
-                                      axisLine={false}
-                                      tickLine={false}
-                                      interval={0}
-                                    />
-                                    <Tooltip
-                                      wrapperStyle={{ zIndex: 999 }}
-                                      cursor={{ fill: "rgba(0,0,0,0.05)" }}
-                                      content={({ active, payload }) => {
-                                        if (
-                                          active &&
-                                          payload &&
-                                          payload.length
-                                        ) {
-                                          return (
-                                            <div className="bg-white p-2 rounded shadow border border-slate-100 text-xs z-[999]">
-                                              <p className="font-bold text-slate-800 mb-1 max-w-[200px] whitespace-normal">
-                                                {payload[0].payload.name}
-                                              </p>
-                                              <p className="text-indigo-600 font-medium">
-                                                Certeza Acumulada:{" "}
-                                                {payload[0].value}
-                                              </p>
-                                            </div>
-                                          );
-                                        }
-                                        return null;
-                                      }}
-                                    />
-                                    {/* SOLUCIÓN PUNTO 4: maxBarSize impide que la barra se vea gigante cuando solo hay 1 dato */}
-                                    <Bar
-                                      dataKey="value"
-                                      radius={[0, 4, 4, 0]}
-                                      maxBarSize={45}
-                                    >
-                                      {microChartData.map((entry, idx) => (
-                                        <Cell
-                                          key={`cell-${idx}`}
-                                          fill={entry.color}
-                                        />
-                                      ))}
-                                    </Bar>
-                                  </BarChart>
-                                </ResponsiveContainer>
+                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2 group relative">
+                              <Layers className="w-4 h-4 text-pink-500" /> Tipos de Microcausas (Top 3)
+                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
+                                Naturaleza teórica subyacente de los problemas detectados.
+                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
                               </div>
+                            </h3>
+                            <div className="w-full">
+                              <ResponsiveContainer width="100%" height={240}>
+                                <RechartsPieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                                  <Pie data={typeChartData} cx="35%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value" nameKey="name" stroke="none" label={({ value }) => value}>
+                                    {typeChartData.map((entry: any, index: number) => (
+                                      <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                  </Pie>
+                                  <Tooltip wrapperStyle={{ zIndex: 999 }} content={({ active, payload }) => {
+                                    if (active && payload && payload.length) {
+                                      return (
+                                        <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
+                                          <p className="font-bold text-slate-800 mb-1">{payload[0].payload.name}</p>
+                                          <p className="text-pink-600 font-medium">Frecuencia: {payload[0].value}</p>
+                                        </div>
+                                      );
+                                    }
+                                    return null;
+                                  }} />
+                                  <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{ fontSize: "15px", lineHeight: "22px", width: "55%", right: 0 }} />
+                                </RechartsPieChart>
+                              </ResponsiveContainer>
                             </div>
+                          </div>
 
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex-1">
-                              <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                                <AlertTriangle className="w-4 h-4 text-orange-500" />{" "}
-                                Riesgos
-                                <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                  Posibles consecuencias negativas si la deuda
-                                  social de este hilo no se resuelve. El número
-                                  indica la frecuencia absoluta, es decir,
-                                  cuántas veces el modelo infirió este riesgo
-                                  específico basándose en los comentarios.
-                                  <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                                </div>
-                              </h3>
-                              <ul className="space-y-2">
-                                {currentMetrics.dominant_risks?.map(
-                                  (r: [string, number], idx: number) => (
-                                    <li
-                                      key={idx}
-                                      className="text-xs md:text-sm py-1.5 flex justify-between items-center border-b border-slate-100/50 last:border-0"
-                                    >
-                                      <span className="text-slate-700 pr-2">
-                                        {parseListString(r[0])
-                                          .map((id) => getRiskDetails(id).name)
-                                          .join(" | ")}
-                                      </span>
-                                      <span className="font-bold text-slate-700 flex-shrink-0">
-                                        {Math.round(r[1])}
-                                      </span>
-                                    </li>
-                                  ),
-                                )}
-                              </ul>
+                          {/* ROW 2: MICROCAUSAS | COMMUNITY SMELLS */}
+                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <ListFilter className="w-4 h-4 text-indigo-500" /> Microcausas (Top 3)
+                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
+                                Lista de los problemas sociales o técnicos específicos más graves detectados. El valor representa la masa acumulada de certeza de la IA.
+                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                              </div>
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={microChartData} colorClass="text-indigo-600" />
                             </div>
+                          </div>
 
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                              <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                                <Layers className="w-4 h-4 text-pink-500" />{" "}
-                                Tipos de Causa
-                                <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                  Naturaleza teórica subyacente de los problemas
-                                  detectados. El valor indica cuántas veces
-                                  problemas de esta naturaleza fueron detectados
-                                  en este hilo.
-                                  <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                                </div>
-                              </h3>
-                              <ul className="space-y-2">
-                                {currentMetrics.dominant_microcause_types?.map(
-                                  (m: [string, number], idx: number) => (
-                                    <li
-                                      key={idx}
-                                      className="text-xs md:text-sm py-1.5 flex justify-between items-center border-b border-slate-100/50 last:border-0"
-                                    >
-                                      <span className="text-slate-700 pr-2">
-                                        {parseListString(m[0])
-                                          .map(
-                                            (id) =>
-                                              getMicrocauseTypeDetails(id).name,
-                                          )
-                                          .join(" | ")}
-                                      </span>
-                                      <span className="font-bold text-slate-700 flex-shrink-0">
-                                        {Math.round(m[1])}
-                                      </span>
-                                    </li>
-                                  ),
-                                )}
-                              </ul>
+                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <Users className="w-4 h-4 text-purple-600" /> Community Smells (Top 3)
+                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
+                                Patrones de comportamiento tóxico o ineficiente en la comunidad.
+                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                              </div>
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={smellChartData} colorClass="text-purple-600" />
+                            </div>
+                          </div>
+
+                          {/* ROW 3: RIESGOS | PREVENTIVAS */}
+<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <AlertTriangle className="w-4 h-4 text-orange-500" /> Riesgos (Top 3)
+                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
+                                Posibles consecuencias negativas si la deuda social de este hilo no se resuelve.
+                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                              </div>
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={riskChartData} colorClass="text-orange-500" />
+                            </div>
+                          </div>
+
+
+
+                          {/* ROW 4: INDICADORES | PREVENTIVAS */}
+                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicadores (Top 3)
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={indicatorChartData} colorClass="text-indigo-500" />
+                            </div>
+                          </div>
+
+                          
+
+                          {/* ROW 4: CORRECTIVAS | EFECTOS */}
+<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <Layers className="w-4 h-4 text-blue-600" /> Estrategias Correctivas (Top 3)
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={correctiveChartData} colorClass="text-blue-600" />
+                            </div>
+                          </div>
+
+<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <AlertTriangle className="w-4 h-4 text-orange-600" /> Efectos (Top 3)
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={effectsChartData} colorClass="text-orange-600" />
+                            </div>
+                          </div>
+
+                          {/* ROW 5: METRICAS | INDICADORES */}
+<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <TrendingUp className="w-4 h-4 text-emerald-600" /> Métricas (Top 3)
+                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
+                                Métricas de software relevantes vinculadas a los problemas detectados.
+                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                              </div>
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={metricsChartData} colorClass="text-emerald-600" />
+                            </div>
+                          </div>
+
+<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicadores (Top 3)
+                            </h3>
+                            <div className="w-full mt-2 relative h-[160px]">
+                              <MetricBarChart data={indicatorChartData} colorClass="text-indigo-500" />
                             </div>
                           </div>
                         </div>
@@ -963,24 +995,10 @@ export const BatchDashboard = ({
                           </p>
                         </div>
                       )}
-                      {selectedIssue !== "individuales" && (
-                        <div className="p-4 border-t border-slate-200 bg-white/50 mt-auto">
-                          <button
-                            onClick={() => {
-                              setShowComments(!showComments);
-                              setCurrentPage(1);
-                            }}
-                            className="w-full py-2 bg-white text-slate-600 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 transition shadow-sm"
-                          >
-                            {showComments
-                              ? "Ocultar Detalles de Comentarios"
-                              : `Ver los ${currentMetrics?.comment_count || issueComments.length} comentarios clasificados`}
-                          </button>
-                        </div>
-                      )}
+                      {/* Boton removido */}
 
-                      {(showComments || selectedIssue === "individuales") && (
-                        <div ref={commentsListRef} className="flex flex-col">
+                      {true && (
+                        <div ref={commentsListRef} className="flex flex-col mt-6 border-t border-slate-200 pt-6">
                           <div
                             className="sticky z-20 bg-slate-50/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 shadow-sm flex flex-wrap gap-2 items-center transition-all duration-75"
                             style={{

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import ontology_dictionary from "../ontology/frontend_ontology_dictionary.json";
+import { flattenAndAggregateMetrics } from "./utils";
 
 interface Step4Row {
   issue_number?: string | number;
@@ -241,23 +242,53 @@ export const downloadFinalExcel = async (
   const sdiArray = Object.keys(issues_metrics)
     .map((issue_number) => {
       const metrics = issues_metrics[issue_number] as Record<string, unknown>;
+      const {
+        dominant_macrocauses,
+        dominant_microcauses,
+        dominant_microcause_types,
+        dominant_community_smells,
+        dominant_risks,
+        dominant_indicators,
+        dominant_preventive_strategies,
+        dominant_corrective_strategies,
+        dominant_effects,
+        dominant_metrics,
+        ...otherMetrics
+      } = metrics as any;
       const row: SDIArrayRow = {
         issue_number: issue_number,
-        ...metrics,
-        dominant_macrocauses: formatTupleList(
-          metrics.dominant_macrocauses,
+        ...otherMetrics,
+        macrocauses: formatTupleList(
+          flattenAndAggregateMetrics(dominant_macrocauses as [string, number][] | undefined),
         ) as string,
-        dominant_microcauses: formatTupleList(
-          metrics.dominant_microcauses,
+        microcauses: formatTupleList(
+          flattenAndAggregateMetrics(dominant_microcauses as [string, number][] | undefined),
         ) as string,
-        dominant_microcause_types: formatTupleList(
-          metrics.dominant_microcause_types,
+        microcause_types: formatTupleList(
+          flattenAndAggregateMetrics(dominant_microcause_types as [string, number][] | undefined),
         ) as string,
-        dominant_community_smells: formatTupleList(
-          metrics.dominant_community_smells,
+        community_smells: formatTupleList(
+          flattenAndAggregateMetrics(dominant_community_smells as [string, number][] | undefined),
           getSmellCode,
         ) as string,
-        dominant_risks: formatTupleList(metrics.dominant_risks) as string,
+        risks: formatTupleList(
+          flattenAndAggregateMetrics(dominant_risks as [string, number][] | undefined),
+        ) as string,
+        indicators: formatTupleList(
+          flattenAndAggregateMetrics(dominant_indicators as [string, number][] | undefined),
+        ) as string,
+        preventive_strategies: formatTupleList(
+          flattenAndAggregateMetrics(dominant_preventive_strategies as [string, number][] | undefined),
+        ) as string,
+        corrective_strategies: formatTupleList(
+          flattenAndAggregateMetrics(dominant_corrective_strategies as [string, number][] | undefined),
+        ) as string,
+        effects: formatTupleList(
+          flattenAndAggregateMetrics(dominant_effects as [string, number][] | undefined),
+        ) as string,
+        metrics: formatTupleList(
+          flattenAndAggregateMetrics(dominant_metrics as [string, number][] | undefined),
+        ) as string,
       };
       return row;
     })
@@ -268,6 +299,25 @@ export const downloadFinalExcel = async (
 
   const sheetSDI = workbook.addWorksheet("Metricas SDI");
   addDataToSheet(sheetSDI, sdiArray, "TablaMetricasSDI");
+  // --- Static Model Data ---
+  const modelComparisonData = [
+    { model: "Random Forest", tipo_de_entrada: "Características Estructuradas Adaptativas", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
+    { model: "TF-IDF + Logistic Regression", tipo_de_entrada: "Texto del Issue", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
+    { model: "TF-IDF + Linear SVM", tipo_de_entrada: "Texto del Issue", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
+  ];
+  
+  const crossValidationData = [
+    { model: "Random Forest + Adaptive Features", accuracy_mean: 0.9094, accuracy_std: 0.0220, macro_f1_mean: 0.9094, macro_f1_std: 0.0220, weighted_f1_mean: 0.9096, weighted_f1_std: 0.0217 },
+    { model: "TF-IDF + Logistic Regression", accuracy_mean: 0.6528, accuracy_std: 0.0627, macro_f1_mean: 0.6345, macro_f1_std: 0.0660, weighted_f1_mean: 0.6355, weighted_f1_std: 0.0660 },
+    { model: "TF-IDF + Linear SVM", accuracy_mean: 0.5887, accuracy_std: 0.0577, macro_f1_mean: 0.5558, macro_f1_std: 0.0552, weighted_f1_mean: 0.5577, weighted_f1_std: 0.0560 }
+  ];
+
+  const sheetModel = workbook.addWorksheet("Comparación Modelos");
+  addDataToSheet(sheetModel, modelComparisonData, "TablaComparacionModelos");
+
+  const sheetCrossVal = workbook.addWorksheet("Validación Cruzada");
+  addDataToSheet(sheetCrossVal, crossValidationData, "TablaValidacionCruzada");
+
 
   const ontDict = ontology_dictionary as OntDictType;
   Object.keys(ontDict).forEach((category, idx) => {
@@ -288,7 +338,6 @@ export const downloadFinalExcel = async (
     const sheetOnt = workbook.addWorksheet(sheetName);
     addDataToSheet(sheetOnt, flatOnt, `TablaOntologia${idx}`);
   });
-
   const buffer = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buffer]), `${baseName}_resultados_deuda.xlsx`);
 };
@@ -519,8 +568,7 @@ export const AlgorithmAuditTrail = ({
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet(sheetName);
     addDataToSheet(worksheet, dataArray, "TablaExportacion");
-
-    const buffer = await workbook.xlsx.writeBuffer();
+  const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), fileName);
   };
 
@@ -703,20 +751,46 @@ export const AlgorithmAuditTrail = ({
               issue_number: issue_number,
               ...metrics,
               dominant_macrocauses: formatTupleList(
-                metrics.dominant_macrocauses,
+                flattenAndAggregateMetrics(metrics.dominant_macrocauses as [string, number][] || []),
               ) as string,
               dominant_microcauses: formatTupleList(
-                metrics.dominant_microcauses,
+                flattenAndAggregateMetrics(metrics.dominant_microcauses as [string, number][] || []),
               ) as string,
               dominant_microcause_types: formatTupleList(
-                metrics.dominant_microcause_types,
+                flattenAndAggregateMetrics(metrics.dominant_microcause_types as [string, number][] || []),
               ) as string,
               dominant_community_smells: formatTupleList(
-                metrics.dominant_community_smells,
+                flattenAndAggregateMetrics(metrics.dominant_community_smells as [string, number][] || []),
                 getSmellCode,
               ) as string,
-              dominant_risks: formatTupleList(metrics.dominant_risks) as string,
+              dominant_risks: formatTupleList(
+                flattenAndAggregateMetrics(metrics.dominant_risks as [string, number][] || [])
+              ) as string,
+              key_indicators: formatTupleList(
+                flattenAndAggregateMetrics((metrics.dominant_indicators || metrics.key_indicators || []) as [string, number][]),
+              ) as string,
+              key_metrics: formatTupleList(
+                flattenAndAggregateMetrics((metrics.dominant_metrics || metrics.key_metrics || metrics.metrics || []) as [string, number][]),
+              ) as string,
+              key_preventive_strategies: formatTupleList(
+                flattenAndAggregateMetrics((metrics.dominant_preventive_strategies || metrics.key_preventive_strategies || []) as [string, number][]),
+              ) as string,
+              key_corrective_strategies: formatTupleList(
+                flattenAndAggregateMetrics((metrics.dominant_corrective_strategies || metrics.key_corrective_strategies || []) as [string, number][]),
+              ) as string,
+              effects: formatTupleList(
+                flattenAndAggregateMetrics((metrics.dominant_effects || metrics.effects || []) as [string, number][]),
+              ) as string,
+              social_debt_index: Number(metrics.social_debt_index) || 0,
             };
+            
+            // Eliminar las llaves originales para que no aparezcan columnas vacías
+            delete row.dominant_indicators;
+            delete row.dominant_metrics;
+            delete row.dominant_preventive_strategies;
+            delete row.dominant_corrective_strategies;
+            delete row.dominant_effects;
+
             return row;
           })
           .sort(
@@ -727,6 +801,25 @@ export const AlgorithmAuditTrail = ({
 
         const sheetSDI = workbook.addWorksheet("Metricas SDI");
         addDataToSheet(sheetSDI, sdiArray, "TablaMetricasSDIPaso5");
+  // --- Static Model Data ---
+  const modelComparisonData = [
+    { model: "Random Forest", tipo_de_entrada: "Características Estructuradas Adaptativas", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
+    { model: "TF-IDF + Logistic Regression", tipo_de_entrada: "Texto del Issue", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
+    { model: "TF-IDF + Linear SVM", tipo_de_entrada: "Texto del Issue", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
+  ];
+  
+  const crossValidationData = [
+    { model: "Random Forest + Adaptive Features", accuracy_mean: 0.9094, accuracy_std: 0.0220, macro_f1_mean: 0.9094, macro_f1_std: 0.0220, weighted_f1_mean: 0.9096, weighted_f1_std: 0.0217 },
+    { model: "TF-IDF + Logistic Regression", accuracy_mean: 0.6528, accuracy_std: 0.0627, macro_f1_mean: 0.6345, macro_f1_std: 0.0660, weighted_f1_mean: 0.6355, weighted_f1_std: 0.0660 },
+    { model: "TF-IDF + Linear SVM", accuracy_mean: 0.5887, accuracy_std: 0.0577, macro_f1_mean: 0.5558, macro_f1_std: 0.0552, weighted_f1_mean: 0.5577, weighted_f1_std: 0.0560 }
+  ];
+
+  const sheetModel = workbook.addWorksheet("Comparación Modelos");
+  addDataToSheet(sheetModel, modelComparisonData, "TablaComparacionModelos");
+
+  const sheetCrossVal = workbook.addWorksheet("Validación Cruzada");
+  addDataToSheet(sheetCrossVal, crossValidationData, "TablaValidacionCruzada");
+
 
         const ontDict = ontology_dictionary as OntDictType;
         Object.keys(ontDict).forEach((category, idx) => {
@@ -747,8 +840,7 @@ export const AlgorithmAuditTrail = ({
           const sheetOnt = workbook.addWorksheet(sheetName);
           addDataToSheet(sheetOnt, flatOnt, `TablaOntologiaPaso5_${idx}`);
         });
-
-        const buffer = await workbook.xlsx.writeBuffer();
+  const buffer = await workbook.xlsx.writeBuffer();
         saveAs(new Blob([buffer]), `${baseName}_auditoria_paso5.xlsx`);
       }
     }

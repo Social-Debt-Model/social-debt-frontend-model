@@ -76,10 +76,10 @@ const MicrocauseCard = ({
           className={`text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5 ${colorClass}`}
         >
           <Icon className="w-4 h-4" />
-          {title}
+          {title} {items.length > 3 ? "(Top 3)" : ""}
         </h4>
         <ul className="flex flex-col gap-2">
-          {items.map((id, idx) => {
+          {items.slice(0, 3).map((id, idx) => {
             const detail = getter(id);
             return (
               <li

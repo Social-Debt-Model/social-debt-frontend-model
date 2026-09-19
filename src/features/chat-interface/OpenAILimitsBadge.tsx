@@ -21,15 +21,21 @@ export const OpenAILimitsBadge = () => {
   useEffect(() => {
     const fetchLimits = async () => {
       setLoading(true);
-      const res = await checkOpenAILimits();
-      if (res?.error) {
-        setErrorObj({ isError: true, code: res.code });
-        console.error(`[Social Debt API] Error de conexión (${res.code}). ${res.code === 401 ? "Verifica la API_SECRET_KEY en el backend." : "Servidor inalcanzable."}`);
-      } else if (res?.limits) {
-        setLimits(res.limits);
-        setErrorObj({ isError: false });
+      try {
+        const res = await checkOpenAILimits();
+        if (res?.error) {
+          setErrorObj({ isError: true, code: res.code });
+          console.error(`[Social Debt API] Error de conexión (${res.code}). ${res.code === 401 ? "Verifica la API_SECRET_KEY en el backend." : "Servidor inalcanzable."}`);
+        } else if (res?.limits) {
+          setLimits(res.limits);
+          setErrorObj({ isError: false });
+        }
+      } catch (err) {
+        console.error("[Social Debt UI] Error invocando Server Action:", err);
+        setErrorObj({ isError: true, code: 503 });
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchLimits();

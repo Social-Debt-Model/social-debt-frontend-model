@@ -173,18 +173,24 @@ export const BatchProgressCard = ({
         ) {
           isFinished = true;
           if (intervalId) clearInterval(intervalId);
-          setStep("completed");
-          setProgressPercent(100);
-          setProgressMsg("Análisis completado exitosamente.");
-          await deletePendingJob(newJobId!);
-          if (callbacksRef.current.onCompleted) {
-            callbacksRef.current.onCompleted(
-              newJobId!,
-              (statusRes.result ||
-                statusRes.data ||
-                statusRes) as unknown as BatchResultData,
-            );
-          }
+          
+          // Actualizar UI para indicar que estamos calculando las métricas
+          setStep("processing");
+          setProgressPercent(99);
+          setProgressMsg("Calculando gráficas y matrices EDA...");
+          
+          // Usar un setTimeout para permitir que el navegador dibuje este mensaje antes de bloquearse
+          setTimeout(async () => {
+            await deletePendingJob(newJobId!);
+            if (callbacksRef.current.onCompleted) {
+              callbacksRef.current.onCompleted(
+                newJobId!,
+                (statusRes.result ||
+                  statusRes.data ||
+                  statusRes) as unknown as BatchResultData,
+              );
+            }
+          }, 150);
           return;
         }
 

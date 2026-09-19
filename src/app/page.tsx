@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, startTransition } from "react";
 import { ChatLayout } from "@/features/chat-interface/ChatLayout";
 import { ChatInput } from "@/features/chat-interface/ChatInput";
 import {
@@ -11,6 +11,7 @@ import { TextResultCard } from "@/features/text-classification/TextResultCard";
 import { BatchProgressCard } from "@/features/batch-classification/BatchProgressCard";
 import { BatchResultData } from "@/features/batch-classification/actions";
 import { BatchDashboard } from "@/features/metrics-dashboard/BatchDashboard";
+import { precalculateEdaStats } from "@/features/metrics-dashboard/edaUtils";
 import { downloadFinalExcel } from "@/features/metrics-dashboard/AlgorithmAuditTrail";
 
 import { BatchResultSummaryCard } from "@/features/batch-classification/BatchResultSummaryCard";
@@ -165,11 +166,16 @@ export default function Home() {
     );
 
     const timestamp = new Date().getTime();
+    
+    console.log("[EDA] Precalculating dashboard stats...");
+    const edaStats = precalculateEdaStats(resultData);
+    
     const historyItem: HistoryItem = {
       jobId,
       filename,
       timestamp,
       resultData,
+      edaStats,
     };
     await saveHistoryItem(historyItem);
 
@@ -208,7 +214,9 @@ export default function Home() {
   };
 
   const handleSelectHistory = (jobId: string) => {
-    setFocusedJobId(jobId);
+    startTransition(() => {
+      setFocusedJobId(jobId);
+    });
     setIsMobileSidebarOpen(false);
   };
 
@@ -264,6 +272,7 @@ export default function Home() {
         <div className="w-full h-full pb-0 md:pb-2 fade-in">
           <BatchDashboard
             resultData={focusedItem.resultData}
+            edaStats={focusedItem.edaStats}
             filename={focusedItem.filename}
             jobId={focusedItem.jobId}
             onDownload={() => handleDownload(focusedItem)}

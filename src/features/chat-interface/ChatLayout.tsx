@@ -23,7 +23,7 @@ export const ChatLayout = ({
       {/* Overlay para móviles */}
       {sidebar && isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden transition-opacity"
+          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 xl:hidden transition-opacity"
           onClick={onToggleSidebar}
         />
       )}
@@ -31,9 +31,9 @@ export const ChatLayout = ({
       {/* Sidebar - offcanvas en móviles, estático en desktop */}
       {sidebar && (
         <aside
-          className={`fixed md:relative inset-y-0 left-0 z-40 transform ${
+          className={`fixed xl:relative inset-y-0 left-0 z-40 transform ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-[120%]"
-          } md:translate-x-0 transition-transform duration-300 ease-in-out h-full flex-shrink-0 p-4 w-80 md:w-auto bg-transparent`}
+          } xl:translate-x-0 transition-transform duration-300 ease-in-out h-full flex-shrink-0 p-4 w-80 xl:w-auto bg-transparent`}
         >
           {sidebar}
         </aside>
@@ -41,7 +41,7 @@ export const ChatLayout = ({
 
       <div className="flex flex-col flex-1 relative overflow-hidden w-full overscroll-none">
         <header className="flex-none py-3 md:py-5 px-3 md:px-6 flex items-center justify-between glass-panel mt-4 mx-4 mb-0 z-20 relative shadow-2xl shadow-slate-900/10 border-white/60">
-          <div className="flex-shrink-0 w-[40px] flex items-center md:hidden">
+          <div className="flex-shrink-0 w-[40px] flex items-center xl:hidden">
             {sidebar && (
               <button
                 onClick={onToggleSidebar}
@@ -56,7 +56,7 @@ export const ChatLayout = ({
             Social Debt Adaptive Model
           </h1>
 
-          <div className="flex-shrink-0 w-[40px] flex justify-end md:hidden">
+          <div className="flex-shrink-0 w-[40px] flex justify-end xl:hidden">
             {headerAction}
           </div>
         </header>

@@ -31,6 +31,11 @@ export type MetricsData = {
   dominant_microcause_types?: [string, number][];
   dominant_risks?: [string, number][];
   dominant_community_smells?: [string, number][];
+  dominant_metrics?: [string, number][];
+  dominant_indicators?: [string, number][];
+  dominant_preventive_strategies?: [string, number][];
+  dominant_corrective_strategies?: [string, number][];
+  dominant_effects?: [string, number][];
   social_debt_index?: number;
   social_debt_level?: string;
   comment_count?: number;
