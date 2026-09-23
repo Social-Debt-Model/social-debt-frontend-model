@@ -28,6 +28,13 @@ import {
   Search,
   HelpCircle,
   TrendingUp,
+  Trophy,
+  Target,
+  Database,
+  ShieldAlert,
+  Activity,
+  ShieldCheck,
+  Wrench,
 } from "lucide-react";
 import { TextResultCard } from "../text-classification/TextResultCard";
 
@@ -253,6 +260,28 @@ export const BatchDashboard = ({
   const currentMetrics = selectedIssue
     ? (metrics[selectedIssue as string] as MetricsData | undefined)
     : undefined;
+
+  const formatPythonList = (strValue: string | undefined, getDetailsFn?: (key: string) => { name: string } | null | undefined) => {
+    if (!strValue) return "N/A";
+    const cleanStr = strValue.trim();
+    if (cleanStr.startsWith("[") && cleanStr.endsWith("]")) {
+      const inner = cleanStr.substring(1, cleanStr.length - 1).trim();
+      if (!inner) return "N/A";
+      return inner.split(/,(?=(?:[^'"]*['"'][^'"]*['"'])*[^'"]*$)/).map(s => {
+        const cleaned = s.trim().replace(/^['"']|['"']$/g, "");
+        if (getDetailsFn) {
+          const detail = getDetailsFn(cleaned);
+          return detail?.name || cleaned;
+        }
+        return cleaned;
+      }).join(" + ");
+    }
+    if (getDetailsFn) {
+      const detail = getDetailsFn(cleanStr);
+      return detail?.name || cleanStr;
+    }
+    return cleanStr;
+  };
 
   const issueComments = useMemo(() => {
     if (selectedIssue === "individuales") return orphanComments;
@@ -801,6 +830,78 @@ export const BatchDashboard = ({
                         </div>
                       ) : (
                         <div className="px-4 md:px-6 pt-4 pb-4 md:pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                          {/* CARACTERÍSTICAS DOMINANTES DEL ISSUE */}
+                          <div className="col-span-1 lg:col-span-2 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <h3 className="text-base md:text-lg font-bold text-slate-700 mb-5 flex items-center gap-2 border-b border-slate-100 pb-3">
+                              <Trophy className="w-5 h-5 text-amber-500" /> Características Dominantes del Issue
+                            </h3>
+                            <div className="flex flex-wrap gap-x-8 gap-y-6">
+                              {currentMetrics && currentMetrics.dominant_macrocauses && currentMetrics.dominant_macrocauses.length > 0 && (
+                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
+                                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0"><Target className="w-5 h-5" /></div>
+                                  <div>
+                                    <p className="text-sm font-bold text-slate-800">Macrocausa Principal</p>
+                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_macrocauses[0][0] as string, (key) => ({ name: getMacroCauseDescription(key) }))}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {currentMetrics && currentMetrics.dominant_microcauses && currentMetrics.dominant_microcauses.length > 0 && (
+                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
+                                  <div className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 shrink-0"><Database className="w-5 h-5" /></div>
+                                  <div>
+                                    <p className="text-sm font-bold text-slate-800">Microcausa Principal</p>
+                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_microcauses[0][0] as string, getMicroCauseDetails)}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {currentMetrics && currentMetrics.dominant_community_smells && currentMetrics.dominant_community_smells.length > 0 && (
+                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
+                                  <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 shrink-0"><Users className="w-5 h-5" /></div>
+                                  <div>
+                                    <p className="text-sm font-bold text-slate-800">Community Smell</p>
+                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_community_smells[0][0] as string, getCommunitySmellDetails)}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {currentMetrics && currentMetrics.dominant_risks && currentMetrics.dominant_risks.length > 0 && (
+                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
+                                  <div className="p-2.5 rounded-xl bg-orange-50 text-orange-600 shrink-0"><ShieldAlert className="w-5 h-5" /></div>
+                                  <div>
+                                    <p className="text-sm font-bold text-slate-800">Riesgo Principal</p>
+                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_risks[0][0] as string, getRiskDetails).replace(/ [Rr]isk$/i, "")}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {currentMetrics && currentMetrics.dominant_effects && currentMetrics.dominant_effects.length > 0 && (
+                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
+                                  <div className="p-2.5 rounded-xl bg-red-50 text-red-600 shrink-0"><Activity className="w-5 h-5" /></div>
+                                  <div>
+                                    <p className="text-sm font-bold text-slate-800">Efecto Más Común</p>
+                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_effects[0][0] as string, getEffectDetails)}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {currentMetrics && currentMetrics.dominant_preventive_strategies && currentMetrics.dominant_preventive_strategies.length > 0 && (
+                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
+                                  <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 shrink-0"><ShieldCheck className="w-5 h-5" /></div>
+                                  <div>
+                                    <p className="text-sm font-bold text-slate-800">Estrategia Preventiva</p>
+                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_preventive_strategies[0][0] as string, getStrategyDetails)}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {currentMetrics && currentMetrics.dominant_corrective_strategies && currentMetrics.dominant_corrective_strategies.length > 0 && (
+                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
+                                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-700 shrink-0"><Wrench className="w-5 h-5" /></div>
+                                  <div>
+                                    <p className="text-sm font-bold text-slate-800">Estrategia Correctiva</p>
+                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_corrective_strategies[0][0] as string, getStrategyDetails)}</p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
                           {/* ROW 1: MACROCAUSAS | TIPOS DE MICROCAUSA */}
                           <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2">
