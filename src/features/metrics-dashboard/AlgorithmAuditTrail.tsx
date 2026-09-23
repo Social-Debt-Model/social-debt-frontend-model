@@ -363,11 +363,11 @@ export const AlgorithmAuditTrail = ({
     const totalComments = comments.length;
     
     // Paso 2: Noise levels
-    const noiseLevels: Record<string, number> = { "Hard noise": 0, "Operational noise": 0, "Useful": 0 };
+    const noiseLevels: Record<string, number> = { "Hard noise": 0, "Soft noise": 0, "Useful": 0 };
     comments.forEach(c => {
       const level = (c.noise_level || "").toLowerCase();
       if (level.includes("hard")) noiseLevels["Hard noise"]++;
-      else if (level.includes("operational")) noiseLevels["Operational noise"]++;
+      else if (level.includes("soft")) noiseLevels["Soft noise"]++;
       else noiseLevels["Useful"]++;
     });
 
@@ -498,7 +498,7 @@ export const AlgorithmAuditTrail = ({
       exportKey: "step2_b64",
       stats: [
         { label: "Hard noise (Ruido Absoluto)", value: stats.noiseLevels["Hard noise"] },
-        { label: "Operational noise (Ruido Operativo)", value: stats.noiseLevels["Operational noise"] },
+        { label: "Soft noise (Ruido Suave)", value: stats.noiseLevels["Soft noise"] },
         { label: "Useful (Útiles para análisis)", value: stats.noiseLevels["Useful"] },
       ],
     },
