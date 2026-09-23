@@ -20,7 +20,7 @@ const DB_PREFIX = "social-debt-history-";
 const PENDING_PREFIX = "social-debt-pending-";
 
 const VERSION_KEY = "social-debt-app-version";
-const CURRENT_VERSION = "v1.1.0";
+const CURRENT_VERSION = "v1.2.0";
 
 /**
  * Verifica si la versión de la aplicación ha cambiado.
