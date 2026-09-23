@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useOntology } from "../ontology/useOntology";
 import {
   AlertTriangle,
   CheckCircle,
-  HelpCircle,
   Info,
   ChevronDown,
   ChevronUp,
@@ -76,10 +75,10 @@ const MicrocauseCard = ({
           className={`text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5 ${colorClass}`}
         >
           <Icon className="w-4 h-4" />
-          {title} {items.length > 3 ? "(Top 3)" : ""}
+          {title}
         </h4>
         <ul className="flex flex-col gap-2">
-          {items.slice(0, 3).map((id, idx) => {
+          {items.map((id, idx) => {
             const detail = getter(id);
             return (
               <li
@@ -104,50 +103,65 @@ const MicrocauseCard = ({
 
   return (
     <div
-      className={`p-4 rounded-xl shadow-sm flex flex-col gap-1.5 transition-colors border ${
+      className={`p-4 rounded-xl shadow-sm flex flex-col gap-1.5 transition-colors border min-w-0 break-words ${
         isDashboardMode
           ? "bg-slate-50 border-slate-200 hover:bg-slate-100"
           : "bg-white/60 border-white hover:bg-white/80"
       }`}
     >
       <div
-        className="cursor-pointer"
+        className="cursor-pointer min-w-0"
         onClick={() => hasDetails && setIsOpen(!isOpen)}
       >
-        <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center gap-2 mb-1.5">
-          <div className="flex flex-row items-center flex-wrap gap-2 flex-1 pr-0 md:pr-2">
-            <span className="font-bold text-lg text-indigo-900">
-              {microDesc.name}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 md:gap-4 mb-2 min-w-0">
+          <div className="flex items-start md:items-center justify-between gap-2 w-full md:w-auto md:flex-1 min-w-0">
+            <div className="min-w-0 flex-1 break-words">
+              <span className="font-bold text-lg text-indigo-900 inline mr-2">
+                {microDesc.name}
+              </span>
+              {mc.cause_type && (
+                <span className="hidden md:inline-flex text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-md whitespace-nowrap align-middle mb-1">
+                  {getMicrocauseTypeDetails(mc.cause_type).name}
+                </span>
+              )}
+            </div>
+            
+            <span className="md:hidden flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0 mt-0.5" title="Nivel de similitud / confianza">
+              <CheckCircle className="w-3.5 h-3.5 opacity-75 flex-shrink-0" />
+              <span className="whitespace-nowrap block">{Math.round(mc.similarity * 100)}% sim.</span>
             </span>
+          </div>
+
+          <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto flex-shrink-0 flex-wrap md:flex-nowrap">
             {mc.cause_type && (
-              <span className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-md">
+              <span className="md:hidden flex items-center text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-1.5 rounded-md whitespace-nowrap flex-shrink-0">
                 {getMicrocauseTypeDetails(mc.cause_type).name}
               </span>
             )}
-          </div>
-          <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-2 flex-shrink-0">
-            <span className="flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm" title="Nivel de similitud / confianza">
-              <CheckCircle className="w-4 h-4 opacity-75" />
-              {Math.round(mc.similarity * 100)}% sim.
+            
+            <span className="hidden md:flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Nivel de similitud / confianza">
+              <CheckCircle className="w-4 h-4 opacity-75 flex-shrink-0" />
+              <span className="whitespace-nowrap block">{Math.round(mc.similarity * 100)}% sim.</span>
             </span>
+            
             {hasDetails && (
-              <button className="text-sm font-semibold text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 transition px-2 py-0.5 rounded-md flex items-center gap-1 whitespace-nowrap">
+              <button className="flex text-sm font-semibold text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 transition px-2 py-1 md:py-0.5 rounded-md items-center gap-1 whitespace-nowrap flex-shrink-0 ml-auto md:ml-0">
                 {isOpen ? (
                   <>
-                    <ChevronUp className="w-3.5 h-3.5" />
-                    Ocultar detalles
+                    <ChevronUp className="w-3.5 h-3.5 flex-shrink-0" />
+                    Ocultar<span className="hidden md:inline">&nbsp;detalles</span>
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-3.5 h-3.5" />
-                    Ver detalles
+                    <ChevronDown className="w-3.5 h-3.5 flex-shrink-0" />
+                    Ver<span className="hidden md:inline">&nbsp;detalles</span>
                   </>
                 )}
               </button>
             )}
           </div>
         </div>
-        <span className="text-base text-indigo-900/80 leading-relaxed block">
+        <span className="text-base text-indigo-900/80 leading-relaxed block break-words">
           {microDesc.description}
         </span>
       </div>
@@ -219,7 +233,22 @@ export const TextResultCard = ({
   index?: number;
 }) => {
   const [isCardOpen, setIsCardOpen] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isInitialRender = useRef(true);
   const { getMacroCauseDescription } = useOntology();
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+    if (cardRef.current && !isDashboardMode) {
+      const timer = setTimeout(() => {
+        cardRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [isCardOpen, isDashboardMode]);
 
   if (result.error) {
     return (
@@ -233,7 +262,7 @@ export const TextResultCard = ({
   if (result.is_noise) {
     return (
       <div
-        className={`p-5 flex flex-col gap-4 rounded-bl-none border-l-4 border-slate-300 ${
+        className={`w-full min-w-0 break-words p-4 md:p-5 flex flex-col gap-4 rounded-bl-none border-l-4 border-slate-300 ${
           isDashboardMode
             ? "bg-white border border-slate-100 shadow-sm"
             : "glass-panel"
@@ -284,7 +313,8 @@ export const TextResultCard = ({
 
   return (
     <div
-      className={`p-4 md:p-5 flex flex-col gap-3 md:gap-4 rounded-bl-none border-l-4 border-indigo-500 transition-all ${
+      ref={cardRef}
+      className={`w-full min-w-0 break-words p-4 md:p-5 flex flex-col gap-3 md:gap-4 rounded-bl-none border-l-4 border-indigo-500 transition-all ${
         isDashboardMode
           ? "bg-white border border-slate-200 shadow-sm"
           : "glass-panel"
@@ -320,30 +350,57 @@ export const TextResultCard = ({
         )}
 
         <div
-          className={`grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 md:gap-y-0.5 ${result.cleaned_text ? "mt-4" : ""}`}
+          className={`flex flex-col md:flex-row md:items-start justify-between gap-3 md:gap-4 min-w-0 ${result.cleaned_text ? "mt-4" : ""}`}
         >
-          <p className="col-start-1 row-start-1 text-sm font-semibold uppercase tracking-wider text-indigo-900/70 self-center md:self-end">
-            Macrocausa Principal ({result.macro_cause_code})
-          </p>
-          <h3 className="col-span-2 md:col-span-1 col-start-1 row-start-2 text-xl font-bold text-indigo-900 leading-tight">
-            {macroDesc}
-          </h3>
-          <div className="col-start-2 row-start-1 md:row-span-2 flex items-center justify-end gap-2 self-center md:self-start md:mt-1">
-            <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm" title="Nivel de similitud / confianza">
-              <CheckCircle className="w-4 h-4 opacity-75" />
-              <span className="font-medium">{confidencePercent}% sim.</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2 mb-1">
+              <p className="text-sm font-semibold uppercase tracking-wider text-indigo-900/70 break-words flex-1 min-w-0">
+                Macrocausa Principal ({result.macro_cause_code})
+              </p>
+              <div className="md:hidden flex items-center gap-1 text-xs bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Nivel de similitud / confianza">
+                <CheckCircle className="w-3.5 h-3.5 opacity-75 flex-shrink-0" />
+                <span className="whitespace-nowrap font-medium block">{confidencePercent}% sim.</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-xl font-bold text-indigo-900 leading-tight break-words">
+                {macroDesc}
+              </h3>
+              {hasMicrocauses && (
+                <button className="md:hidden flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-auto flex-shrink-0">
+                  {isCardOpen ? (
+                    <>
+                      <ChevronUp className="w-4 h-4 flex-shrink-0" />
+                      Ocultar
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                      Detalles
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+          
+          <div className="hidden md:flex items-center justify-end gap-2 w-full md:w-auto flex-shrink-0 flex-wrap md:flex-nowrap">
+            <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Nivel de similitud / confianza">
+              <CheckCircle className="w-4 h-4 opacity-75 flex-shrink-0" />
+              <span className="whitespace-nowrap font-medium block">{confidencePercent}% sim.</span>
             </div>
             {hasMicrocauses && (
-              <button className="flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-1">
+              <button className="flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-auto md:ml-0">
                 {isCardOpen ? (
                   <>
-                    <ChevronUp className="w-4 h-4" />
-                    Ocultar detalles
+                    <ChevronUp className="w-4 h-4 flex-shrink-0" />
+                    Ocultar<span className="hidden md:inline">&nbsp;detalles</span>
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-4 h-4" />
-                    Ver detalles
+                    <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                    Ver<span className="hidden md:inline">&nbsp;detalles</span>
                   </>
                 )}
               </button>

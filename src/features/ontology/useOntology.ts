@@ -11,11 +11,12 @@ export const useOntology = () => {
   };
 
   const getMicroCauseDetails = (id: string) => {
-    return (
-      ontologyData.micro_causes[id as MicroCauseId] || {
-        name: id,
-        description: "Descripción no disponible.",
-      }
+    return getFlexibleDetails(
+      (ontologyData as Record<string, unknown>).micro_causes as Record<
+        string,
+        { name: string; description: string | null }
+      >,
+      id,
     );
   };
 
@@ -52,21 +53,21 @@ export const useOntology = () => {
         return dict[key];
       }
 
-      const squashId = cleanId.replace(/\s+/g, "");
-      const squashKey = cleanKey.replace(/\s+/g, "");
-      const squashName = dictNameClean.replace(/\s+/g, "");
+      const squashId = cleanId.replace(/[^a-z]/g, "");
+      const squashKey = cleanKey.replace(/[^a-z]/g, "");
+      const squashName = dictNameClean.replace(/[^a-z]/g, "");
 
       if (
         squashKey === squashId ||
-        squashKey.includes(squashId) ||
-        squashId.includes(squashKey)
+        (squashId.length > 5 && squashKey.includes(squashId)) ||
+        (squashKey.length > 5 && squashId.includes(squashKey))
       ) {
         return dict[key];
       }
       if (
         squashName === squashId ||
-        squashName.includes(squashId) ||
-        squashId.includes(squashName)
+        (squashId.length > 5 && squashName.includes(squashId)) ||
+        (squashName.length > 5 && squashId.includes(squashName))
       ) {
         return dict[key];
       }

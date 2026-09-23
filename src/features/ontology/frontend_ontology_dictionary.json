@@ -473,7 +473,7 @@
       "description": "Organize workshops on active listening skills to promote understanding and empathy."
     },
     "PS-018_ClearCommunicationGuidelines": {
-      "name": "PS-018_ClearCommunicationGuidelines",
+      "name": "Clear Communication Guidelines",
       "description": "\n        Define and promote clear communication practices to reduce ambiguity, misunderstandings, and inconsistencies in collaborative interactions.\n    "
     },
     "STR-I-002_MindfulnessTraining": {
@@ -709,11 +709,11 @@
       "description": "Establish shared goals and KPIs that require teamwork to achieve, reducing unhealthy rivalry."
     },
     "PS-020_BackwardCompatibilityReview": {
-      "name": "PS-020_BackwardCompatibilityReview",
+      "name": "Backward Compatibility Review",
       "description": "\n        Establish systematic reviews to ensure that new changes preserve compatibility with previous system behaviors, interfaces, and dependent components.\n    "
     },
     "PS-006_FormalPeerSupportMechanism": {
-      "name": "PS-006_FormalPeerSupportMechanism",
+      "name": "Formal Peer Support Mechanism",
       "description": "\n        Establish formal peer support mechanisms that facilitate collaborative assistance, knowledge exchange, and mutual problem solving among team members.\n    "
     },
     "STR-006_SupportResourceAllocation": {
@@ -1117,7 +1117,7 @@
       "description": "Risk of delays, blocked progress, duplicated effort, or dependency accumulation caused by limited access to repositories, pull requests, CI environments, validation resources, or technical permissions."
     },
     "RSK-004_Collaboration_Breakdown_Risk": {
-      "name": "RSK-004_Collaboration_Breakdown_Risk",
+      "name": "Collaboration Breakdown Risk",
       "description": "\n        Risk of collaboration breakdown caused by delayed communication, unclear feedback, poor coordination, or ineffective interaction among team members, which can negatively affect teamwork and project progress.\n    "
     },
     "RSK-024_ValidationBottleneckRisk": {
@@ -1177,7 +1177,7 @@
       "description": "Risk of breaking existing APIs, integrations, or expected behavior."
     },
     "RSK-006_Technical_Inconsistency_Risk": {
-      "name": "RSK-006_Technical_Inconsistency_Risk",
+      "name": "Technical Inconsistency Risk",
       "description": "Risk of introducing inconsistent technical behavior due to unresolved dependencies, incompatible components, configuration constraints, or misaligned implementation decisions."
     }
   },

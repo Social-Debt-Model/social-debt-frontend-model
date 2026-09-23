@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, startTransition } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChatLayout } from "@/features/chat-interface/ChatLayout";
 import { ChatInput } from "@/features/chat-interface/ChatInput";
 import {
@@ -214,9 +214,7 @@ export default function Home() {
   };
 
   const handleSelectHistory = (jobId: string) => {
-    startTransition(() => {
-      setFocusedJobId(jobId);
-    });
+    setFocusedJobId(jobId);
     setIsMobileSidebarOpen(false);
   };
 
@@ -265,7 +263,7 @@ export default function Home() {
         )
       }
     >
-      <div className="hidden md:block absolute top-[108px] right-4 z-50">
+      <div className="hidden 2xl:block absolute top-[108px] right-4 z-50">
         {!focusedItem && <OpenAILimitsBadge />}
       </div>
       {focusedItem ? (
@@ -284,14 +282,17 @@ export default function Home() {
             <h2 className="text-xl font-semibold text-slate-700 mb-2">
               ¡Bienvenido!
             </h2>
-            <p className="text-sm">
+            <p className="text-sm hidden md:block">
               Escribe un comentario para clasificarlo, o usa el ícono del clip
               para subir un archivo CSV/Excel para análisis masivo.
+            </p>
+            <p className="text-sm md:hidden text-slate-500">
+              Escribe un comentario o fragmento de código para clasificar su deuda social y descubrir sus causas o riesgos.
             </p>
           </div>
         </div>
       ) : (
-        <div className="max-w-3xl mx-auto w-full space-y-8 fade-in">
+        <div className="max-w-5xl mx-auto w-full space-y-8 fade-in">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -304,7 +305,7 @@ export default function Home() {
               )}
 
               {msg.sender === "system" && (
-                <div className="max-w-[80%] w-full">
+                <div className="max-w-[95%] lg:max-w-[90%] w-full">
                   {msg.isLoading ? (
                     <div className="glass-panel p-4 rounded-2xl rounded-bl-none flex items-center gap-3 text-slate-500 w-fit">
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -314,9 +315,13 @@ export default function Home() {
                     </div>
                   ) : msg.result ? (
                     <TextResultCard result={msg.result} />
-                  ) : msg.batchResult ? (
+                  ) : (msg.batchResult || (msg.batchJobId && historyItems.some((h) => h.jobId === msg.batchJobId))) ? (
                     <BatchResultSummaryCard
-                      resultData={msg.batchResult}
+                      resultData={
+                        msg.batchResult ||
+                        (historyItems.find((h) => h.jobId === msg.batchJobId)
+                          ?.resultData as BatchResultData)
+                      }
                       filename={
                         msg.batchFile?.name ||
                         `Lote ${new Date().toLocaleTimeString()}`
@@ -335,6 +340,15 @@ export default function Home() {
                       file={msg.batchFile}
                       resumeJobId={msg.batchJobId}
                       resumeFilename={msg.batchFileName}
+                      isCancelled={msg.batchCancelled}
+                      isError={msg.batchError}
+                      onJobStarted={(jobId) => {
+                        setMessages((prev) =>
+                          prev.map((m) =>
+                            m.id === msg.id ? { ...m, batchJobId: jobId } : m,
+                          ),
+                        );
+                      }}
                       onCompleted={(jobId, data) =>
                         handleBatchCompleted(msg.id, jobId, data)
                       }

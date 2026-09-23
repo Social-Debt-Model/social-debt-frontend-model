@@ -1,6 +1,6 @@
 export const parseListString = (str: string): string[] => {
   if (!str) return [];
-  let cleaned = str.replace(/[\[\]'"]/g, "").trim();
+  const cleaned = str.replace(/[\[\]'"]/g, "").trim();
   if (cleaned.includes(",")) {
     return cleaned
       .split(",")

@@ -169,7 +169,7 @@ export const ChatInput = ({
             type="button"
             onClick={handleAttachmentClick}
             disabled={!!selectedFile || isProcessingFile || isChatDisabled}
-            className={`flex-shrink-0 p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"} ${isProcessingFile || isChatDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`hidden md:flex flex-shrink-0 p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"} ${isProcessingFile || isChatDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {isProcessingFile ? (
               <Loader2 className="w-5 h-5 animate-spin text-blue-500" />

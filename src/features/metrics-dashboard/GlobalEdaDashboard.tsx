@@ -1,11 +1,6 @@
 import React, { useMemo } from "react";
 import { BatchResultData } from "../batch-classification/actions";
-import {
-  calculateGlobalDistributions,
-  calculateMicrocauseSmellMatrix,
-  calculateSmellRiskMatrix,
-  calculateCriticalPaths,
-} from "./edaUtils";
+
 import { useOntology } from "../ontology/useOntology";
 import {
   BarChart,
@@ -14,18 +9,15 @@ import {
   YAxis,
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
-  Cell,
   LabelList,
 } from "recharts";
-import { ResponsiveHeatMap } from "@nivo/heatmap";
+import { ResponsiveHeatMap, HeatMapDatum } from "@nivo/heatmap";
+import { ContinuousColorScaleConfig } from "@nivo/colors";
 import { BasicTooltip } from "@nivo/tooltip";
 import {
   Layers,
-  AlertTriangle,
   Users,
   Route,
-  ChevronDown,
-  ChevronUp,
   Database,
 } from "lucide-react";
 
@@ -35,67 +27,55 @@ type Props = {
   precalculatedStats?: PrecalculatedEdaData;
 };
 
-const CHART_PALETTE = ["#4f46e5", "#818cf8"];
 
-const CollapsibleSection = ({
+
+const DashboardSection = ({
   title,
   icon: Icon,
   children,
-  defaultOpen = false,
   count = 0,
-}: any) => {
-  const [isOpen, setIsOpen] = React.useState(defaultOpen);
-
+}: {
+  title: React.ReactNode;
+  icon: React.ElementType;
+  children: React.ReactNode;
+  count?: number;
+}) => {
   return (
-    <section className="bg-white rounded-2xl shadow-sm border border-slate-100">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-6 bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100"
-      >
-        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-3">
-          <div className="p-2 bg-white rounded-lg shadow-sm border border-slate-100">
-            <Icon className="w-5 h-5 text-indigo-600" />
+    <section className="mb-6 mt-4">
+      <div className="w-full flex items-center mb-8">
+        <h2 className="text-2xl font-extrabold text-slate-800 flex items-center gap-3">
+          <div className="p-2.5 bg-indigo-50 rounded-xl text-indigo-600">
+            <Icon className="w-6 h-6" />
           </div>
           {title}
           {count > 0 && (
-            <span className="text-xs font-semibold px-2 py-1 bg-slate-200 text-slate-600 rounded-full">
+            <span className="text-sm font-bold px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full">
               {count}
             </span>
           )}
         </h2>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 bg-white hover:bg-slate-50 rounded-lg shadow-sm border border-slate-200 transition-colors">
-          {isOpen ? (
-            <>
-              <ChevronUp className="w-4 h-4" />
-              Ocultar detalles
-            </>
-          ) : (
-            <>
-              <ChevronDown className="w-4 h-4" />
-              Ver detalles
-            </>
-          )}
-        </div>
-      </button>
-      {isOpen && <div className="p-6">{children}</div>}
+      </div>
+      <div className="w-full relative">
+        {children}
+      </div>
+      {/* Separador sutil para darle ritmo visual a la página */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mt-16 mb-4"></div>
     </section>
   );
 };
 
 const GlobalMetricBarChart = ({
   data,
-  colorClass,
   fill = "#4f46e5",
   formatValue,
 }: {
-  data: any[];
-  colorClass: string;
+  data: { name: string; value: number }[];
   fill?: string;
-  formatValue?: (v: any) => string | number;
+  formatValue?: (v: number) => string | number;
 }) => {
   const format =
     formatValue ||
-    ((v: any) =>
+    ((v: number) =>
       Number(v)
         .toFixed(2)
         .replace(/\\.00$/, ""));
@@ -125,14 +105,14 @@ const GlobalMetricBarChart = ({
               border: "none",
               boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
             }}
-            formatter={(value: any) => [format(value), "Frecuencia"]}
+            formatter={(value, name) => [format(typeof value === 'number' ? value : Number(value ?? 0)), name ?? "Frecuencia"]}
           />
           <Bar
             dataKey="value"
             fill={fill}
             radius={[0, 4, 4, 0]}
             barSize={20}
-            isAnimationActive={false}
+            isAnimationActive={true}
           >
             <LabelList
               dataKey="value"
@@ -140,7 +120,7 @@ const GlobalMetricBarChart = ({
               fill="#334155"
               fontSize={13}
               fontWeight={700}
-              formatter={format}
+              formatter={(v) => format(typeof v === 'number' ? v : Number(v ?? 0))}
             />
           </Bar>
         </BarChart>
@@ -162,7 +142,20 @@ const NivoHeatmapWrapper = ({
   legendOffsetLeft = -270,
   marginTop = 220,
   marginLeft = 300,
-}: any) => {
+}: {
+  matrix: Record<string, Record<string, number>>;
+  rows: string[];
+  cols: string[];
+  getRowName?: (v: string) => string;
+  getColName?: (v: string) => string;
+  colors?: unknown;
+  legendTop?: string;
+  legendLeft?: string;
+  legendOffsetTop?: number;
+  legendOffsetLeft?: number;
+  marginTop?: number;
+  marginLeft?: number;
+}) => {
   if (!rows.length || !cols.length)
     return <p className="text-sm text-slate-400">No hay co-ocurrencias</p>;
 
@@ -182,7 +175,7 @@ const NivoHeatmapWrapper = ({
   return (
     <div style={{ height: Math.max(700, rows.length * 45 + 200) }}>
       <ResponsiveHeatMap
-        animate={false}
+        animate={true}
         data={heatmapData}
         margin={{ top: marginTop, right: 60, bottom: 60, left: marginLeft }}
         valueFormat=">-.0f"
@@ -206,10 +199,10 @@ const NivoHeatmapWrapper = ({
           format: (v: string) => truncate(getRowName ? getRowName(v) : v, 40),
         }}
         colors={
-          colors || {
+          (colors as ContinuousColorScaleConfig) || ({
             type: "sequential",
             scheme: "purples",
-          }
+          } as ContinuousColorScaleConfig)
         }
         emptyColor="#f8fafc"
         borderWidth={1}
@@ -232,14 +225,14 @@ const NivoHeatmapWrapper = ({
           axis: {
             ticks: {
               text: {
-                fontSize: 10,
-                maxWidth: 200,
+                fontSize: 13,
+                maxWidth: 300,
                 fill: "#475569",
               },
             },
             legend: {
               text: {
-                fontSize: 14,
+                fontSize: 15,
                 fontWeight: "bold",
                 fill: "#334155",
               },
@@ -251,7 +244,7 @@ const NivoHeatmapWrapper = ({
   );
 };
 
-const formatGroupLabel = (rawId: string, getDetailsFn: (id: string) => any) => {
+const formatGroupLabel = (rawId: string, getDetailsFn: (id: string) => { name: string } | null | undefined) => {
   try {
     let clean = rawId.trim();
     if (clean.startsWith("[") && clean.endsWith("]")) {
@@ -260,14 +253,14 @@ const formatGroupLabel = (rawId: string, getDetailsFn: (id: string) => any) => {
       if (Array.isArray(arr)) {
         return arr
           .map((item: string) => {
-            let name = getDetailsFn(item)?.name || item;
+            const name = getDetailsFn(item)?.name || item;
             return name.replace(/ [Rr]isk$/i, "");
           })
           .join(" + ");
       }
     }
-  } catch (e) {}
-  let name = getDetailsFn(rawId)?.name || rawId;
+  } catch {}
+  const name = getDetailsFn(rawId)?.name || rawId;
   return name.replace(/ [Rr]isk$/i, "");
 };
 
@@ -304,28 +297,26 @@ export const GlobalEdaDashboard = ({
 
   return (
     <div className="flex flex-col gap-8 pb-10 fade-in">
-      <CollapsibleSection
+      <DashboardSection
         title="Frecuencias Globales del Dataset"
         icon={Layers}
-        defaultOpen={true}
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 15 Microcausas
+              Top 7 Microcausas
             </h3>
             <GlobalMetricBarChart
               data={globals.topMicrocauses.map((m) => ({
                 name: getMicroCauseDetails(m.name)?.name || m.name,
                 value: m.value,
               }))}
-              colorClass="text-indigo-600"
               fill="#4f46e5"
             />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 12 Riesgos
+              Top 7 Riesgos
             </h3>
             <GlobalMetricBarChart
               formatValue={(v) => Math.round(Number(v))}
@@ -336,13 +327,12 @@ export const GlobalEdaDashboard = ({
                 ),
                 value: r.value,
               }))}
-              colorClass="text-orange-500"
               fill="#f97316"
             />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 20 Estrategias Preventivas
+              Top 7 Estrategias Preventivas
             </h3>
             <GlobalMetricBarChart
               formatValue={(v) => Math.round(Number(v))}
@@ -350,13 +340,12 @@ export const GlobalEdaDashboard = ({
                 name: getStrategyDetails(m.name)?.name || m.name,
                 value: m.value,
               }))}
-              colorClass="text-emerald-500"
               fill="#10b981"
             />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 20 Estrategias Correctivas
+              Top 7 Estrategias Correctivas
             </h3>
             <GlobalMetricBarChart
               formatValue={(v) => Math.round(Number(v))}
@@ -364,26 +353,24 @@ export const GlobalEdaDashboard = ({
                 name: getStrategyDetails(m.name)?.name || m.name,
                 value: m.value,
               }))}
-              colorClass="text-blue-500"
               fill="#3b82f6"
             />
           </div>
         </div>
-      </CollapsibleSection>
+      </DashboardSection>
 
-      <CollapsibleSection
+      <DashboardSection
         title="Análisis de Co-ocurrencias: Microcausas vs Community Smells"
         icon={Users}
-        defaultOpen={false}
       >
         <div>
           <NivoHeatmapWrapper
             legendTop="Community Smells"
             legendLeft="Microcausas"
-            marginTop={220}
-            marginLeft={300}
-            legendOffsetTop={-180}
-            legendOffsetLeft={-270}
+            marginTop={260}
+            marginLeft={380}
+            legendOffsetTop={-220}
+            legendOffsetLeft={-340}
             matrix={microSmellEda.matrix}
             rows={microTopKeys}
             cols={microSmellEda.smellsList}
@@ -396,21 +383,20 @@ export const GlobalEdaDashboard = ({
             colors={{ type: "sequential", scheme: "purples" }}
           />
         </div>
-      </CollapsibleSection>
+      </DashboardSection>
 
-      <CollapsibleSection
+      <DashboardSection
         title="Análisis de Co-ocurrencias: Riesgos vs Community Smells"
         icon={Users}
-        defaultOpen={false}
       >
         <div>
           <NivoHeatmapWrapper
             legendTop="Riesgos"
             legendLeft="Community Smells"
-            marginTop={220}
-            marginLeft={300}
-            legendOffsetTop={-180}
-            legendOffsetLeft={-270}
+            marginTop={260}
+            marginLeft={380}
+            legendOffsetTop={-220}
+            legendOffsetLeft={-340}
             matrix={smellRiskEda.matrix}
             rows={smellRiskEda.smellsList}
             cols={risksTopKeys}
@@ -421,12 +407,11 @@ export const GlobalEdaDashboard = ({
             colors={{ type: "sequential", scheme: "oranges" }}
           />
         </div>
-      </CollapsibleSection>
+      </DashboardSection>
 
-      <CollapsibleSection
-        title="Rutas Críticas de Propagación (Top 30)"
+      <DashboardSection
+        title="Rutas Críticas de Propagación (Top 7)"
         icon={Route}
-        defaultOpen={false}
       >
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
@@ -479,12 +464,11 @@ export const GlobalEdaDashboard = ({
             </tbody>
           </table>
         </div>
-      </CollapsibleSection>
+      </DashboardSection>
 
-      <CollapsibleSection
+      <DashboardSection
         title="Datos Estáticos del Modelo"
         icon={Database}
-        defaultOpen={false}
       >
         <div className="space-y-8">
           <div>
@@ -493,7 +477,7 @@ export const GlobalEdaDashboard = ({
             </h3>
             <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full text-sm text-left whitespace-nowrap">
-                <thead className="bg-slate-800 text-white">
+                <thead className="bg-slate-700 text-slate-100 font-semibold uppercase text-xs tracking-wide">
                   <tr>
                     <th className="px-4 py-3 rounded-tl-lg">Modelo</th>
                     <th className="px-4 py-3">Tipo de Entrada</th>
@@ -555,7 +539,7 @@ export const GlobalEdaDashboard = ({
             </h3>
             <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full text-sm text-left whitespace-nowrap">
-                <thead className="bg-slate-800 text-white">
+                <thead className="bg-slate-700 text-slate-100 font-semibold uppercase text-xs tracking-wide">
                   <tr>
                     <th className="px-4 py-3 rounded-tl-lg">Modelo</th>
                     <th className="px-4 py-3 text-right">Accuracy</th>
@@ -601,7 +585,7 @@ export const GlobalEdaDashboard = ({
             </div>
           </div>
         </div>
-      </CollapsibleSection>
+      </DashboardSection>
     </div>
   );
 };

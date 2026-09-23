@@ -11,8 +11,6 @@ import {
   AlertTriangle,
   UploadCloud,
   Loader2,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import {
   ValidationReport,
@@ -203,7 +201,8 @@ export const ValidationChecklistModal = ({
       <div className="glass-panel p-5 max-w-3xl w-full relative bg-white md:bg-white/80 my-auto">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition"
+          disabled={isProcessingFile}
+          className={`absolute top-4 right-4 transition ${isProcessingFile ? "text-slate-200 cursor-not-allowed" : "text-slate-400 hover:text-slate-700"}`}
         >
           <X className="w-5 h-5" />
         </button>
@@ -509,7 +508,8 @@ export const ValidationChecklistModal = ({
             <>
               <button
                 onClick={onClose}
-                className="px-5 py-2 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg font-medium transition"
+                disabled={isProcessingFile}
+                className={`px-5 py-2 rounded-lg font-medium transition ${isProcessingFile ? "text-slate-400 cursor-not-allowed" : "text-slate-600 hover:text-slate-800 hover:bg-slate-100"}`}
               >
                 Cancelar
               </button>

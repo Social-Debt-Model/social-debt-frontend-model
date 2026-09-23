@@ -22,18 +22,24 @@ type BatchProgressCardProps = {
   file?: File;
   resumeJobId?: string;
   resumeFilename?: string;
+  isCancelled?: boolean;
+  isError?: boolean;
   onCompleted?: (jobId: string, resultData: BatchResultData) => void;
   onCancelled?: (jobId: string) => void;
   onError?: (jobId: string) => void;
+  onJobStarted?: (jobId: string) => void;
 };
 
 export const BatchProgressCard = ({
   file,
   resumeJobId,
   resumeFilename,
+  isCancelled,
+  isError,
   onCompleted,
   onCancelled,
   onError,
+  onJobStarted,
 }: BatchProgressCardProps) => {
   const [step, setStep] = useState<
     | "checking_limits"
@@ -42,23 +48,26 @@ export const BatchProgressCard = ({
     | "completed"
     | "error"
     | "cancelled"
-  >("checking_limits");
+  >(isCancelled ? "cancelled" : isError ? "error" : resumeJobId ? "processing" : "checking_limits");
   const [progressMsg, setProgressMsg] = useState(
-    "Verificando cuota disponible de OpenAI...",
+    isCancelled ? "Análisis cancelado." : isError ? "Error al procesar el archivo." : "Verificando cuota disponible de OpenAI...",
   );
-  const [progressPercent, setProgressPercent] = useState(0);
+  const [progressPercent, setProgressPercent] = useState(
+    isCancelled || isError ? 100 : 0
+  );
   const [estimatedTime, setEstimatedTime] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
   const hasStarted = useRef(false);
 
   const isCancelledRef = useRef(false);
 
-  const callbacksRef = useRef({ onCompleted, onCancelled, onError });
+  const callbacksRef = useRef({ onCompleted, onCancelled, onError, onJobStarted });
   useEffect(() => {
-    callbacksRef.current = { onCompleted, onCancelled, onError };
+    callbacksRef.current = { onCompleted, onCancelled, onError, onJobStarted };
   });
 
   useEffect(() => {
+    if (isCancelled || isError) return;
     isCancelledRef.current = false;
 
     if (hasStarted.current) return;
@@ -113,6 +122,9 @@ export const BatchProgressCard = ({
 
         newJobId = uploadRes.job_id;
         setJobId(newJobId || null);
+        if (callbacksRef.current.onJobStarted && newJobId) {
+          callbacksRef.current.onJobStarted(newJobId);
+        }
         setStep("processing");
         setProgressMsg("Procesando (0%)");
         setProgressPercent(20);
@@ -264,15 +276,16 @@ export const BatchProgressCard = ({
       isCancelledRef.current = true;
       if (intervalId) clearInterval(intervalId);
     };
-  }, [file, resumeJobId]);
+  }, [file, resumeJobId, isCancelled, isError]);
 
   const handleCancel = async () => {
     if (!jobId) return;
     setStep("cancelled");
     setProgressMsg("Cancelando...");
-    try {
-      await cancelBatchJob(jobId);
-    } catch {}
+    
+    // No usamos await aquí para no bloquear la UI mientras el servidor cancela
+    cancelBatchJob(jobId).catch(() => {});
+    
     await deletePendingJob(jobId);
     if (onCancelled) onCancelled(jobId);
   };

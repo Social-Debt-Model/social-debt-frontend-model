@@ -45,7 +45,7 @@ type BatchDashboardProps = {
   onDownload?: () => void;
 };
 
-const CHART_PALETTE = ["#4f46e5", "#818cf8"];
+
 const PIE_PALETTE = [
   "#3b82f6",
   "#ef4444",
@@ -57,19 +57,9 @@ const PIE_PALETTE = [
   "#14b8a6",
 ];
 
-const parseListString = (str: string): string[] => {
-  if (!str) return [];
-  let cleaned = str.replace(/[\[\]'"]/g, "").trim();
-  if (cleaned.includes(",")) {
-    return cleaned
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-  }
-  return cleaned ? [cleaned] : [];
-};
 
-const MetricBarChart = ({ data, colorClass }: { data: any[]; colorClass: string }) => {
+
+const MetricBarChart = ({ data, colorClass }: { data: { name: string; value: number; color?: string }[]; colorClass: string }) => {
   if (data.length === 0) {
     return (
       <div className="absolute inset-0 flex items-center justify-center">
@@ -94,7 +84,7 @@ const MetricBarChart = ({ data, colorClass }: { data: any[]; colorClass: string 
         }} />
         <Bar isAnimationActive={false} dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={30}>
           <LabelList dataKey="value" position="right" fill="#334155" fontSize={15} fontWeight={700} />
-          {data.map((entry: any, idx: number) => (<Cell key={`cell-${idx}`} fill={entry.color} />))}
+          {data.map((entry: { color?: string }, idx: number) => (<Cell key={`cell-${idx}`} fill={entry.color} />))}
         </Bar>
       </BarChart>
     </ResponsiveContainer>
@@ -109,9 +99,11 @@ export const BatchDashboard = ({
   onDownload,
 }: BatchDashboardProps) => {
   const { comments = [], social_debt_metrics, issues_metrics } = resultData;
-  const metrics: Record<string, MetricsData> = (social_debt_metrics ||
-    issues_metrics ||
-    {}) as Record<string, MetricsData>;
+  const metrics = useMemo<Record<string, MetricsData>>(() => {
+    return (social_debt_metrics ||
+      issues_metrics ||
+      {}) as Record<string, MetricsData>;
+  }, [social_debt_metrics, issues_metrics]);
   const issueKeys = Object.keys(metrics);
   const storageKey = jobId || filename;
   const [activeTab, setActiveTab] = useState<"global" | "audit" | "dashboard">(() => {
@@ -124,11 +116,13 @@ export const BatchDashboard = ({
     return "global";
   });
 
+
+
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       sessionStorage.setItem(`batchDashboard_activeTab_${storageKey}`, activeTab);
     }
-  }, [activeTab, filename]);
+  }, [activeTab, filename, storageKey]);
 
   // Fix: Ensure scroll is at the top when a new dataset is opened
   React.useEffect(() => {
@@ -164,31 +158,37 @@ export const BatchDashboard = ({
     } else if (selectedIssue === null && typeof window !== "undefined") {
       sessionStorage.removeItem(`batchDashboard_selectedIssue_${storageKey}`);
     }
-  }, [selectedIssue, filename]);
+  }, [selectedIssue, filename, storageKey]);
 
   // SOLUCIÓN PUNTO 2: Reseteo de selección al cambiar de dataset (evita bugs de superposición)
+  const [showComments, setShowComments] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   React.useEffect(() => {
+    let resetTimer: NodeJS.Timeout;
     if (
       selectedIssue !== null &&
       selectedIssue !== "individuales" &&
       selectedIssue !== "all" &&
       !issueKeys.includes(selectedIssue)
     ) {
-      setSelectedIssue(null);
-      setCurrentPage(1);
+      resetTimer = setTimeout(() => {
+        setSelectedIssue(null);
+        setCurrentPage(1);
+      }, 0);
     } else if (
       issueKeys.length === 0 &&
       hasOrphanComments &&
       selectedIssue !== "individuales"
     ) {
-      setSelectedIssue("individuales");
-      setCurrentPage(1);
+      resetTimer = setTimeout(() => {
+        setSelectedIssue("individuales");
+        setCurrentPage(1);
+      }, 0);
     }
+    return () => clearTimeout(resetTimer);
   }, [issueKeys, selectedIssue, hasOrphanComments]);
-
-  const [showComments, setShowComments] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   React.useEffect(() => {
     if (isDropdownOpen && selectedIssue !== "individuales") {
@@ -324,8 +324,8 @@ export const BatchDashboard = ({
       const counts: Record<string, number> = {};
       issueComments.forEach((comment) => {
         if (!comment.is_noise && comment.microcauses) {
-          comment.microcauses.forEach((mc: any) => {
-            const items = mc[key];
+          comment.microcauses.forEach((mc) => {
+            const items = (mc as unknown as Record<string, string[]>)[key];
             if (Array.isArray(items)) {
               items.forEach((item) => {
                 counts[item] = (counts[item] || 0) + 1;
@@ -341,7 +341,7 @@ export const BatchDashboard = ({
   );
 
   const metricsChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_metrics || (currentMetrics as any)?.metrics || aggregateFromComments("metrics");
+    const raw = currentMetrics?.dominant_metrics || (currentMetrics as Record<string, unknown>)?.metrics || aggregateFromComments("metrics");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
     return flattened.slice(0, 3).map(
@@ -354,7 +354,7 @@ export const BatchDashboard = ({
   }, [currentMetrics, getMetricDetails, aggregateFromComments]);
 
   const indicatorChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_indicators || (currentMetrics as any)?.indicators || aggregateFromComments("indicators");
+    const raw = currentMetrics?.dominant_indicators || (currentMetrics as Record<string, unknown>)?.indicators || aggregateFromComments("indicators");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
     return flattened.slice(0, 3).map(
@@ -366,21 +366,10 @@ export const BatchDashboard = ({
     );
   }, [currentMetrics, getIndicatorDetails, aggregateFromComments]);
 
-  const preventiveChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_preventive_strategies || (currentMetrics as any)?.preventive_strategies || aggregateFromComments("preventive_strategies");
-    if (!raw) return [];
-    const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
-        name: getStrategyDetails(item[0])?.name || item[0],
-        value: Math.round(item[1]),
-        color: PIE_PALETTE[(index + 2) % PIE_PALETTE.length],
-      }),
-    );
-  }, [currentMetrics, getStrategyDetails, aggregateFromComments]);
+
 
   const correctiveChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_corrective_strategies || (currentMetrics as any)?.corrective_strategies || aggregateFromComments("corrective_strategies");
+    const raw = currentMetrics?.dominant_corrective_strategies || (currentMetrics as Record<string, unknown>)?.corrective_strategies || aggregateFromComments("corrective_strategies");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
     return flattened.slice(0, 3).map(
@@ -393,7 +382,7 @@ export const BatchDashboard = ({
   }, [currentMetrics, getStrategyDetails, aggregateFromComments]);
 
   const effectsChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_effects || (currentMetrics as any)?.effects || aggregateFromComments("effects");
+    const raw = currentMetrics?.dominant_effects || (currentMetrics as Record<string, unknown>)?.effects || aggregateFromComments("effects");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
     return flattened.slice(0, 3).map(
@@ -734,7 +723,7 @@ export const BatchDashboard = ({
                     <div className="flex flex-col w-full">
                       <div className="px-4 md:px-6 pt-4">
                           {/* BANNER SDI */}
-                          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative mb-4">
+                          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative">
                             <div>
                               <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-1 flex items-center gap-1.5 relative group cursor-help w-max">
                                 Índice de Deuda Social (SDI)
@@ -811,16 +800,16 @@ export const BatchDashboard = ({
                           </p>
                         </div>
                       ) : (
-                        <div className="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                        <div className="px-4 md:px-6 pt-4 pb-4 md:pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                           {/* ROW 1: MACROCAUSAS | TIPOS DE MICROCAUSA */}
                           <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2">
                               <Layers className="w-4 h-4" /> Distribución de Macrocausas (Top 3)
                             </h3>
                             <div className="w-full">
-                              <ResponsiveContainer width="100%" height={240}>
-                                <RechartsPieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                                  <Pie data={chartData} cx="35%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="count" nameKey="label" stroke="none" label={({ value }) => value}>
+                              <ResponsiveContainer width="100%" height={320}>
+                                <RechartsPieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
+                                  <Pie data={chartData} cx="50%" cy="45%" innerRadius={50} outerRadius={75} paddingAngle={2} dataKey="count" nameKey="label" stroke="none" label={({ value }) => value}>
                                     {chartData.map((entry, index) => (
                                       <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
@@ -836,7 +825,7 @@ export const BatchDashboard = ({
                                     }
                                     return null;
                                   }} />
-                                  <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{ fontSize: "15px", lineHeight: "22px", width: "55%", right: 0 }} />
+                                  <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ fontSize: "13px", lineHeight: "18px", paddingTop: "10px" }} />
                                 </RechartsPieChart>
                               </ResponsiveContainer>
                             </div>
@@ -852,10 +841,10 @@ export const BatchDashboard = ({
                               </div>
                             </h3>
                             <div className="w-full">
-                              <ResponsiveContainer width="100%" height={240}>
-                                <RechartsPieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                                  <Pie data={typeChartData} cx="35%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value" nameKey="name" stroke="none" label={({ value }) => value}>
-                                    {typeChartData.map((entry: any, index: number) => (
+                              <ResponsiveContainer width="100%" height={320}>
+                                <RechartsPieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
+                                  <Pie data={typeChartData} cx="50%" cy="45%" innerRadius={50} outerRadius={75} paddingAngle={2} dataKey="value" nameKey="name" stroke="none" label={({ value }) => value}>
+                                    {typeChartData.map((entry: { color: string }, index: number) => (
                                       <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
                                   </Pie>
@@ -870,7 +859,7 @@ export const BatchDashboard = ({
                                     }
                                     return null;
                                   }} />
-                                  <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{ fontSize: "15px", lineHeight: "22px", width: "55%", right: 0 }} />
+                                  <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ fontSize: "13px", lineHeight: "18px", paddingTop: "10px" }} />
                                 </RechartsPieChart>
                               </ResponsiveContainer>
                             </div>
@@ -998,7 +987,7 @@ export const BatchDashboard = ({
                       {/* Boton removido */}
 
                       {true && (
-                        <div ref={commentsListRef} className="flex flex-col mt-6 border-t border-slate-200 pt-6">
+                        <div ref={commentsListRef} className="flex flex-col mt-6 border-t border-slate-200 pt-6 scroll-mt-32">
                           <div
                             className="sticky z-20 bg-slate-50/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 shadow-sm flex flex-wrap gap-2 items-center transition-all duration-75"
                             style={{
@@ -1143,17 +1132,14 @@ export const BatchDashboard = ({
 
                               const handlePageChange = (newPage: number) => {
                                 setCurrentPage(newPage);
-                                if (commentsListRef.current) {
-                                  const y =
-                                    commentsListRef.current.getBoundingClientRect()
-                                      .top +
-                                    window.scrollY -
-                                    (headerHeight + 60);
-                                  window.scrollTo({
-                                    top: y,
-                                    behavior: "smooth",
-                                  });
-                                }
+                                setTimeout(() => {
+                                  if (commentsListRef.current) {
+                                    commentsListRef.current.scrollIntoView({
+                                      behavior: "smooth",
+                                      block: "start",
+                                    });
+                                  }
+                                }, 100);
                               };
 
                               return (

@@ -1,20 +1,21 @@
 import { BatchResultData } from "../batch-classification/actions";
+import { ClassifyTextResponse } from "../text-classification/actions";
 
 /**
  * Calculates global Top N distributions across the entire dataset.
  */
 export const calculateGlobalDistributions = (data: BatchResultData) => {
-  const { issues_metrics } = data;
+  const { issues_metrics, comments = [] } = data;
   if (!issues_metrics) return { topMicrocauses: [], topRisks: [], topPrevStrategies: [], topCorrStrategies: [] };
   const issues = Object.values(issues_metrics);
-  const comments = data.comments || [];
+
 
   const microcausesCount: Record<string, number> = {};
   const risksCount: Record<string, number> = {};
   const prevStrategiesCount: Record<string, number> = {};
   const corrStrategiesCount: Record<string, number> = {};
 
-  issues.forEach((issue: any) => {
+  issues.forEach((issue) => {
     if (issue.dominant_microcauses) {
       issue.dominant_microcauses.forEach(([mc, freq]: [string, number]) => {
         microcausesCount[mc] = (microcausesCount[mc] || 0) + freq;
@@ -40,9 +41,9 @@ export const calculateGlobalDistributions = (data: BatchResultData) => {
 
   // If strategies were not found in issues, calculate from comments
   if (Object.keys(prevStrategiesCount).length === 0 || Object.keys(corrStrategiesCount).length === 0) {
-    comments.forEach((comment: any) => {
+    comments.forEach((comment) => {
       if (!comment.is_noise && comment.microcauses) {
-        comment.microcauses.forEach((mc: any) => {
+        comment.microcauses.forEach((mc: NonNullable<ClassifyTextResponse['microcauses']>[number]) => {
           if (Array.isArray(mc.preventive_strategies)) {
             mc.preventive_strategies.forEach((strat: string) => {
               prevStrategiesCount[strat] = (prevStrategiesCount[strat] || 0) + 1;
@@ -66,10 +67,12 @@ export const calculateGlobalDistributions = (data: BatchResultData) => {
   };
 
   return {
-    topMicrocauses: sortByValue(microcausesCount, 15),
-    topRisks: sortByValue(risksCount, 12),
-    topPrevStrategies: sortByValue(prevStrategiesCount, 20),
-    topCorrStrategies: sortByValue(corrStrategiesCount, 20),
+    topMicrocauses: sortByValue(microcausesCount, 7),
+    topRisks: sortByValue(risksCount, 7),
+    topPrevStrategies: sortByValue(prevStrategiesCount, 7),
+    topCorrStrategies: sortByValue(corrStrategiesCount, 7),
+    topMicrocausesMatrix: sortByValue(microcausesCount, 7),
+    topRisksMatrix: sortByValue(risksCount, 7),
   };
 };
 
@@ -80,7 +83,7 @@ export const calculateMicrocauseSmellMatrix = (data: BatchResultData, topMicroca
   const { issues_metrics } = data;
   if (!issues_metrics) return { matrix: {}, smellsList: [] };
   const issues = Object.values(issues_metrics);
-  const comments = data.comments || [];
+
   
   const matrix: Record<string, Record<string, number>> = {};
   
@@ -90,9 +93,9 @@ export const calculateMicrocauseSmellMatrix = (data: BatchResultData, topMicroca
 
   const allSmellsSet = new Set<string>();
 
-  issues.forEach((issue: any) => {
-    const issueMicrocauses = issue.dominant_microcauses?.map((m: any) => m[0]) || [];
-    const issueSmells = issue.dominant_community_smells?.map((s: any) => s[0]) || [];
+  issues.forEach((issue) => {
+    const issueMicrocauses = issue.dominant_microcauses?.map((m) => m[0]) || [];
+    const issueSmells = issue.dominant_community_smells?.map((s) => s[0]) || [];
 
     issueMicrocauses.forEach((mc: string) => {
       if (topMicrocauses.includes(mc)) {
@@ -104,9 +107,15 @@ export const calculateMicrocauseSmellMatrix = (data: BatchResultData, topMicroca
     });
   });
 
+  const sortedSmells = Array.from(allSmellsSet).sort((a, b) => {
+    const sumA = topMicrocauses.reduce((sum, mc) => sum + (matrix[mc][a] || 0), 0);
+    const sumB = topMicrocauses.reduce((sum, mc) => sum + (matrix[mc][b] || 0), 0);
+    return sumB - sumA;
+  }).slice(0, 7);
+
   return {
     matrix,
-    smellsList: Array.from(allSmellsSet)
+    smellsList: sortedSmells
   };
 };
 
@@ -117,14 +126,14 @@ export const calculateSmellRiskMatrix = (data: BatchResultData, topRisks: string
   const { issues_metrics } = data;
   if (!issues_metrics) return { matrix: {}, smellsList: [] };
   const issues = Object.values(issues_metrics);
-  const comments = data.comments || [];
+
   
   const matrix: Record<string, Record<string, number>> = {};
   const allSmellsSet = new Set<string>();
 
-  issues.forEach((issue: any) => {
-    const issueSmells = issue.dominant_community_smells?.map((s: any) => s[0]) || [];
-    const issueRisks = issue.dominant_risks?.map((r: any) => r[0]) || [];
+  issues.forEach((issue) => {
+    const issueSmells = issue.dominant_community_smells?.map((s) => s[0]) || [];
+    const issueRisks = issue.dominant_risks?.map((r) => r[0]) || [];
 
     issueSmells.forEach((smell: string) => {
       if (!matrix[smell]) matrix[smell] = {};
@@ -138,7 +147,13 @@ export const calculateSmellRiskMatrix = (data: BatchResultData, topRisks: string
     });
   });
 
-  allSmellsSet.forEach(smell => {
+  const sortedSmells = Array.from(allSmellsSet).sort((a, b) => {
+    const sumA = topRisks.reduce((sum, risk) => sum + (matrix[a][risk] || 0), 0);
+    const sumB = topRisks.reduce((sum, risk) => sum + (matrix[b][risk] || 0), 0);
+    return sumB - sumA;
+  }).slice(0, 7);
+
+  sortedSmells.forEach(smell => {
     topRisks.forEach(risk => {
       if (!matrix[smell][risk]) matrix[smell][risk] = 0;
     });
@@ -146,7 +161,7 @@ export const calculateSmellRiskMatrix = (data: BatchResultData, topRisks: string
 
   return {
     matrix,
-    smellsList: Array.from(allSmellsSet)
+    smellsList: sortedSmells
   };
 };
 
@@ -157,14 +172,14 @@ export const calculateCriticalPaths = (data: BatchResultData) => {
   const { issues_metrics } = data;
   if (!issues_metrics) return [];
   const issues = Object.values(issues_metrics);
-  const comments = data.comments || [];
+
   
   const pathCounts: Record<string, { microcause: string, smell: string, risk: string, count: number }> = {};
 
-  issues.forEach((issue: any) => {
-    const mcs = issue.dominant_microcauses?.map((m: any) => m[0]) || [];
-    const smells = issue.dominant_community_smells?.map((s: any) => s[0]) || [];
-    const risks = issue.dominant_risks?.map((r: any) => r[0]) || [];
+  issues.forEach((issue) => {
+    const mcs = issue.dominant_microcauses?.map((m) => m[0]) || [];
+    const smells = issue.dominant_community_smells?.map((s) => s[0]) || [];
+    const risks = issue.dominant_risks?.map((r) => r[0]) || [];
 
     mcs.forEach((mc: string) => {
       smells.forEach((smell: string) => {
@@ -181,7 +196,7 @@ export const calculateCriticalPaths = (data: BatchResultData) => {
 
   return Object.values(pathCounts)
     .sort((a, b) => b.count - a.count)
-    .slice(0, 30);
+    .slice(0, 7);
 };
 
 export type PrecalculatedEdaData = {

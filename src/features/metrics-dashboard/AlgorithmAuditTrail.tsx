@@ -52,7 +52,7 @@ const getSmellCode = (smellName: string): string => {
 
 const addDataToSheet = (
   worksheet: ExcelJS.Worksheet,
-  data: any[],
+  data: Record<string, unknown>[],
   tableName: string,
 ) => {
   if (!data || data.length === 0) return;
@@ -254,7 +254,7 @@ export const downloadFinalExcel = async (
         dominant_effects,
         dominant_metrics,
         ...otherMetrics
-      } = metrics as any;
+      } = metrics as MetricsData;
       const row: SDIArrayRow = {
         issue_number: issue_number,
         ...otherMetrics,
@@ -373,7 +373,7 @@ export const AlgorithmAuditTrail = ({
 
     // Paso 4: Unicas macro y micro
     // Paso 4: Distribucion macrocausas
-    let macroDistribution: Record<string, number> = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0 };
+    const macroDistribution: Record<string, number> = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0 };
     comments.forEach((c) => {
       if (c.macro_cause_code && c.macro_cause_code !== "none") {
         const m = c.macro_cause_code.toUpperCase();
@@ -383,7 +383,7 @@ export const AlgorithmAuditTrail = ({
       }
     });
     const distStr = Object.entries(macroDistribution)
-      .filter(([_, count]) => count > 0)
+      .filter(([, count]) => count > 0)
       .sort((a, b) => b[1] - a[1])
       .map(([macro, count]) => `${macro}: ${count}`)
       .join(" | ") || "Ninguna";
@@ -392,7 +392,7 @@ export const AlgorithmAuditTrail = ({
     let maxSdiValue = -1;
     let minSdiValue = Infinity;
 
-    Object.entries(metrics).forEach(([issue, m]) => {
+    Object.values(metrics).forEach((m) => {
       if (typeof m.social_debt_index === "number") {
         if (m.social_debt_index > maxSdiValue) {
           maxSdiValue = m.social_debt_index;
@@ -433,7 +433,7 @@ export const AlgorithmAuditTrail = ({
       sortedTypes
         .slice(0, 1)
         .map((t) => {
-          const dict = (ontology_dictionary as any).microcause_types;
+          const dict = (ontology_dictionary as unknown as Record<string, Record<string, { name: string }>>).microcause_types;
           return dict && dict[t[0]] ? dict[t[0]].name : t[0].replace("Cause", "");
         })
         .join(", ") || "Ninguno";
@@ -567,7 +567,7 @@ export const AlgorithmAuditTrail = ({
   ) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet(sheetName);
-    addDataToSheet(worksheet, dataArray, "TablaExportacion");
+    addDataToSheet(worksheet, dataArray as Record<string, unknown>[], "TablaExportacion");
   const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), fileName);
   };
