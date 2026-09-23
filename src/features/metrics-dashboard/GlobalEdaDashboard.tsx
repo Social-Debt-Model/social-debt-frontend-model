@@ -112,7 +112,7 @@ const GlobalMetricBarChart = ({
             fill={fill}
             radius={[0, 4, 4, 0]}
             barSize={20}
-            isAnimationActive={true}
+            isAnimationActive={false}
           >
             <LabelList
               dataKey="value"
