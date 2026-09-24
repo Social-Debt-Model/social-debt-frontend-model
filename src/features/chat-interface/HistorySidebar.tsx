@@ -26,10 +26,15 @@ export const HistorySidebar = ({
       <div className="p-4 flex items-center gap-2">
         <button
           onClick={onNewChat}
-          className="flex-1 flex items-center justify-center gap-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-800 border border-emerald-500/30 font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm backdrop-blur-md"
+          disabled={!focusedJobId}
+          className={`flex-1 flex items-center justify-center gap-2 font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm backdrop-blur-md ${
+            !focusedJobId
+              ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed opacity-60"
+              : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-800 border border-emerald-500/30"
+          }`}
         >
           <MessageSquarePlus className="w-5 h-5" />
-          Nuevo Análisis
+          Regresar al chat
         </button>
         {onClose && (
           <button
