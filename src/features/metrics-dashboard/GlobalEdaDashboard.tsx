@@ -172,6 +172,10 @@ const NivoHeatmapWrapper = ({
   const truncate = (str: string, max: number) =>
     str.length > max ? str.substring(0, max) + "..." : str;
 
+  const maxVal = Math.max(
+    ...rows.flatMap((r) => cols.map((c) => matrix[r]?.[c] || 0))
+  );
+
   return (
     <div style={{ height: Math.max(700, rows.length * 45 + 200) }}>
       <ResponsiveHeatMap
@@ -207,7 +211,9 @@ const NivoHeatmapWrapper = ({
         emptyColor="#f8fafc"
         borderWidth={1}
         borderColor={{ from: "color", modifiers: [["darker", 0.4]] }}
-        labelTextColor={{ from: "color", modifiers: [["darker", 2]] }}
+        labelTextColor={(cell: any) =>
+          cell.value > maxVal * 0.4 ? "#ffffff" : "#334155"
+        }
         hoverTarget="cell"
         tooltip={({ cell }) => (
           <BasicTooltip
@@ -222,6 +228,12 @@ const NivoHeatmapWrapper = ({
           />
         )}
         theme={{
+          labels: {
+            text: {
+              fontSize: 16,
+              fontWeight: 600,
+            },
+          },
           axis: {
             ticks: {
               text: {
