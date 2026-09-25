@@ -552,7 +552,7 @@ export const BatchDashboard = ({
           }}
           className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "dashboard" ? "text-blue-700 border-b-2 border-blue-500 bg-blue-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
         >
-          <BarChart3 className="w-4 h-4" /> Dashboard (por hilo)
+          <BarChart3 className="w-4 h-4" /> Dashboard por hilo (issue)
         </button>
         <button
           onClick={() => {
