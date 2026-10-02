@@ -24,7 +24,6 @@ export type ClassifyTextResponse = {
   error?: string;
   issue_number?: number | string;
   comment_id?: number | string;
-  author?: string;
   raw_text?: string;
   macro_cause_clean?: string;
   rule_applied?: string;

@@ -7,7 +7,6 @@ import { flattenAndAggregateMetrics } from "./utils";
 interface Step4Row {
   issue_number?: string | number;
   comment_id?: string | number;
-  author?: string;
   raw_text?: string;
   cleaned_text?: string;
   is_noise?: boolean;
@@ -149,7 +148,6 @@ export const downloadFinalExcel = async (
     const row: Step4Row = {
       issue_number: c.issue_number as string | number | undefined,
       comment_id: c.comment_id as string | number | undefined,
-      author: c.author,
       raw_text: c.raw_text,
       cleaned_text: c.cleaned_text,
       is_noise: c.is_noise,
@@ -584,7 +582,6 @@ export const AlgorithmAuditTrail = ({
       const dataStep1 = comments.map((c) => ({
         issue_number: c.issue_number,
         comment_id: c.comment_id,
-        author: c.author,
         raw_text: c.raw_text,
         cleaned_text: c.cleaned_text,
       }));
@@ -597,7 +594,6 @@ export const AlgorithmAuditTrail = ({
       const dataStep2 = comments.map((c) => ({
         issue_number: c.issue_number,
         comment_id: c.comment_id,
-        author: c.author,
         raw_text: c.raw_text,
         cleaned_text: c.cleaned_text,
         is_noise: c.is_noise,
@@ -614,7 +610,6 @@ export const AlgorithmAuditTrail = ({
         .map((c) => ({
           issue_number: c.issue_number,
           comment_id: c.comment_id,
-          author: c.author,
           raw_text: c.raw_text,
           cleaned_text: c.cleaned_text,
           is_noise: c.is_noise,
@@ -636,7 +631,6 @@ export const AlgorithmAuditTrail = ({
           const row: Step4Row = {
             issue_number: c.issue_number as string | number | undefined,
             comment_id: c.comment_id as string | number | undefined,
-            author: c.author,
             raw_text: c.raw_text,
             cleaned_text: c.cleaned_text,
             is_noise: c.is_noise,

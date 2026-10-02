@@ -22,8 +22,6 @@ export type ValidationReport = {
   detectedColumns: string[];
   hasCommentColumn: boolean;
   matchedCommentColumn?: string;
-  matchedAuthorColumn?: string;
-  hasAuthorColumn?: boolean;
   hasIssueColumn: boolean;
   matchedIssueColumn?: string;
   hasIdColumn: boolean;
