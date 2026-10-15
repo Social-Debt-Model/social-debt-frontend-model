@@ -210,8 +210,8 @@ export const downloadFinalExcel = async (
   });
 
   const workbook = new ExcelJS.Workbook();
-  const sheetComments = workbook.addWorksheet("Comentarios");
-  addDataToSheet(sheetComments, dataStep4, "TablaComentarios");
+  const sheetComments = workbook.addWorksheet("Comments");
+  addDataToSheet(sheetComments, dataStep4, "CommentsTable");
 
   const formatTupleList = (
     lst: unknown,
@@ -295,13 +295,13 @@ export const downloadFinalExcel = async (
         (Number(b.social_debt_index) || 0) - (Number(a.social_debt_index) || 0),
     );
 
-  const sheetSDI = workbook.addWorksheet("Metricas SDI");
+  const sheetSDI = workbook.addWorksheet("SDI Metrics");
   addDataToSheet(sheetSDI, sdiArray, "TablaMetricasSDI");
   // --- Static Model Data ---
   const modelComparisonData = [
-    { model: "Random Forest", tipo_de_entrada: "Características Estructuradas Adaptativas", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
-    { model: "TF-IDF + Logistic Regression", tipo_de_entrada: "Texto del Issue", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
-    { model: "TF-IDF + Linear SVM", tipo_de_entrada: "Texto del Issue", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
+    { model: "Random Forest", tipo_de_entrada: "Adaptive Structured Features", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
+    { model: "TF-IDF + Logistic Regression", tipo_de_entrada: "Issue Text", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
+    { model: "TF-IDF + Linear SVM", tipo_de_entrada: "Issue Text", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
   ];
   
   const crossValidationData = [
@@ -310,10 +310,10 @@ export const downloadFinalExcel = async (
     { model: "TF-IDF + Linear SVM", accuracy_mean: 0.5887, accuracy_std: 0.0577, macro_f1_mean: 0.5558, macro_f1_std: 0.0552, weighted_f1_mean: 0.5577, weighted_f1_std: 0.0560 }
   ];
 
-  const sheetModel = workbook.addWorksheet("Comparación Modelos");
+  const sheetModel = workbook.addWorksheet("Model Comparison");
   addDataToSheet(sheetModel, modelComparisonData, "TablaComparacionModelos");
 
-  const sheetCrossVal = workbook.addWorksheet("Validación Cruzada");
+  const sheetCrossVal = workbook.addWorksheet("Cross Validation");
   addDataToSheet(sheetCrossVal, crossValidationData, "TablaValidacionCruzada");
 
 
@@ -332,12 +332,12 @@ export const downloadFinalExcel = async (
       };
     });
 
-    const sheetName = `Ontologia - ${category}`.substring(0, 31);
+    const sheetName = `Ontology - ${category}`.substring(0, 31);
     const sheetOnt = workbook.addWorksheet(sheetName);
     addDataToSheet(sheetOnt, flatOnt, `TablaOntologia${idx}`);
   });
   const buffer = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buffer]), `${baseName}_resultados_deuda.xlsx`);
+  saveAs(new Blob([buffer]), `${baseName}_debt_results.xlsx`);
 };
 
 export const AlgorithmAuditTrail = ({
@@ -452,7 +452,7 @@ export const AlgorithmAuditTrail = ({
           N/A
           <Info className="w-4 h-4 text-slate-400" />
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 bg-slate-800 text-white text-[11px] leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 font-normal normal-case pointer-events-none text-center">
-            El SDI requiere al menos 2 Issues para comparar.
+            SDI requires at least 2 Issues to compare.
             <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
           </div>
         </span>
@@ -481,77 +481,77 @@ export const AlgorithmAuditTrail = ({
 
   const STEPS = [
     {
-      title: "Paso 1: Limpieza de Texto Crudo",
+      title: "Step 1: Raw Text Cleaning",
       description:
-        "En esta etapa inicial se procesa el texto crudo de los comentarios para remover elementos que no aportan valor semántico, tales como bloques de código, imágenes, URLs, firmas y artefactos de Markdown. El objetivo es aislar y extraer únicamente el texto plano que pasará a la fase de análisis.",
+        "In this initial stage, the raw comment text is processed to remove elements that do not provide semantic value, such as code blocks, images, URLs, signatures, and Markdown artifacts. The goal is to isolate and extract clean plain text for subsequent analysis phases.",
       exportKey: "step1_b64",
       stats: [
-        { label: "Comentarios procesados", value: stats.totalComments },
+        { label: "Processed comments", value: stats.totalComments },
       ],
     },
     {
-      title: "Paso 2: Filtro de Ruido Operativo (Clasificador)",
+      title: "Step 2: Operational Noise Filter (Classifier)",
       description:
-        "Se analiza el texto limpio para filtrar y descartar el ruido operativo. Se identifican los comentarios generados por bots, integraciones automatizadas (ej. flujos de CI/CD) o intervenciones humanas rutinarias (ej. 'LGTM', 'thanks') que carecen de contexto sobre deuda social, conservando únicamente los comentarios útiles.",
+        "The clean text is evaluated to filter and discard operational noise. Comments generated by bots, automated CI/CD workflows, or routine human interactions (e.g., 'LGTM', 'thanks') that lack social debt context are filtered out, preserving only useful comments.",
       exportKey: "step2_b64",
       stats: [
-        { label: "Hard noise (Ruido Absoluto)", value: stats.noiseLevels["Hard noise"] },
-        { label: "Soft noise (Ruido Suave)", value: stats.noiseLevels["Soft noise"] },
-        { label: "Useful (Útiles para análisis)", value: stats.noiseLevels["Useful"] },
+        { label: "Hard noise (Absolute noise)", value: stats.noiseLevels["Hard noise"] },
+        { label: "Soft noise (Mild noise)", value: stats.noiseLevels["Soft noise"] },
+        { label: "Useful (Actionable for analysis)", value: stats.noiseLevels["Useful"] },
       ],
     },
     {
-      title: "Paso 3: Clasificación de Macrocausas (LLM)",
+      title: "Step 3: Macrocause Classification (LLM)",
       description:
-        "Los comentarios útiles son procesados por un modelo de lenguaje (LLM) que evalúa la semántica de la conversación. Cada comentario se analiza y clasifica para determinar si pertenece a alguna de las 7 macrocausas de deuda social (A-G) o si se trata de una conversación normal y/o no identificable (Causa H).",
+        "Actionable comments are analyzed by a Large Language Model (LLM) that evaluates conversation semantics. Each comment is classified to determine if it belongs to one of the 7 social debt macrocauses (A-G) or represents normal/non-identifiable conversation (Cause H).",
       exportKey: "step3_b64",
       stats: [
         {
-          label: "Comentarios efectivos a evaluar",
+          label: "Evaluated comments",
           value: stats.normalConversations + stats.debtComments,
         },
         {
-          label: "No identificable (Macrocausa H)",
+          label: "Non-identifiable (Macrocause H)",
           value: stats.normalConversations,
         },
         {
-          label: "Deuda Social (Causas A-G)",
+          label: "Social Debt (Causes A-G)",
           value: stats.debtComments,
         },
       ],
     },
     {
-      title: "Paso 4: Asignación de Microcausas (NLP)",
+      title: "Step 4: Microcause Matching (NLP)",
       description:
-        "Los comentarios identificados con deuda social (A-G) se procesan mediante un modelo de Natural Language Processing (NLP) basado en embeddings vectoriales. Se calcula la similitud semántica para emparejar y extraer las microcausas específicas de la ontología, logrando una mayor granularidad analítica.",
+        "Comments flagged with social debt (A-G) are processed using a Natural Language Processing (NLP) model powered by vector embeddings. Semantic similarity is computed to map and extract specific microcauses from the ontology, providing deep analytical granularity.",
       exportKey: "step4_b64",
       stats: [
         {
-          label: "Microcausas identificadas",
+          label: "Identified microcauses",
           value: stats.totalMicrocauses,
         },
         {
-          label: "Tipo de microcausa más frecuente",
+          label: "Most frequent microcause type",
           value: stats.topTypes,
         },
       ],
     },
     {
-      title: "Paso 5: Agrupamiento y Cálculo del Índice SDI",
+      title: "Step 5: Aggregation and SDI Calculation",
       description:
-        "Los resultados obtenidos se consolidan y agrupan por hilo de conversación (Issue). Se calcula el Índice de Deuda Social (SDI) utilizando un algoritmo que pondera tanto la criticidad como la variedad de las causas detectadas, entregando una métrica cuantitativa de la deuda técnica y social del Issue.",
+        "Individual comment findings are aggregated and grouped by discussion thread (Issue). The Social Debt Index (SDI) is computed using an algorithm that factors in both criticality and cause diversity, delivering a quantitative metric of technical and social debt per Issue.",
       exportKey: "final_excel_b64",
       stats: [
         {
-          label: "Issues (Hilos)",
+          label: "Issues (Threads)",
           value: stats.totalIssues,
         },
         {
-          label: "SDI Máximo",
+          label: "Max SDI",
           value: stats.maxSdiDisplay,
         },
         {
-          label: "SDI Mínimo",
+          label: "Min SDI",
           value: stats.minSdiDisplay,
         },
       ],
@@ -708,8 +708,8 @@ export const AlgorithmAuditTrail = ({
         );
       } else {
         const workbook = new ExcelJS.Workbook();
-        const sheetComments = workbook.addWorksheet("Comentarios");
-        addDataToSheet(sheetComments, dataStep4, "TablaComentariosPaso5");
+        const sheetComments = workbook.addWorksheet("Comments");
+        addDataToSheet(sheetComments, dataStep4, "CommentsStep5Table");
 
         const formatTupleList = (
           lst: unknown,
@@ -778,7 +778,6 @@ export const AlgorithmAuditTrail = ({
               social_debt_index: Number(metrics.social_debt_index) || 0,
             };
             
-            // Eliminar las llaves originales para que no aparezcan columnas vacías
             delete row.dominant_indicators;
             delete row.dominant_metrics;
             delete row.dominant_preventive_strategies;
@@ -793,13 +792,13 @@ export const AlgorithmAuditTrail = ({
               (Number(a.social_debt_index) || 0),
           );
 
-        const sheetSDI = workbook.addWorksheet("Metricas SDI");
-        addDataToSheet(sheetSDI, sdiArray, "TablaMetricasSDIPaso5");
+        const sheetSDI = workbook.addWorksheet("SDI Metrics");
+        addDataToSheet(sheetSDI, sdiArray, "SDIMetricsStep5Table");
   // --- Static Model Data ---
   const modelComparisonData = [
-    { model: "Random Forest", tipo_de_entrada: "Características Estructuradas Adaptativas", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
-    { model: "TF-IDF + Logistic Regression", tipo_de_entrada: "Texto del Issue", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
-    { model: "TF-IDF + Linear SVM", tipo_de_entrada: "Texto del Issue", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
+    { model: "Random Forest", input_type: "Adaptive Structured Features", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
+    { model: "TF-IDF + Logistic Regression", input_type: "Issue Text", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
+    { model: "TF-IDF + Linear SVM", input_type: "Issue Text", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
   ];
   
   const crossValidationData = [
@@ -808,11 +807,11 @@ export const AlgorithmAuditTrail = ({
     { model: "TF-IDF + Linear SVM", accuracy_mean: 0.5887, accuracy_std: 0.0577, macro_f1_mean: 0.5558, macro_f1_std: 0.0552, weighted_f1_mean: 0.5577, weighted_f1_std: 0.0560 }
   ];
 
-  const sheetModel = workbook.addWorksheet("Comparación Modelos");
-  addDataToSheet(sheetModel, modelComparisonData, "TablaComparacionModelos");
+  const sheetModel = workbook.addWorksheet("Model Comparison");
+  addDataToSheet(sheetModel, modelComparisonData, "ModelComparisonTable");
 
-  const sheetCrossVal = workbook.addWorksheet("Validación Cruzada");
-  addDataToSheet(sheetCrossVal, crossValidationData, "TablaValidacionCruzada");
+  const sheetCrossVal = workbook.addWorksheet("Cross-Validation");
+  addDataToSheet(sheetCrossVal, crossValidationData, "CrossValidationTable");
 
 
         const ontDict = ontology_dictionary as OntDictType;
@@ -830,12 +829,12 @@ export const AlgorithmAuditTrail = ({
             };
           });
 
-          const sheetName = `Ontologia - ${category}`.substring(0, 31);
+          const sheetName = `Ontology - ${category}`.substring(0, 31);
           const sheetOnt = workbook.addWorksheet(sheetName);
-          addDataToSheet(sheetOnt, flatOnt, `TablaOntologiaPaso5_${idx}`);
+          addDataToSheet(sheetOnt, flatOnt, `OntologyStep5Table_${idx}`);
         });
   const buffer = await workbook.xlsx.writeBuffer();
-        saveAs(new Blob([buffer]), `${baseName}_auditoria_paso5.xlsx`);
+        saveAs(new Blob([buffer]), `${baseName}_step5_audit.xlsx`);
       }
     }
   };
@@ -844,10 +843,10 @@ export const AlgorithmAuditTrail = ({
     <div className="flex flex-col py-2">
       <div className="mb-8 relative z-10">
         <h2 className="text-2xl font-bold text-slate-800">
-          Trazabilidad del Algoritmo
+          Algorithm Traceability
         </h2>
         <p className="text-slate-500 mt-1">
-          Descripción detallada del procesamiento paso a paso.
+          Detailed step-by-step processing description.
         </p>
       </div>
 
@@ -879,7 +878,7 @@ export const AlgorithmAuditTrail = ({
                   className="px-5 py-2.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors w-full md:w-auto whitespace-nowrap text-sm"
                 >
                   <Download className="w-4 h-4" />
-                  Descargar Paso {index + 1}
+                  Download Step {index + 1}
                 </button>
               </div>
 

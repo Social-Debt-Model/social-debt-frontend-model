@@ -16,7 +16,7 @@ export const DownloadModal = ({ isOpen, onClose, onDownload }: DownloadModalProp
         <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
           <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <Download className="w-5 h-5 text-indigo-600" />
-            Descargar Resultados
+            Download Results
           </h3>
           <button
             onClick={onClose}
@@ -27,9 +27,9 @@ export const DownloadModal = ({ isOpen, onClose, onDownload }: DownloadModalProp
         </div>
         <div className="p-5">
           <p className="text-sm text-slate-600 mb-6">
-            El archivo Excel incluirá dos hojas: los comentarios clasificados y un catálogo con las definiciones de las causas.
+            The Excel file will include sheets for classified comments, metrics, and definitions.
             <br /><br />
-            ¿Deseas incluir los comentarios descartados (identificados como ruido) en la descarga?
+            Do you want to include discarded comments (identified as noise) in the download?
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <button
@@ -39,7 +39,7 @@ export const DownloadModal = ({ isOpen, onClose, onDownload }: DownloadModalProp
               }}
               className="flex-1 py-2.5 px-4 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-semibold rounded-xl transition-colors border border-indigo-200 shadow-sm text-sm"
             >
-              Solo limpios (Sin ruido)
+              Clean only (Exclude noise)
             </button>
             <button
               onClick={() => {
@@ -48,7 +48,7 @@ export const DownloadModal = ({ isOpen, onClose, onDownload }: DownloadModalProp
               }}
               className="flex-1 py-2.5 px-4 bg-indigo-600 text-white hover:bg-indigo-700 font-semibold rounded-xl transition-colors shadow-md text-sm"
             >
-              Todos (Incluir ruido)
+              All (Include noise)
             </button>
           </div>
         </div>

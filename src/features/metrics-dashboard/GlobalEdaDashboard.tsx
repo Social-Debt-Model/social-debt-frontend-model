@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
-import { ResponsiveHeatMap, HeatMapDatum } from "@nivo/heatmap";
+import { ResponsiveHeatMap } from "@nivo/heatmap";
 import { ContinuousColorScaleConfig } from "@nivo/colors";
 import { BasicTooltip } from "@nivo/tooltip";
 import {
@@ -58,7 +58,7 @@ const DashboardSection = ({
       <div className="w-full relative">
         {children}
       </div>
-      {/* Separador sutil para darle ritmo visual a la página */}
+      {/* Subtle divider for visual pacing */}
       <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mt-16 mb-4"></div>
     </section>
   );
@@ -80,7 +80,7 @@ const GlobalMetricBarChart = ({
         .toFixed(2)
         .replace(/\\.00$/, ""));
   if (data.length === 0)
-    return <p className="text-sm text-slate-400">No hay datos</p>;
+    return <p className="text-sm text-slate-400">No data available</p>;
   return (
     <div style={{ height: Math.max(300, data.length * 35) }} className="mt-2">
       <ResponsiveContainer width="100%" height="100%">
@@ -211,8 +211,8 @@ const NivoHeatmapWrapper = ({
         emptyColor="#f8fafc"
         borderWidth={1}
         borderColor={{ from: "color", modifiers: [["darker", 0.4]] }}
-        labelTextColor={(cell: any) =>
-          cell.value > maxVal * 0.4 ? "#ffffff" : "#334155"
+        labelTextColor={(cell: { value: number | null }) =>
+          (cell.value ?? 0) > maxVal * 0.4 ? "#ffffff" : "#334155"
         }
         hoverTarget="cell"
         tooltip={({ cell }) => (
@@ -287,15 +287,15 @@ export const GlobalEdaDashboard = ({
     getRiskDetails,
   } = useOntology();
 
-  // Si ya tenemos los precalculados desde el HistoryDB (casi instantáneo), los usamos
-  // De lo contrario, los calculamos como fallback de emergencia (bloqueará el hilo principal)
+  // If precalculated stats from HistoryDB exist (near instant), use them
+  // Otherwise, compute them as an emergency fallback (will block main thread)
   const stats = useMemo(() => {
     if (precalculatedStats) {
-      console.log("[EDA] Usando estadisticas precalculadas desde HistoryDB!");
+      console.log("[EDA] Using precalculated statistics from HistoryDB!");
       return precalculatedStats;
     }
     console.warn(
-      "[EDA] FALLBACK: Calculando estadisticas desde cero! Esto bloqueará la UI.",
+      "[EDA] FALLBACK: Calculating statistics from scratch! This will block the UI.",
     );
     return precalculateEdaStats(resultData);
   }, [precalculatedStats, resultData]);
@@ -372,13 +372,13 @@ export const GlobalEdaDashboard = ({
       </DashboardSection>
 
       <DashboardSection
-        title="Análisis de Co-ocurrencias: Microcausas vs Community Smells"
+        title="Co-occurrence Analysis: Microcauses vs Community Smells"
         icon={Users}
       >
         <div>
           <NivoHeatmapWrapper
             legendTop="Community Smells"
-            legendLeft="Microcausas"
+            legendLeft="Microcauses"
             marginTop={260}
             marginLeft={380}
             legendOffsetTop={-220}
@@ -398,12 +398,12 @@ export const GlobalEdaDashboard = ({
       </DashboardSection>
 
       <DashboardSection
-        title="Análisis de Co-ocurrencias: Riesgos vs Community Smells"
+        title="Co-occurrence Analysis: Risks vs Community Smells"
         icon={Users}
       >
         <div>
           <NivoHeatmapWrapper
-            legendTop="Riesgos"
+            legendTop="Risks"
             legendLeft="Community Smells"
             marginTop={260}
             marginLeft={380}
@@ -422,7 +422,7 @@ export const GlobalEdaDashboard = ({
       </DashboardSection>
 
       <DashboardSection
-        title="Rutas Críticas de Propagación (Top 7)"
+        title="Critical Propagation Paths (Top 7)"
         icon={Route}
       >
         <div className="overflow-x-auto">
@@ -430,12 +430,12 @@ export const GlobalEdaDashboard = ({
             <thead className="bg-slate-50 text-slate-600 font-semibold uppercase text-xs">
               <tr>
                 <th className="px-4 py-3 rounded-tl-lg">
-                  Microcausa Originadora
+                  Originating Microcause
                 </th>
                 <th className="px-4 py-3">➔ Community Smell</th>
-                <th className="px-4 py-3">➔ Riesgo Latente</th>
+                <th className="px-4 py-3">➔ Latent Risk</th>
                 <th className="px-4 py-3 text-right rounded-tr-lg">
-                  Frecuencia
+                  Frequency
                 </th>
               </tr>
             </thead>
@@ -469,7 +469,7 @@ export const GlobalEdaDashboard = ({
                     colSpan={4}
                     className="px-4 py-8 text-center text-slate-400"
                   >
-                    No se detectaron rutas críticas
+                    No critical paths detected
                   </td>
                 </tr>
               )}
@@ -479,20 +479,20 @@ export const GlobalEdaDashboard = ({
       </DashboardSection>
 
       <DashboardSection
-        title="Datos Estáticos del Modelo"
+        title="Static Model Benchmarks"
         icon={Database}
       >
         <div className="space-y-8">
           <div>
             <h3 className="text-lg font-bold text-slate-700 mb-4 border-b pb-2">
-              Comparación de Modelos
+              Model Comparison
             </h3>
             <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full text-sm text-left whitespace-nowrap">
                 <thead className="bg-slate-700 text-slate-100 font-semibold uppercase text-xs tracking-wide">
                   <tr>
-                    <th className="px-4 py-3 rounded-tl-lg">Modelo</th>
-                    <th className="px-4 py-3">Tipo de Entrada</th>
+                    <th className="px-4 py-3 rounded-tl-lg">Model</th>
+                    <th className="px-4 py-3">Input Type</th>
                     <th className="px-4 py-3 text-right">Accuracy</th>
                     <th className="px-4 py-3 text-right">Macro F1</th>
                     <th className="px-4 py-3 text-right rounded-tr-lg">
@@ -506,7 +506,7 @@ export const GlobalEdaDashboard = ({
                       Random Forest
                     </td>
                     <td className="px-4 py-3 text-indigo-600 font-medium">
-                      Características Estructuradas Adaptativas
+                      Adaptive Structured Features
                     </td>
                     <td className="px-4 py-3 text-right font-bold text-green-600">
                       0.9000
@@ -523,7 +523,7 @@ export const GlobalEdaDashboard = ({
                       TF-IDF + Logistic Regression
                     </td>
                     <td className="px-4 py-3 text-slate-600">
-                      Texto del Issue
+                      Issue Text
                     </td>
                     <td className="px-4 py-3 text-right font-medium">0.5625</td>
                     <td className="px-4 py-3 text-right font-medium">0.5547</td>
@@ -534,7 +534,7 @@ export const GlobalEdaDashboard = ({
                       TF-IDF + Linear SVM
                     </td>
                     <td className="px-4 py-3 text-slate-600">
-                      Texto del Issue
+                      Issue Text
                     </td>
                     <td className="px-4 py-3 text-right font-medium">0.5375</td>
                     <td className="px-4 py-3 text-right font-medium">0.5108</td>
@@ -547,7 +547,7 @@ export const GlobalEdaDashboard = ({
 
           <div>
             <h3 className="text-lg font-bold text-slate-700 mb-4 border-b pb-2">
-              Validación Cruzada (Media ± Desviación)
+              Cross-Validation (Mean ± Std)
             </h3>
             <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full text-sm text-left whitespace-nowrap">

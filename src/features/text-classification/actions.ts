@@ -59,7 +59,7 @@ export async function classifyText(
       macro_cause_code: "H",
       confidence: 0,
       microcauses: [],
-      error: "Hubo un error de conexión con la API de Social Debt.",
+      error: "There was a connection error with the Social Debt API.",
     };
   }
 }

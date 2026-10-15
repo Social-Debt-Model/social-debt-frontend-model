@@ -25,13 +25,13 @@ export const OpenAILimitsBadge = () => {
         const res = await checkOpenAILimits();
         if (res?.error) {
           setErrorObj({ isError: true, code: res.code });
-          console.error(`[Social Debt API] Error de conexión (${res.code}). ${res.code === 401 ? "Verifica la API_SECRET_KEY en el backend." : "Servidor inalcanzable."}`);
+          console.error(`[Social Debt API] Connection error (${res.code}). ${res.code === 401 ? "Check API_SECRET_KEY in the backend." : "Server unreachable."}`);
         } else if (res?.limits) {
           setLimits(res.limits);
           setErrorObj({ isError: false });
         }
       } catch (err) {
-        console.error("[Social Debt UI] Error invocando Server Action:", err);
+        console.error("[Social Debt UI] Error invoking Server Action:", err);
         setErrorObj({ isError: true, code: 503 });
       } finally {
         setLoading(false);
@@ -58,7 +58,7 @@ export const OpenAILimitsBadge = () => {
       <div className="relative z-50 flex justify-end">
         <div className="glass-panel px-0 md:px-4 w-[40px] md:w-auto h-[40px] rounded-full md:rounded-xl flex items-center justify-center gap-2 text-slate-500 shadow-sm ml-auto">
           <Activity className="w-4 h-4 animate-spin" />
-          <span className="hidden md:inline text-xs">Consultando red...</span>
+          <span className="hidden md:inline text-xs">Checking network...</span>
         </div>
       </div>
     );
@@ -76,7 +76,7 @@ export const OpenAILimitsBadge = () => {
 
   return (
     <div className="relative z-50 flex justify-end" ref={badgeRef}>
-      {/* Botón principal */}
+      {/* Main button */}
       <div
         className={`glass-panel h-[40px] flex items-center justify-center rounded-full md:rounded-xl border shadow-sm backdrop-blur-md cursor-pointer transition-all ${badgeColor} w-[40px] md:w-auto md:px-4`}
         onClick={() => setIsHovered(!isHovered)}
@@ -85,7 +85,7 @@ export const OpenAILimitsBadge = () => {
           {errorObj.isError ? (
             <>
               <AlertCircle className="w-4 h-4 text-red-500" />
-              {isAuthError ? "No Autorizado" : "Sin Conexión"}
+              {isAuthError ? "Unauthorized" : "Offline"}
             </>
           ) : (
             <>
@@ -93,7 +93,7 @@ export const OpenAILimitsBadge = () => {
               <span>
                 {limits?.remaining_requests ?? 0}{" "}
                 <span className="text-xs font-normal text-slate-500/80 ml-1">
-                  restantes
+                  remaining
                 </span>
               </span>
             </>
@@ -112,7 +112,7 @@ export const OpenAILimitsBadge = () => {
         </div>
       </div>
 
-      {/* Popover desplegable absoluto */}
+      {/* Absolute dropdown popover */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
@@ -125,24 +125,23 @@ export const OpenAILimitsBadge = () => {
             {errorObj.isError ? (
               <>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-red-500 mb-2">
-                  Sin Conexión
+                  Offline
                 </h4>
                 <p className="text-xs text-red-700/80 leading-relaxed">
-                  El sistema se encuentra desconectado. Las funciones de análisis pueden no estar disponibles en este momento.
+                  The system is currently disconnected. Analysis features may be temporarily unavailable.
                 </p>
               </>
             ) : (
               <>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                  Cuota de Red OpenAI
+                  OpenAI Network Quota
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                  Número estimado de comentarios restantes que se pueden analizar
-                  antes de alcanzar el límite dinámico de la API.
+                  Estimated number of remaining comments that can be analyzed before reaching the API rate limit.
                 </p>
                 <div className="flex items-center gap-2 text-lg font-bold text-slate-800">
                   <Activity className="w-5 h-5 text-emerald-500" />
-                  {limits?.remaining_requests ?? 0} restantes
+                  {limits?.remaining_requests ?? 0} remaining
                 </div>
               </>
             )}

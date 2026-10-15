@@ -20,18 +20,18 @@ const DB_PREFIX = "social-debt-history-";
 const PENDING_PREFIX = "social-debt-pending-";
 
 const VERSION_KEY = "social-debt-app-version";
-const CURRENT_VERSION = "v1.3.0";
+const CURRENT_VERSION = "v1.4.0";
 
 /**
- * Verifica si la versión de la aplicación ha cambiado.
- * Si es así, borra todo el historial de IndexedDB para evitar crashes por incompatibilidad.
+ * Checks if the application version has changed.
+ * If so, clears the IndexedDB history to prevent incompatibility crashes.
  */
 export async function checkAndClearOldCache(): Promise<void> {
   try {
     const storedVersion = await get(VERSION_KEY);
     if (storedVersion !== CURRENT_VERSION) {
       console.log(
-        `[Cache] Actualizando versión de ${storedVersion || "ninguna"} a ${CURRENT_VERSION}. Limpiando datos obsoletos...`,
+        `[Cache] Updating version from ${storedVersion || "none"} to ${CURRENT_VERSION}. Clearing outdated data...`,
       );
 
       const allKeys = await keys();
@@ -48,7 +48,7 @@ export async function checkAndClearOldCache(): Promise<void> {
       await set(VERSION_KEY, CURRENT_VERSION);
     }
   } catch (error) {
-    console.error("Error validando la versión de la caché:", error);
+    console.error("Error validating cache version:", error);
   }
 }
 

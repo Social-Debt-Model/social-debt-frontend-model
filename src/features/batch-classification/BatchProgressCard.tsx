@@ -50,7 +50,7 @@ export const BatchProgressCard = ({
     | "cancelled"
   >(isCancelled ? "cancelled" : isError ? "error" : resumeJobId ? "processing" : "checking_limits");
   const [progressMsg, setProgressMsg] = useState(
-    isCancelled ? "Análisis cancelado." : isError ? "Error al procesar el archivo." : "Verificando cuota disponible de OpenAI...",
+    isCancelled ? "Analysis cancelled." : isError ? "Error processing file." : "Verifying OpenAI quota...",
   );
   const [progressPercent, setProgressPercent] = useState(
     isCancelled || isError ? 100 : 0
@@ -82,7 +82,7 @@ export const BatchProgressCard = ({
       if (resumeJobId) {
         setJobId(resumeJobId || null);
         setStep("processing");
-        setProgressMsg("Reanudando conexión con el lote...");
+        setProgressMsg("Reconnecting to batch job...");
         setProgressPercent(20);
       } else if (file) {
         const limitsRes = await checkOpenAILimits();
@@ -90,7 +90,7 @@ export const BatchProgressCard = ({
         if (limitsRes?.error) {
           setStep("error");
           setProgressMsg(
-            `Error de cuota/límites: ${limitsRes?.details || "No se pudo verificar la conexión con OpenAI."}`,
+            `Quota/limit error: ${limitsRes?.details || "Could not verify connection with OpenAI."}`,
           );
           if (callbacksRef.current.onError)
             callbacksRef.current.onError(newJobId || "");
@@ -98,7 +98,7 @@ export const BatchProgressCard = ({
         }
 
         setStep("uploading");
-        setProgressMsg(`Enviando archivo ${file.name} al servidor...`);
+        setProgressMsg(`Uploading file ${file.name} to server...`);
         setProgressPercent(10);
 
         const formData = new FormData();
@@ -113,7 +113,7 @@ export const BatchProgressCard = ({
         if (uploadRes?.error || !uploadRes?.job_id) {
           setStep("error");
           setProgressMsg(
-            `Error al iniciar lote: ${uploadRes?.message || "job_id missing"}`,
+            `Error starting batch: ${uploadRes?.message || "job_id missing"}`,
           );
           if (callbacksRef.current.onError)
             callbacksRef.current.onError(newJobId || "");
@@ -126,7 +126,7 @@ export const BatchProgressCard = ({
           callbacksRef.current.onJobStarted(newJobId);
         }
         setStep("processing");
-        setProgressMsg("Procesando (0%)");
+        setProgressMsg("Processing (0%)");
         setProgressPercent(20);
 
         await savePendingJob({
@@ -136,7 +136,7 @@ export const BatchProgressCard = ({
         });
       } else {
         setStep("error");
-        setProgressMsg("No se proporcionó archivo ni jobId.");
+        setProgressMsg("No file or jobId provided.");
         if (callbacksRef.current.onError)
           callbacksRef.current.onError(newJobId || "");
         return;
@@ -155,11 +155,11 @@ export const BatchProgressCard = ({
           setStep("error");
           if (statusRes.code === 404) {
             setProgressMsg(
-              "El trabajo expiró o no fue encontrado en el servidor (404).",
+              "Job expired or was not found on the server (404).",
             );
           } else {
             setProgressMsg(
-              `Error de conexión: ${statusRes.message || "Desconocido"}`,
+              `Connection error: ${statusRes.message || "Unknown"}`,
             );
           }
           await deletePendingJob(newJobId!);
@@ -172,7 +172,7 @@ export const BatchProgressCard = ({
           isFinished = true;
           if (intervalId) clearInterval(intervalId);
           setStep("cancelled");
-          setProgressMsg("Análisis cancelado.");
+          setProgressMsg("Analysis cancelled.");
           await deletePendingJob(newJobId!);
           if (callbacksRef.current.onCancelled)
             callbacksRef.current.onCancelled(newJobId!);
@@ -186,12 +186,10 @@ export const BatchProgressCard = ({
           isFinished = true;
           if (intervalId) clearInterval(intervalId);
           
-          // Actualizar UI para indicar que estamos calculando las métricas
           setStep("processing");
           setProgressPercent(99);
-          setProgressMsg("Calculando gráficas y matrices EDA...");
+          setProgressMsg("Computing EDA charts and metrics...");
           
-          // Usar un setTimeout para permitir que el navegador dibuje este mensaje antes de bloquearse
           setTimeout(async () => {
             await deletePendingJob(newJobId!);
             if (callbacksRef.current.onCompleted) {
@@ -210,11 +208,11 @@ export const BatchProgressCard = ({
           ? String(statusRes.progress)
           : "";
         if (statusRes.status === "pending") {
-          setProgressMsg(rawProgressStr || "En cola. Esperando turno...");
+          setProgressMsg(rawProgressStr || "Queued. Waiting for turn...");
         } else if (rawProgressStr.toLowerCase().includes("cola de espera")) {
-          setProgressMsg("En cola. Esperando turno...");
+          setProgressMsg("Queued. Waiting for turn...");
         } else {
-          setProgressMsg(rawProgressStr || "Procesando en segundo plano...");
+          setProgressMsg(rawProgressStr || "Processing in background...");
         }
 
         try {
@@ -238,21 +236,21 @@ export const BatchProgressCard = ({
           if (extractedPercent !== null && !isNaN(extractedPercent)) {
             setProgressPercent(20 + Math.floor(extractedPercent * 0.8));
           } else if (statusRes.status === "pending") {
-            setProgressPercent(20); // Se queda en 20% si está en cola
+            setProgressPercent(20); // Remains at 20% while queued
           } else {
             setProgressPercent((prev) => Math.min(prev + 5, 95));
           }
 
           if (statusRes.estimated_remaining_time_formatted) {
             setEstimatedTime(
-              `Tiempo estimado: ${statusRes.estimated_remaining_time_formatted}`,
+              `Estimated time: ${statusRes.estimated_remaining_time_formatted}`,
             );
           } else if (
             statusRes.status === "pending" &&
             statusRes.estimated_wait_seconds
           ) {
             const m = Math.round(statusRes.estimated_wait_seconds / 60);
-            setEstimatedTime(`Tiempo estimado de espera: ~${m} minutos`);
+            setEstimatedTime(`Estimated wait time: ~${m} minutes`);
           } else {
             setEstimatedTime(null);
           }
@@ -281,9 +279,8 @@ export const BatchProgressCard = ({
   const handleCancel = async () => {
     if (!jobId) return;
     setStep("cancelled");
-    setProgressMsg("Cancelando...");
+    setProgressMsg("Cancelling...");
     
-    // No usamos await aquí para no bloquear la UI mientras el servidor cancela
     cancelBatchJob(jobId).catch(() => {});
     
     await deletePendingJob(jobId);
@@ -293,7 +290,7 @@ export const BatchProgressCard = ({
   const handleDiscardError = async () => {
     if (!jobId) return;
     setStep("cancelled");
-    setProgressMsg("Descartando trabajo fallido...");
+    setProgressMsg("Discarding failed job...");
     await deletePendingJob(jobId);
     if (onCancelled) onCancelled(jobId);
   };
@@ -316,12 +313,12 @@ export const BatchProgressCard = ({
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-slate-800 truncate">
             {step === "completed"
-              ? "Análisis Finalizado"
+              ? "Analysis Finished"
               : step === "error"
                 ? "Error"
                 : step === "cancelled"
-                  ? "Análisis Cancelado"
-                  : "Análisis Masivo en Progreso"}
+                  ? "Analysis Cancelled"
+                  : "Batch Analysis in Progress"}
           </h3>
           {(file?.name || resumeFilename) && (
             <p className="text-xs text-slate-500 font-medium truncate max-w-[200px]">
@@ -335,7 +332,7 @@ export const BatchProgressCard = ({
             onClick={handleCancel}
             className="flex-shrink-0 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
           >
-            Cancelar
+            Cancel
           </button>
         )}
 
@@ -344,14 +341,14 @@ export const BatchProgressCard = ({
             onClick={handleDiscardError}
             className="flex-shrink-0 text-xs text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
           >
-            Descartar
+            Discard
           </button>
         )}
       </div>
 
       <div className="flex flex-col flex-1 justify-end pb-1">
         <div className="mb-3">
-          <p className="text-sm text-slate-600 font-medium truncate">{progressMsg || "Iniciando..."}</p>
+          <p className="text-sm text-slate-600 font-medium truncate">{progressMsg || "Starting..."}</p>
           <div className="min-h-[16px] mt-1">
             {estimatedTime && step === "processing" ? (
               <p className="text-xs text-slate-500 font-medium truncate">
@@ -359,7 +356,7 @@ export const BatchProgressCard = ({
               </p>
             ) : step === "completed" ? (
               <p className="text-xs text-emerald-600 font-medium truncate">
-                Generando métricas y dashboard...
+                Generating metrics and dashboard...
               </p>
             ) : null}
           </div>

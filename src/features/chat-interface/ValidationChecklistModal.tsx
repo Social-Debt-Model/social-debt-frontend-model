@@ -68,30 +68,28 @@ export const ValidationChecklistModal = ({
           <div className="flex items-center gap-3 mb-2">
             <Columns className="w-6 h-6 text-blue-500" />
             <h3 className="text-2xl font-bold text-slate-800">
-              Requisitos del Archivo
+              File Requirements
             </h3>
           </div>
 
           <p className="text-lg text-slate-600 mb-6">
-            Antes de subir el dataset, asegúrese que contenga las siguientes
-            columnas para poder procesarlo correctamente.
+            Before uploading the dataset, ensure it contains the following
+            columns to be processed correctly.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="p-4 rounded-xl border bg-slate-50/50 border-slate-200 h-full">
               <h4 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-emerald-500" /> Campos
-                Obligatorios
+                <AlertCircle className="w-5 h-5 text-emerald-500" /> Required Fields
               </h4>
               <div className="flex items-start gap-2">
                 <div className="w-2 h-2 mt-1.5 rounded-full bg-emerald-500 shrink-0"></div>
                 <div className="flex flex-col gap-3">
                   <p className="text-base font-semibold text-slate-700">
-                    Contenido del Comentario
+                    Comment Content
                   </p>
                   <p className="text-base text-slate-500">
-                    Columna que contiene el texto del comentario, la cual debe
-                    llamarse exactamente como una de estas opciones:
+                    Column containing the comment text, which must be named exactly as one of these options:
                   </p>
                   <div className="grid grid-cols-2 gap-2 mt-2">
                     {VALID_COMMENT_HEADERS.map((h) => (
@@ -109,15 +107,15 @@ export const ValidationChecklistModal = ({
 
             <div className="p-4 rounded-xl border bg-slate-50/50 border-slate-200 h-full flex flex-col">
               <h4 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-6">
-                <HelpCircle className="w-5 h-5 text-blue-500" /> Opcionales
+                <HelpCircle className="w-5 h-5 text-blue-500" /> Optional Fields
               </h4>
               <div className="flex flex-col gap-5 flex-1">
                 <div className="flex items-start gap-2">
                   <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
                   <div className="flex flex-col gap-2 w-full">
                     <div>
-                      <p className="text-base font-semibold text-slate-700">ID Comentario</p>
-                      <p className="text-sm text-slate-500 leading-tight mt-0.5">Si no existe, se generará.</p>
+                      <p className="text-base font-semibold text-slate-700">Comment ID</p>
+                      <p className="text-sm text-slate-500 leading-tight mt-0.5">If missing, one will be generated.</p>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {VALID_ID_HEADERS.map((h) => (
@@ -132,7 +130,7 @@ export const ValidationChecklistModal = ({
                   <div className="flex flex-col gap-2 w-full">
                     <div>
                       <p className="text-base font-semibold text-slate-700">Issue / Ticket</p>
-                      <p className="text-sm text-slate-500 leading-tight mt-0.5">Agrupa los comentarios.</p>
+                      <p className="text-sm text-slate-500 leading-tight mt-0.5">Groups comments together.</p>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {VALID_ISSUE_HEADERS.map((h) => (
@@ -159,20 +157,20 @@ export const ValidationChecklistModal = ({
               <>
                 <Loader2 className="w-8 h-8 text-indigo-500 mb-3 animate-spin" />
                 <span className="text-base font-semibold text-indigo-900">
-                  Subiendo y analizando dataset...
+                  Uploading and analyzing dataset...
                 </span>
                 <span className="text-sm text-indigo-600/70 mt-1">
-                  Por favor espera un momento
+                  Please wait a moment
                 </span>
               </>
             ) : (
               <>
                 <UploadCloud className="w-8 h-8 text-blue-500 mb-3" />
                 <span className="text-base font-semibold text-blue-900">
-                  Haga clic o arrastre el archivo aquí
+                  Click or drag file here
                 </span>
                 <span className="text-sm text-blue-600/70 mt-1">
-                  Soporta formatos .CSV y .XLSX
+                  Supports .CSV and .XLSX formats
                 </span>
               </>
             )}
@@ -214,24 +212,24 @@ export const ValidationChecklistModal = ({
             <AlertCircle className="w-6 h-6 text-red-500" />
           )}
           <h3 className="text-xl font-bold text-slate-800">
-            {report.isValid ? "Archivo Válido" : "Archivo Inválido"}
+            {report.isValid ? "Valid File" : "Invalid File"}
           </h3>
         </div>
 
         <p className="text-base text-slate-600 mb-4">
           {report.isValid
-            ? "Las columnas del archivo cumplen con la estructura necesaria para procesar los datos."
-            : "Faltan columnas requeridas. Por favor, corrija el archivo y vuelva a subirlo."}
+            ? "The file columns match the required structure to process the dataset."
+            : "Required columns are missing. Please fix the file and upload again."}
         </p>
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-base font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-              <Columns className="w-4 h-4" /> Resumen de Columnas
+              <Columns className="w-4 h-4" /> Column Summary
             </h4>
             {report.totalRows !== undefined && (
               <span className="text-sm font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-                {report.totalRows.toLocaleString()} registros cargados
+                {report.totalRows.toLocaleString()} rows loaded
               </span>
             )}
           </div>
@@ -242,7 +240,7 @@ export const ValidationChecklistModal = ({
             >
               <div className="flex items-center justify-between">
                 <span className="text-base font-bold text-slate-800">
-                  Comentario{" "}
+                  Comment{" "}
                   <span className="text-sm font-normal text-slate-500">
                     (Req)
                   </span>
@@ -264,7 +262,7 @@ export const ValidationChecklistModal = ({
                 ) : (
                   <div className="inline-flex items-center gap-1 text-red-700 bg-red-100/50 border border-red-200 px-2 py-1 rounded-md text-base w-full">
                     <XCircle className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate">Falta la columna</span>
+                    <span className="truncate">Missing column</span>
                   </div>
                 )}
               </div>
@@ -277,7 +275,7 @@ export const ValidationChecklistModal = ({
                 <span className="text-base font-bold text-slate-800">
                   ID{" "}
                   <span className="text-sm font-normal text-slate-500">
-                    (Opc)
+                    (Opt)
                   </span>
                 </span>
                 {(report.missingIdCount ?? 0) > 0 && report.totalRows ? (
@@ -288,8 +286,8 @@ export const ValidationChecklistModal = ({
                     </span>
                     <div className="absolute bottom-full right-0 mb-2 w-56 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-left">
                       {report.hasIdColumn
-                        ? `Falta el ID en ${report.missingIdCount} de los ${report.totalRows} comentarios existentes. El sistema los asignará de manera automática.`
-                        : `Falta el ID en los ${report.totalRows} comentarios existentes. El sistema los asignará de manera automática.`}
+                        ? `ID missing in ${report.missingIdCount} of ${report.totalRows} comments. The system will assign them automatically.`
+                        : `ID missing in all ${report.totalRows} comments. The system will assign them automatically.`}
                       <div className="absolute top-full right-4 border-4 border-transparent border-t-slate-800"></div>
                     </div>
                   </div>
@@ -310,7 +308,7 @@ export const ValidationChecklistModal = ({
                 ) : (
                   <div className="inline-flex items-center gap-1 text-slate-600 bg-white border border-slate-200 px-2 py-1 rounded-md shadow-sm text-base w-full">
                     <AlertTriangle className="w-4 h-4 text-orange-500 shrink-0" />
-                    <span className="truncate">Autogenerado</span>
+                    <span className="truncate">Auto-generated</span>
                   </div>
                 )}
               </div>
@@ -323,7 +321,7 @@ export const ValidationChecklistModal = ({
                 <span className="text-base font-bold text-slate-800">
                   Issue{" "}
                   <span className="text-sm font-normal text-slate-500">
-                    (Opc)
+                    (Opt)
                   </span>
                 </span>
                 {(report.missingIssueCount ?? 0) > 0 && report.totalRows ? (
@@ -334,8 +332,8 @@ export const ValidationChecklistModal = ({
                     </span>
                     <div className="absolute bottom-full right-0 mb-2 w-56 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-left">
                       {report.hasIssueColumn
-                        ? `Falta el número de Issue en ${report.missingIssueCount} de los ${report.totalRows} comentarios existentes. Se deberá decidir qué hacer con ellos más abajo.`
-                        : `Falta el número de Issue en los ${report.totalRows} comentarios existentes. Deberás decidir qué hacer con ellos más abajo.`}
+                        ? `Issue number missing in ${report.missingIssueCount} of ${report.totalRows} comments. You can choose how to handle them below.`
+                        : `Issue number missing in all ${report.totalRows} comments. You can choose how to handle them below.`}
                       <div className="absolute top-full right-4 border-4 border-transparent border-t-slate-800"></div>
                     </div>
                   </div>
@@ -356,7 +354,7 @@ export const ValidationChecklistModal = ({
                 ) : (
                   <div className="inline-flex items-center gap-1 text-slate-600 bg-white border border-slate-200 px-2 py-1 rounded-md shadow-sm text-base w-full">
                     <AlertTriangle className="w-4 h-4 text-orange-500 shrink-0" />
-                    <span className="truncate">Falta la columna</span>
+                    <span className="truncate">Missing column</span>
                   </div>
                 )}
               </div>
@@ -368,15 +366,14 @@ export const ValidationChecklistModal = ({
         {report.isValid && hasOrphans && (
           <div className="mt-4 pt-4 border-t border-slate-200">
             <h4 className="text-base font-semibold text-slate-800 mb-3 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-orange-500" /> ¿Qué hacemos
-              con los comentarios sueltos?
+              <AlertCircle className="w-4 h-4 text-orange-500" /> How should unassigned comments be handled?
             </h4>
             <p className="text-sm text-slate-600 mb-4">
-              Se detectaron{" "}
+              Detected{" "}
               <strong className="text-slate-800">
-                {report.missingIssueCount} de los {report.totalRows} comentarios
+                {report.missingIssueCount} of {report.totalRows} comments
               </strong>{" "}
-              que no tienen un número de Issue asociado.
+              without an associated Issue key.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <label
@@ -394,7 +391,7 @@ export const ValidationChecklistModal = ({
                   <p
                     className={`text-base font-bold ${decision === "group" ? "text-blue-700" : "text-slate-700"}`}
                   >
-                    Agrupar
+                    Group
                   </p>
                   {decision === "group" && (
                     <div className="w-2 h-2 rounded-full bg-blue-500 shadow-sm" />
@@ -403,11 +400,10 @@ export const ValidationChecklistModal = ({
                 <p
                   className={`text-sm leading-snug mt-1 ${decision === "group" ? "text-blue-600/80" : "text-slate-500"}`}
                 >
-                  Agrupar en un mismo Issue
+                  Group into a single Issue
                 </p>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-center">
-                  Se simulará que todos pertenecen al mismo hilo o discusión
-                  (UNGROUPED-COMMENTS).
+                  All unassigned comments will be grouped under UNGROUPED-COMMENTS.
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                 </div>
               </label>
@@ -435,11 +431,10 @@ export const ValidationChecklistModal = ({
                 <p
                   className={`text-sm leading-snug mt-1 ${decision === "individual" ? "text-blue-600/80" : "text-slate-500"}`}
                 >
-                  Evaluar por separado
+                  Evaluate separately
                 </p>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-center">
-                  Cada comentario se analizará de forma independiente sin
-                  relacionarse con los demás.
+                  Each comment will be analyzed independently without associating with others.
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                 </div>
               </label>
@@ -458,7 +453,7 @@ export const ValidationChecklistModal = ({
                   <p
                     className={`text-base font-bold ${decision === "discard" ? "text-blue-700" : "text-slate-700"}`}
                   >
-                    Descartar
+                    Discard
                   </p>
                   {decision === "discard" && (
                     <div className="w-2 h-2 rounded-full bg-blue-500 shadow-sm" />
@@ -467,11 +462,10 @@ export const ValidationChecklistModal = ({
                 <p
                   className={`text-sm leading-snug mt-1 ${decision === "discard" ? "text-blue-600/80" : "text-slate-500"}`}
                 >
-                  Solo procesar válidos
+                  Only process valid issues
                 </p>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-center">
-                  Se ignorarán estos comentarios y solo se analizarán aquellos
-                  que tengan Issue.
+                  These comments will be ignored and only comments with an Issue will be analyzed.
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                 </div>
               </label>
@@ -481,7 +475,7 @@ export const ValidationChecklistModal = ({
 
         <div className="mt-4 pt-4 border-t border-slate-200">
           <p className="text-base font-semibold text-slate-500 mb-2 uppercase tracking-wider">
-            Columnas detectadas en el archivo ({report.detectedColumns.length})
+            Detected columns in file ({report.detectedColumns.length})
           </p>
           <div className="flex flex-wrap gap-2">
             {report.detectedColumns.map((col, idx) => (
@@ -502,7 +496,7 @@ export const ValidationChecklistModal = ({
               onClick={onClose}
               className="w-full py-3 bg-slate-800 text-white rounded-lg font-medium hover:bg-slate-700 transition"
             >
-              Entendido, corregiré el archivo
+              Understood, I will fix the file
             </button>
           ) : (
             <>
@@ -511,7 +505,7 @@ export const ValidationChecklistModal = ({
                 disabled={isProcessingFile}
                 className={`px-5 py-2 rounded-lg font-medium transition ${isProcessingFile ? "text-slate-400 cursor-not-allowed" : "text-slate-600 hover:text-slate-800 hover:bg-slate-100"}`}
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 onClick={() => {
@@ -529,10 +523,10 @@ export const ValidationChecklistModal = ({
                 {isProcessingFile ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Procesando...
+                    Processing...
                   </>
                 ) : (
-                  "Continuar"
+                  "Continue"
                 )}
               </button>
             </>

@@ -38,7 +38,6 @@ const MicrocauseCard = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // SOLUCIÓN PUNTO 7: Importar el getter específico para los Community Smells
   const {
     getMicroCauseDetails,
     getStrategyDetails,
@@ -126,7 +125,7 @@ const MicrocauseCard = ({
               )}
             </div>
             
-            <span className="md:hidden flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0 mt-0.5" title="Nivel de similitud / confianza">
+            <span className="md:hidden flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0 mt-0.5" title="Similarity / Confidence">
               <CheckCircle className="w-3.5 h-3.5 opacity-75 flex-shrink-0" />
               <span className="whitespace-nowrap block">{Math.round(mc.similarity * 100)}% sim.</span>
             </span>
@@ -139,7 +138,7 @@ const MicrocauseCard = ({
               </span>
             )}
             
-            <span className="hidden md:flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Nivel de similitud / confianza">
+            <span className="hidden md:flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Similarity / Confidence">
               <CheckCircle className="w-4 h-4 opacity-75 flex-shrink-0" />
               <span className="whitespace-nowrap block">{Math.round(mc.similarity * 100)}% sim.</span>
             </span>
@@ -149,12 +148,12 @@ const MicrocauseCard = ({
                 {isOpen ? (
                   <>
                     <ChevronUp className="w-3.5 h-3.5 flex-shrink-0" />
-                    Ocultar<span className="hidden md:inline">&nbsp;detalles</span>
+                    Hide<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 ) : (
                   <>
                     <ChevronDown className="w-3.5 h-3.5 flex-shrink-0" />
-                    Ver<span className="hidden md:inline">&nbsp;detalles</span>
+                    View<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 )}
               </button>
@@ -171,47 +170,47 @@ const MicrocauseCard = ({
           {renderList(
             "Community Smells",
             mc.community_smells,
-            getCommunitySmellDetails, // <-- SOLUCIÓN PUNTO 7: Usamos el getter de la ontología
+            getCommunitySmellDetails,
             Users,
             "text-purple-600",
           )}
           {renderList(
-            "Riesgos",
+            "Risks",
             mc.risks,
             getRiskDetails,
             Shield,
             "text-red-500",
           )}
           {renderList(
-            "Efectos",
+            "Effects",
             mc.effects,
             getEffectDetails,
             AlertCircle,
             "text-orange-500",
           )}
           {renderList(
-            "Estrategias Preventivas",
+            "Preventive Strategies",
             mc.preventive_strategies,
             getStrategyDetails,
             Target,
             "text-emerald-600",
           )}
           {renderList(
-            "Estrategias Correctivas",
+            "Corrective Strategies",
             mc.corrective_strategies,
             getStrategyDetails,
             Wrench,
             "text-blue-600",
           )}
           {renderList(
-            "Indicadores",
+            "Indicators",
             mc.indicators,
             getIndicatorDetails,
             Activity,
             "text-indigo-500",
           )}
           {renderList(
-            "Métricas",
+            "Metrics",
             mc.metrics,
             getMetricDetails,
             TrendingUp,
@@ -280,7 +279,7 @@ export const TextResultCard = ({
             <div className="flex justify-between items-center mb-1">
               {index !== undefined && (
                 <span className="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">
-                  Comentario {index}
+                  Comment {index}
                 </span>
               )}
               {result.issue_number && (
@@ -296,10 +295,10 @@ export const TextResultCard = ({
         )}
 
         <div className="flex items-center gap-1.5 text-slate-500 relative group cursor-help w-max mt-1">
-          <span className="font-semibold text-base">Ruido Operativo</span>
+          <span className="font-semibold text-base">Operational Noise</span>
           <Info className="w-4 h-4" />
           <div className="absolute bottom-full left-0 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] pointer-events-none font-normal normal-case tracking-normal">
-            Este comentario ha sido clasificado como ruido operativo (Ej. logs de bots o mensajes automáticos) y no representa deuda social genuina.
+            This comment has been classified as operational noise (e.g., bot logs or automated messages) and does not represent genuine social debt.
             <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
           </div>
         </div>
@@ -334,7 +333,7 @@ export const TextResultCard = ({
             <div className="flex justify-between items-center mb-1">
               {index !== undefined && (
                 <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md">
-                  Comentario {index}
+                  Comment {index}
                 </span>
               )}
               {result.issue_number && (
@@ -355,9 +354,9 @@ export const TextResultCard = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1">
               <p className="text-sm font-semibold uppercase tracking-wider text-indigo-900/70 break-words flex-1 min-w-0">
-                Macrocausa Principal ({result.macro_cause_code})
+                Primary Macrocause ({result.macro_cause_code})
               </p>
-              <div className="md:hidden flex items-center gap-1 text-xs bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Nivel de similitud / confianza">
+              <div className="md:hidden flex items-center gap-1 text-xs bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Similarity / Confidence">
                 <CheckCircle className="w-3.5 h-3.5 opacity-75 flex-shrink-0" />
                 <span className="whitespace-nowrap font-medium block">{confidencePercent}% sim.</span>
               </div>
@@ -372,12 +371,12 @@ export const TextResultCard = ({
                   {isCardOpen ? (
                     <>
                       <ChevronUp className="w-4 h-4 flex-shrink-0" />
-                      Ocultar
+                      Hide
                     </>
                   ) : (
                     <>
                       <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                      Detalles
+                      Details
                     </>
                   )}
                 </button>
@@ -386,7 +385,7 @@ export const TextResultCard = ({
           </div>
           
           <div className="hidden md:flex items-center justify-end gap-2 w-full md:w-auto flex-shrink-0 flex-wrap md:flex-nowrap">
-            <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Nivel de similitud / confianza">
+            <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Similarity / Confidence">
               <CheckCircle className="w-4 h-4 opacity-75 flex-shrink-0" />
               <span className="whitespace-nowrap font-medium block">{confidencePercent}% sim.</span>
             </div>
@@ -395,12 +394,12 @@ export const TextResultCard = ({
                 {isCardOpen ? (
                   <>
                     <ChevronUp className="w-4 h-4 flex-shrink-0" />
-                    Ocultar<span className="hidden md:inline">&nbsp;detalles</span>
+                    Hide<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 ) : (
                   <>
                     <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                    Ver<span className="hidden md:inline">&nbsp;detalles</span>
+                    View<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 )}
               </button>
@@ -415,7 +414,7 @@ export const TextResultCard = ({
           onClick={(e) => e.stopPropagation()}
         >
           <p className="text-sm font-semibold uppercase tracking-wider mb-2 text-indigo-900/70">
-            Microcausas Encontradas
+            Identified Microcauses
           </p>
           {result.microcauses.map((mc, idx) => (
             <MicrocauseCard

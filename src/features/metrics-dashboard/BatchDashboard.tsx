@@ -70,7 +70,7 @@ const MetricBarChart = ({ data, colorClass }: { data: { name: string; value: num
   if (data.length === 0) {
     return (
       <div className="absolute inset-0 flex items-center justify-center">
-        <p className="text-slate-400 text-sm italic">No se detectaron datos</p>
+        <p className="text-slate-400 text-sm italic">No data detected</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ const MetricBarChart = ({ data, colorClass }: { data: { name: string; value: num
             return (
               <div className="bg-white p-2 rounded shadow border border-slate-100 text-xs z-[999]">
                 <p className="font-bold text-slate-800 mb-1 max-w-[200px] whitespace-normal">{payload[0].payload.name}</p>
-                <p className={`${colorClass} font-medium`}>Valor: {payload[0].value}</p>
+                <p className={`${colorClass} font-medium`}>Value: {payload[0].value}</p>
               </div>
             );
           } return null;
@@ -167,7 +167,6 @@ export const BatchDashboard = ({
     }
   }, [selectedIssue, filename, storageKey]);
 
-  // SOLUCIÓN PUNTO 2: Reseteo de selección al cambiar de dataset (evita bugs de superposición)
   const [showComments, setShowComments] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -456,16 +455,16 @@ export const BatchDashboard = ({
     return (
       <div className="glass-panel p-6 flex flex-col gap-4 rounded-bl-none w-full h-full overflow-hidden">
         <h2 className="text-xl font-bold text-slate-800 flex-shrink-0">
-          Resultados del Análisis
+          Analysis Results
         </h2>
         <p className="text-sm text-slate-600 flex-shrink-0">
-          Se analizaron {comments.length} comentarios individualmente.
+          {comments.length} comments were individually analyzed.
         </p>
         <button
           onClick={() => setShowComments(!showComments)}
           className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg w-fit text-sm font-medium border border-blue-100 hover:bg-blue-100 transition flex-shrink-0"
         >
-          {showComments ? "Ocultar Comentarios" : "Ver Comentarios"}
+          {showComments ? "Hide Comments" : "View Comments"}
         </button>
         {showComments && (
           <div className="flex-1 overflow-y-auto pr-2 pb-4 mt-2 flex flex-col gap-8">
@@ -484,10 +483,10 @@ export const BatchDashboard = ({
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   className="px-3 py-1 bg-white text-slate-600 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition"
                 >
-                  Anterior
+                  Previous
                 </button>
                 <span className="text-sm font-medium text-slate-600">
-                  Página {currentPage} de {totalPages}
+                  Page {currentPage} of {totalPages}
                 </span>
                 <button
                   disabled={currentPage === totalPages}
@@ -496,7 +495,7 @@ export const BatchDashboard = ({
                   }
                   className="px-3 py-1 bg-white text-slate-600 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition"
                 >
-                  Siguiente
+                  Next
                 </button>
               </div>
             )}
@@ -537,7 +536,7 @@ export const BatchDashboard = ({
           }}
           className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "global" ? "text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
         >
-          <PieChart className="w-4 h-4" /> Dashboard General
+          <PieChart className="w-4 h-4" /> Global Dashboard
         </button>
         <button
           onClick={() => {
@@ -552,7 +551,7 @@ export const BatchDashboard = ({
           }}
           className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "dashboard" ? "text-blue-700 border-b-2 border-blue-500 bg-blue-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
         >
-          <BarChart3 className="w-4 h-4" /> Dashboard por hilo (issue)
+          <BarChart3 className="w-4 h-4" /> Issue-Level Dashboard
         </button>
         <button
           onClick={() => {
@@ -567,7 +566,7 @@ export const BatchDashboard = ({
           }}
           className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "audit" ? "text-indigo-700 border-b-2 border-indigo-500 bg-indigo-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
         >
-          <Search className="w-4 h-4" /> Trazabilidad
+          <Search className="w-4 h-4" /> Traceability
         </button>
         </div>
         
@@ -578,7 +577,7 @@ export const BatchDashboard = ({
               className="px-5 py-2.5 bg-white text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 hover:border-emerald-200 font-bold text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all w-full md:w-auto whitespace-nowrap"
             >
               <Download className="w-4 h-4" />
-              Descargar Resultados
+              Download Results
             </button>
           </div>
         )}
@@ -608,7 +607,7 @@ export const BatchDashboard = ({
               <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
                 <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-blue-600" />
-                  Resultados del Análisis
+                  Analysis Results
                 </h2>
                 <div className="h-5 w-px bg-slate-300 hidden md:block"></div>
                 <div className="flex items-center gap-3 text-sm font-medium text-slate-500">
@@ -616,14 +615,14 @@ export const BatchDashboard = ({
                     <span className="font-bold text-slate-700">
                       {comments.length}
                     </span>{" "}
-                    comentarios procesados
+                    comments processed
                   </p>
                   <div className="h-4 w-px bg-slate-300"></div>
                   <p>
                     <span className="font-bold text-slate-700">
                       {issueKeys.length}
                     </span>{" "}
-                    issues analizados
+                    issues analyzed
                   </p>
                 </div>
               </div>
@@ -666,10 +665,10 @@ export const BatchDashboard = ({
                       )}
                       <span className="truncate flex items-center gap-2">
                         {selectedIssue === null
-                          ? "Seleccione un issue..."
+                          ? "Select an issue..."
                           : selectedIssue === "individuales"
-                            ? "Resultados Globales"
-                            : `Issue: ${selectedIssue} (${metrics[selectedIssue as string]?.comment_count || 0} mensajes)`}
+                            ? "Global Results"
+                            : `Issue: ${selectedIssue} (${metrics[selectedIssue as string]?.comment_count || 0} messages)`}
                       </span>
                       <ChevronDown className="w-5 h-5 flex-shrink-0 text-indigo-600" />
                     </button>
@@ -687,7 +686,7 @@ export const BatchDashboard = ({
                             <input
                               type="text"
                               autoFocus
-                              placeholder="Buscar Issue..."
+                              placeholder="Search Issue..."
                               value={searchQuery}
                               onChange={(e) => setSearchQuery(e.target.value)}
                               className="w-full bg-white/70 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all placeholder:text-slate-400"
@@ -697,7 +696,7 @@ export const BatchDashboard = ({
                           <div className="max-h-60 overflow-y-auto flex flex-col gap-1 pr-1 custom-scrollbar">
                             {filteredIssues.length === 0 ? (
                               <p className="text-xs text-center text-slate-500 py-3">
-                                No se encontraron issues.
+                                No issues found.
                               </p>
                             ) : (
                               filteredIssues.map((key) => (
@@ -717,7 +716,7 @@ export const BatchDashboard = ({
                                 >
                                   Issue: {key}
                                   <span className="block text-xs text-slate-500">
-                                    {metrics[key].comment_count} comentarios
+                                    {metrics[key].comment_count} comments
                                   </span>
                                 </button>
                               ))
@@ -738,12 +737,11 @@ export const BatchDashboard = ({
                     <BarChart3 className="w-10 h-10" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-800 mb-3">
-                    Seleccione un Issue para empezar
+                    Select an Issue to get started
                   </h3>
                   <p className="text-slate-500 max-w-md text-base leading-relaxed">
-                    Elija un issue del menú desplegable en la parte superior
-                    derecha para visualizar sus métricas, niveles de deuda
-                    social y comentarios detallados.
+                    Choose an issue from the top-right dropdown menu
+                    to view its metrics, social debt levels, and detailed comments.
                   </p>
                 </div>
               ) : (
@@ -751,21 +749,21 @@ export const BatchDashboard = ({
                   {currentMetrics && (
                     <div className="flex flex-col w-full">
                       <div className="px-4 md:px-6 pt-4">
-                          {/* BANNER SDI */}
+                          {/* SDI BANNER */}
                           <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative">
                             <div>
                               <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-1 flex items-center gap-1.5 relative group cursor-help w-max">
-                                Índice de Deuda Social (SDI)
+                                Social Debt Index (SDI)
                                 <Info className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
                                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] pointer-events-none font-normal text-center normal-case tracking-normal">
                                   {isSingleIssue
-                                    ? "El SDI es un índice de ranking relativo. Requiere el análisis simultáneo de al menos 2 Issues distintos para poder calcular y comparar la varianza de la deuda social."
-                                    : "El SDI (Social Debt Index) es un índice relativo. Se calcula comparando el volumen y severidad de este Issue con respecto a todos los demás Issues analizados en este lote."}
+                                    ? "The SDI is a relative ranking index. It requires the simultaneous analysis of at least 2 distinct Issues to calculate and compare social debt variance."
+                                    : "The SDI (Social Debt Index) is a relative index. It is calculated by comparing the volume and severity of this Issue against all other Issues analyzed in this batch."}
                                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                                 </div>
                               </div>
                               <p className={`text-lg font-semibold ${isSingleIssue ? "text-slate-500" : sdiColor}`}>
-                                {isSingleIssue ? "No Calculable" : currentMetrics.social_debt_level}
+                                {isSingleIssue ? "Not Calculable" : currentMetrics.social_debt_level}
                               </p>
                             </div>
                             <div className={`text-4xl md:text-5xl font-black ${sdiColor}`}>
@@ -780,7 +778,7 @@ export const BatchDashboard = ({
                       <div className="px-4 md:px-6 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                            Comentarios en Issue
+                            Comments in Issue
                           </span>
                           <span className="text-2xl font-black text-slate-700">
                             {funnelStats.total}
@@ -788,7 +786,7 @@ export const BatchDashboard = ({
                         </div>
                         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
                           <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider">
-                            Ruido (Descartado)
+                            Noise (Discarded)
                           </span>
                           <span className="text-2xl font-black text-red-500">
                             {funnelStats.noise}
@@ -796,7 +794,7 @@ export const BatchDashboard = ({
                         </div>
                         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
                           <span className="text-[10px] font-bold text-yellow-600 uppercase tracking-wider">
-                            Causa H (No identificable)
+                            Cause H (Non-identifiable)
                           </span>
                           <span className="text-2xl font-black text-yellow-500">
                             {funnelStats.causeH}
@@ -804,7 +802,7 @@ export const BatchDashboard = ({
                         </div>
                         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
                           <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
-                            Con Deuda Social
+                            With Social Debt
                           </span>
                           <span className="text-2xl font-black text-emerald-600">
                             {funnelStats.debt}
@@ -812,35 +810,34 @@ export const BatchDashboard = ({
                         </div>
                       </div>
 
-                      {/* SOLUCIÓN PUNTO 1: Mostrar mensaje de vacío si no hay deuda social */}
+                      {/* Empty state if no social debt detected */}
                       {funnelStats.debt === 0 ? (
                         <div className="p-8 md:p-12 mx-4 md:mx-6 mt-4 lg:mt-6 mb-6 flex flex-col items-center justify-center text-center bg-white/60 rounded-2xl border border-slate-200 shadow-sm min-h-[250px]">
                           <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 border border-slate-200">
                             <Info className="w-8 h-8 text-slate-400" />
                           </div>
                           <h3 className="text-xl font-bold text-slate-700 mb-2">
-                            Sin Deuda Social Detectada
+                            No Social Debt Detected
                           </h3>
                           <p className="text-slate-500 max-w-md">
-                            Todos los comentarios en este hilo fueron
-                            clasificados como ruido o como conversaciones
-                            normales (Causa H). No se generaron métricas ni
-                            gráficas para este Issue.
+                            All comments in this thread were classified as noise
+                            or normal conversations (Cause H). No debt metrics or
+                            charts were generated for this Issue.
                           </p>
                         </div>
                       ) : (
                         <div className="px-4 md:px-6 pt-4 pb-4 md:pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                          {/* CARACTERÍSTICAS DOMINANTES DEL ISSUE */}
+                          {/* DOMINANT ISSUE CHARACTERISTICS */}
                           <div className="col-span-1 lg:col-span-2 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
                             <h3 className="text-base md:text-lg font-bold text-slate-700 mb-5 flex items-center gap-2 border-b border-slate-100 pb-3">
-                              <Trophy className="w-5 h-5 text-amber-500" /> Características Dominantes del Issue
+                              <Trophy className="w-5 h-5 text-amber-500" /> Dominant Issue Characteristics
                             </h3>
                             <div className="flex flex-wrap gap-x-8 gap-y-6">
                               {currentMetrics && currentMetrics.dominant_macrocauses && currentMetrics.dominant_macrocauses.length > 0 && (
                                 <div className="flex items-start gap-3 flex-1 min-w-[250px]">
                                   <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0"><Target className="w-5 h-5" /></div>
                                   <div>
-                                    <p className="text-sm font-bold text-slate-800">Macrocausa Principal</p>
+                                    <p className="text-sm font-bold text-slate-800">Primary Macrocause</p>
                                     <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_macrocauses[0][0] as string, (key) => ({ name: getMacroCauseDescription(key) }))}</p>
                                   </div>
                                 </div>
@@ -849,7 +846,7 @@ export const BatchDashboard = ({
                                 <div className="flex items-start gap-3 flex-1 min-w-[250px]">
                                   <div className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 shrink-0"><Database className="w-5 h-5" /></div>
                                   <div>
-                                    <p className="text-sm font-bold text-slate-800">Microcausa Principal</p>
+                                    <p className="text-sm font-bold text-slate-800">Primary Microcause</p>
                                     <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_microcauses[0][0] as string, getMicroCauseDetails)}</p>
                                   </div>
                                 </div>
@@ -867,7 +864,7 @@ export const BatchDashboard = ({
                                 <div className="flex items-start gap-3 flex-1 min-w-[250px]">
                                   <div className="p-2.5 rounded-xl bg-orange-50 text-orange-600 shrink-0"><ShieldAlert className="w-5 h-5" /></div>
                                   <div>
-                                    <p className="text-sm font-bold text-slate-800">Riesgo Principal</p>
+                                    <p className="text-sm font-bold text-slate-800">Primary Risk</p>
                                     <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_risks[0][0] as string, getRiskDetails).replace(/ [Rr]isk$/i, "")}</p>
                                   </div>
                                 </div>
@@ -876,7 +873,7 @@ export const BatchDashboard = ({
                                 <div className="flex items-start gap-3 flex-1 min-w-[250px]">
                                   <div className="p-2.5 rounded-xl bg-red-50 text-red-600 shrink-0"><Activity className="w-5 h-5" /></div>
                                   <div>
-                                    <p className="text-sm font-bold text-slate-800">Efecto Más Común</p>
+                                    <p className="text-sm font-bold text-slate-800">Most Common Effect</p>
                                     <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_effects[0][0] as string, getEffectDetails)}</p>
                                   </div>
                                 </div>
@@ -885,7 +882,7 @@ export const BatchDashboard = ({
                                 <div className="flex items-start gap-3 flex-1 min-w-[250px]">
                                   <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 shrink-0"><ShieldCheck className="w-5 h-5" /></div>
                                   <div>
-                                    <p className="text-sm font-bold text-slate-800">Estrategia Preventiva</p>
+                                    <p className="text-sm font-bold text-slate-800">Preventive Strategy</p>
                                     <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_preventive_strategies[0][0] as string, getStrategyDetails)}</p>
                                   </div>
                                 </div>
@@ -894,7 +891,7 @@ export const BatchDashboard = ({
                                 <div className="flex items-start gap-3 flex-1 min-w-[250px]">
                                   <div className="p-2.5 rounded-xl bg-blue-50 text-blue-700 shrink-0"><Wrench className="w-5 h-5" /></div>
                                   <div>
-                                    <p className="text-sm font-bold text-slate-800">Estrategia Correctiva</p>
+                                    <p className="text-sm font-bold text-slate-800">Corrective Strategy</p>
                                     <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_corrective_strategies[0][0] as string, getStrategyDetails)}</p>
                                   </div>
                                 </div>
@@ -902,10 +899,10 @@ export const BatchDashboard = ({
                             </div>
                           </div>
 
-                          {/* ROW 1: MACROCAUSAS | TIPOS DE MICROCAUSA */}
+                          {/* ROW 1: MACROCAUSES | MICROCAUSE TYPES */}
                           <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                              <Layers className="w-4 h-4" /> Distribución de Macrocausas (Top 3)
+                              <Layers className="w-4 h-4" /> Distribution of Macrocauses (Top 3)
                             </h3>
                             <div className="w-full">
                               <ResponsiveContainer width="100%" height={320}>
@@ -920,7 +917,7 @@ export const BatchDashboard = ({
                                       return (
                                         <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
                                           <p className="font-bold text-slate-800 mb-1">{payload[0].payload.name}: {payload[0].payload.desc}</p>
-                                          <p className="text-blue-600 font-medium">Frecuencia: {payload[0].value}</p>
+                                          <p className="text-blue-600 font-medium">Frequency: {payload[0].value}</p>
                                         </div>
                                       );
                                     }
@@ -934,10 +931,10 @@ export const BatchDashboard = ({
 
                           <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2 group relative">
-                              <Layers className="w-4 h-4 text-pink-500" /> Tipos de Microcausas (Top 3)
+                              <Layers className="w-4 h-4 text-pink-500" /> Microcause Types (Top 3)
                               <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
                               <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Naturaleza teórica subyacente de los problemas detectados.
+                                Underlying theoretical nature of identified issues.
                                 <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
                               </div>
                             </h3>
@@ -954,7 +951,7 @@ export const BatchDashboard = ({
                                       return (
                                         <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
                                           <p className="font-bold text-slate-800 mb-1">{payload[0].payload.name}</p>
-                                          <p className="text-pink-600 font-medium">Frecuencia: {payload[0].value}</p>
+                                          <p className="text-pink-600 font-medium">Frequency: {payload[0].value}</p>
                                         </div>
                                       );
                                     }
@@ -966,13 +963,13 @@ export const BatchDashboard = ({
                             </div>
                           </div>
 
-                          {/* ROW 2: MICROCAUSAS | COMMUNITY SMELLS */}
+                          {/* ROW 2: MICROCAUSES | COMMUNITY SMELLS */}
                           <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <ListFilter className="w-4 h-4 text-indigo-500" /> Microcausas (Top 3)
+                              <ListFilter className="w-4 h-4 text-indigo-500" /> Microcauses (Top 3)
                               <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
                               <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Lista de los problemas sociales o técnicos específicos más graves detectados. El valor representa la masa acumulada de certeza de la IA.
+                                List of specific severe social or technical issues identified. The value represents the cumulative AI confidence mass.
                                 <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
                               </div>
                             </h3>
@@ -986,7 +983,7 @@ export const BatchDashboard = ({
                               <Users className="w-4 h-4 text-purple-600" /> Community Smells (Top 3)
                               <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
                               <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Patrones de comportamiento tóxico o ineficiente en la comunidad.
+                                Patterns of inefficient or toxic behavior in the community.
                                 <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
                               </div>
                             </h3>
@@ -995,13 +992,13 @@ export const BatchDashboard = ({
                             </div>
                           </div>
 
-                          {/* ROW 3: RIESGOS | PREVENTIVAS */}
+                          {/* ROW 3: RISKS */}
 <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <AlertTriangle className="w-4 h-4 text-orange-500" /> Riesgos (Top 3)
+                              <AlertTriangle className="w-4 h-4 text-orange-500" /> Risks (Top 3)
                               <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
                               <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Posibles consecuencias negativas si la deuda social de este hilo no se resuelve.
+                                Potential negative consequences if this thread&apos;s social debt remains unresolved.
                                 <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
                               </div>
                             </h3>
@@ -1012,10 +1009,10 @@ export const BatchDashboard = ({
 
 
 
-                          {/* ROW 4: INDICADORES | PREVENTIVAS */}
+                          {/* ROW 4: INDICATORS */}
                           <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicadores (Top 3)
+                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicators (Top 3)
                             </h3>
                             <div className="w-full mt-2 relative h-[160px]">
                               <MetricBarChart data={indicatorChartData} colorClass="text-indigo-500" />
@@ -1024,10 +1021,10 @@ export const BatchDashboard = ({
 
                           
 
-                          {/* ROW 4: CORRECTIVAS | EFECTOS */}
+                          {/* ROW 5: CORRECTIVE STRATEGIES | EFFECTS */}
 <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <Layers className="w-4 h-4 text-blue-600" /> Estrategias Correctivas (Top 3)
+                              <Layers className="w-4 h-4 text-blue-600" /> Corrective Strategies (Top 3)
                             </h3>
                             <div className="w-full mt-2 relative h-[160px]">
                               <MetricBarChart data={correctiveChartData} colorClass="text-blue-600" />
@@ -1036,20 +1033,20 @@ export const BatchDashboard = ({
 
 <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <AlertTriangle className="w-4 h-4 text-orange-600" /> Efectos (Top 3)
+                              <AlertTriangle className="w-4 h-4 text-orange-600" /> Effects (Top 3)
                             </h3>
                             <div className="w-full mt-2 relative h-[160px]">
                               <MetricBarChart data={effectsChartData} colorClass="text-orange-600" />
                             </div>
                           </div>
 
-                          {/* ROW 5: METRICAS | INDICADORES */}
+                          {/* ROW 6: METRICS */}
 <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <TrendingUp className="w-4 h-4 text-emerald-600" /> Métricas (Top 3)
+                              <TrendingUp className="w-4 h-4 text-emerald-600" /> Metrics (Top 3)
                               <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
                               <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Métricas de software relevantes vinculadas a los problemas detectados.
+                                Relevant software metrics linked to the identified issues.
                                 <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
                               </div>
                             </h3>
@@ -1060,7 +1057,7 @@ export const BatchDashboard = ({
 
 <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                             <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicadores (Top 3)
+                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicators (Top 3)
                             </h3>
                             <div className="w-full mt-2 relative h-[160px]">
                               <MetricBarChart data={indicatorChartData} colorClass="text-indigo-500" />
@@ -1076,12 +1073,12 @@ export const BatchDashboard = ({
                       {selectedIssue === "individuales" && (
                         <div className="px-4 md:px-6 pt-6 pb-2">
                           <h3 className="text-lg font-semibold text-slate-800 mb-1">
-                            Comentarios Individuales
+                            Individual Comments
                           </h3>
                           <p className="text-sm text-slate-500">
-                            Estos comentarios no estaban asociados a ningún
-                            issue, o se eligió procesarlos de manera individual.
-                            Utilice los filtros a continuación para explorarlos.
+                            These comments were not associated with any issue,
+                            or were chosen to be processed individually.
+                            Use the filters below to explore them.
                           </p>
                         </div>
                       )}
@@ -1096,7 +1093,7 @@ export const BatchDashboard = ({
                             }}
                           >
                             <span className="text-xs font-bold text-slate-500 uppercase mr-2">
-                              Filtros:
+                              Filters:
                             </span>
 
                             {(() => {
@@ -1141,13 +1138,13 @@ export const BatchDashboard = ({
                                         : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
                                     }`}
                                   >
-                                    Todos{" "}
+                                    All{" "}
                                     <span className="opacity-70 ml-1">
                                       ({cleanCount})
                                     </span>
                                   </button>
 
-                                  {/* SOLUCIÓN PUNTO 6: Filtros fijos de la A a la H ordenados con deshabilitación si no hay datos y separador en la H */}
+                                  {/* Filter buttons A-H */}
                                   {MACROCAUSES.map((code) => {
                                     const count = macrocauseCounts[code] || 0;
                                     const isDisabled = count === 0;
@@ -1173,7 +1170,7 @@ export const BatchDashboard = ({
                                                 : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
                                           }`}
                                         >
-                                          Causa {code}{" "}
+                                          Cause {code}{" "}
                                           <span className="opacity-70 ml-1">
                                             ({count})
                                           </span>
@@ -1201,7 +1198,7 @@ export const BatchDashboard = ({
                                     <div
                                       className={`w-2 h-2 rounded-full ${showNoise ? "bg-amber-500" : "bg-slate-300"}`}
                                     ></div>
-                                    Incluir Ruido ({noiseCount})
+                                    Include Noise ({noiseCount})
                                   </button>
                                 </>
                               );
@@ -1247,8 +1244,7 @@ export const BatchDashboard = ({
                                 <>
                                   {filteredComments.length === 0 ? (
                                     <div className="text-center py-10 text-slate-400 bg-white/50 rounded-xl border border-slate-100 font-medium">
-                                      No hay comentarios que coincidan con estos
-                                      filtros.
+                                      No comments match these filters.
                                     </div>
                                   ) : (
                                     paginatedComments.map((c, i) => (
@@ -1274,10 +1270,10 @@ export const BatchDashboard = ({
                                         }
                                         className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
                                       >
-                                        Anterior
+                                        Previous
                                       </button>
                                       <span className="text-sm font-semibold text-slate-600">
-                                        Página {currentPage} de {totalPages}
+                                        Page {currentPage} of {totalPages}
                                       </span>
                                       <button
                                         disabled={currentPage === totalPages}
@@ -1291,7 +1287,7 @@ export const BatchDashboard = ({
                                         }
                                         className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
                                       >
-                                        Siguiente
+                                        Next
                                       </button>
                                     </div>
                                   )}

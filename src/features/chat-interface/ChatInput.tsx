@@ -49,7 +49,7 @@ export const ChatInput = ({
       const result = await processFile(file);
 
       const elapsed = Date.now() - start;
-      const minDuration = 1000; // Mínimo 1 segundo de animación
+      const minDuration = 1000;
       if (elapsed < minDuration) {
         await new Promise((resolve) =>
           setTimeout(resolve, minDuration - elapsed),
@@ -89,8 +89,6 @@ export const ChatInput = ({
           }
         };
         
-        // Attach instructions as a new property on the file object temporarily 
-        // so we can access it in the parent component
         const fileToUpload = validResult.file! as File & { _instructions?: Record<string, unknown> };
         fileToUpload._instructions = instructions;
 
@@ -109,7 +107,7 @@ export const ChatInput = ({
         };
 
         const elapsed = Date.now() - start;
-        const minDuration = 1000; // Mínimo 1 segundo de animación
+        const minDuration = 1000;
         if (elapsed < minDuration) {
           setTimeout(finishProcessing, minDuration - elapsed);
         } else {
@@ -188,7 +186,7 @@ export const ChatInput = ({
                   {selectedFile.name}
                 </span>
                 <span className="hidden md:inline-flex text-xs text-blue-500 bg-blue-100 px-2 py-0.5 rounded-full flex-shrink-0">
-                  Listo
+                  Ready
                 </span>
               </span>
               <div className="flex items-center flex-shrink-0 ml-1 md:ml-3">
@@ -198,12 +196,12 @@ export const ChatInput = ({
                     const url = URL.createObjectURL(selectedFile);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = `auditoria_${selectedFile.name}`;
+                    a.download = `audit_${selectedFile.name}`;
                     a.click();
                     URL.revokeObjectURL(url);
                   }}
                   className="text-blue-600 hover:text-blue-900 p-1 md:p-1.5 rounded hover:bg-blue-200/50 transition-colors"
-                  title="Descargar archivo procesado para auditoría"
+                  title="Download processed file for audit"
                 >
                   <Download className="w-4 h-4" />
                 </button>
@@ -211,7 +209,7 @@ export const ChatInput = ({
                   type="button"
                   onClick={removeFile}
                   className="ml-0.5 md:ml-1 text-blue-600 hover:text-blue-900 p-1 md:p-1.5 rounded hover:bg-blue-200/50 transition-colors"
-                  title="Quitar archivo"
+                  title="Remove file"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -228,7 +226,7 @@ export const ChatInput = ({
                 }
               }}
               placeholder={
-                isChatDisabled ? "Analizando..." : "Escribe un mensaje..."
+                isChatDisabled ? "Analyzing..." : "Type a message..."
               }
               className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none py-3 px-2 text-base text-slate-800 placeholder-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
               rows={1}
@@ -246,8 +244,7 @@ export const ChatInput = ({
         </form>
         <div className="flex justify-center items-center mt-2">
           <p className="text-center text-[10px] md:text-xs text-slate-500 font-medium leading-tight">
-            Los resultados son inferidos por el modelo y pueden no ser
-            completamente exactos o deterministas.
+            Results are inferred by the model and may not be completely exact or deterministic.
           </p>
         </div>
       </div>

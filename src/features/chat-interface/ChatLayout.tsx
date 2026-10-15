@@ -20,7 +20,7 @@ export const ChatLayout = ({
 }) => {
   return (
     <div className="flex fixed inset-0 w-full h-[100dvh] max-h-[100dvh] overflow-hidden bg-slate-50/50">
-      {/* Overlay para desktop/tablets. Oculto en móvil puro (< md) */}
+      {/* Overlay for desktop/tablets. Hidden on mobile (< md) */}
       {sidebar && isSidebarOpen && (
         <div
           className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 hidden md:block 2xl:hidden transition-opacity"
@@ -28,7 +28,7 @@ export const ChatLayout = ({
         />
       )}
 
-      {/* Sidebar - Oculto en móvil (< md), Offcanvas en md-2xl, estático en 2xl+ */}
+      {/* Sidebar - Hidden on mobile (< md), off-canvas on md-2xl, static on 2xl+ */}
       {sidebar && (
         <aside
           className={`fixed 2xl:relative inset-y-0 left-0 z-40 transform ${
@@ -42,7 +42,7 @@ export const ChatLayout = ({
       <div className="flex flex-col flex-1 relative overflow-hidden w-full overscroll-none">
         <header className="flex-none py-3 md:py-5 px-3 md:px-6 flex items-center justify-between glass-panel mt-4 mx-4 mb-0 z-20 relative shadow-2xl shadow-slate-900/10 border-white/60">
           <div className="flex-shrink-0 w-[40px] flex items-center 2xl:hidden">
-            {/* El botón de hamburguesa SOLO se muestra en md (tablet/mitad pantalla). Oculto en móvil puro. */}
+            {/* Hamburger menu ONLY displayed on md (tablet/half screen). Hidden on mobile. */}
             {sidebar && (
               <button
                 onClick={onToggleSidebar}

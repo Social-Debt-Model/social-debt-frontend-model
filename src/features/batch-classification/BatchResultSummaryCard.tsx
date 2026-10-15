@@ -40,7 +40,7 @@ export const BatchResultSummaryCard = ({
           </h4>
           <p className="text-xs text-slate-500">
             {count}{" "}
-            {count === 1 ? "comentario procesado" : "comentarios procesados"}
+            {count === 1 ? "comment processed" : "comments processed"}
           </p>
         </div>
       </div>
@@ -58,12 +58,12 @@ export const BatchResultSummaryCard = ({
         {isDeleted ? (
           <>
             <Trash2 className="w-4 h-4" />
-            Resultados Eliminados
+            Results Deleted
           </>
         ) : (
           <>
             <BarChart2 className="w-4 h-4" />
-            Ver Resultados
+            View Results
           </>
         )}
       </button>

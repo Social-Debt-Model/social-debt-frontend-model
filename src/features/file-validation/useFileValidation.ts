@@ -134,7 +134,7 @@ export const useFileValidation = () => {
             });
           },
           error: () => {
-            setError("Hubo un error al leer el archivo CSV.");
+            setError("There was an error reading the CSV file.");
             resolve({ valid: false });
           },
         });
@@ -205,14 +205,14 @@ export const useFileValidation = () => {
               report,
             });
           } catch {
-            setError("Hubo un error al leer el archivo Excel.");
+            setError("There was an error reading the Excel file.");
             resolve({ valid: false });
           }
         };
         reader.readAsArrayBuffer(file);
       } else {
         setError(
-          "Formato de archivo no soportado. Cargue un archivo CSV o Excel (.xlsx, .xls).",
+          "Unsupported file format. Please upload a CSV or Excel (.xlsx, .xls) file.",
         );
         resolve({ valid: false });
       }

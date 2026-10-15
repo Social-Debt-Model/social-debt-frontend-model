@@ -116,7 +116,7 @@ export default function Home() {
   const handleSendFile = (file: File) => {
     const userMsg: Message = {
       id: Date.now(),
-      text: `Archivo adjuntado: ${file.name}`,
+      text: `Attached file: ${file.name}`,
       sender: "user",
       isFile: true,
     };
@@ -155,7 +155,7 @@ export default function Home() {
     const filename =
       msg?.batchFile?.name ||
       msg?.batchFileName ||
-      `Lote ${new Date().toLocaleTimeString()}`;
+      `Batch ${new Date().toLocaleTimeString()}`;
 
     setMessages((prev) =>
       prev.map((m) =>
@@ -181,10 +181,6 @@ export default function Home() {
 
     await loadHistory();
 
-    // SOLUCIÓN AL BUG:
-    // Solo forzar el salto al dashboard si el usuario está en el chat (focusedJobId es null).
-    // Si el usuario está viendo el dashboard de otro archivo, usamos una función de callback del setter
-    // para verificar el estado actual y no interrumpir su vista.
     setFocusedJobId((currentFocused) => {
       if (currentFocused === null) {
         return jobId;
@@ -195,7 +191,6 @@ export default function Home() {
 
   const handleDeleteHistory = async (jobId: string) => {
     try {
-      // Usar directamente IndexedDB para evitar bugs por variables de estado cacheadas (closures)
       const itemToDelete = await getHistoryItem(jobId);
       if (itemToDelete && itemToDelete.filename && typeof window !== "undefined") {
         const storageKey = itemToDelete.jobId || itemToDelete.filename;
@@ -280,14 +275,14 @@ export default function Home() {
         <div className="flex-1 flex flex-col items-center justify-center text-slate-400">
           <div className="glass-panel p-8 text-center max-w-md mx-auto fade-in">
             <h2 className="text-xl font-semibold text-slate-700 mb-2">
-              ¡Bienvenido!
+              ¡Welcome!
             </h2>
             <p className="text-sm hidden md:block">
-              Escribe un comentario para clasificarlo, o usa el ícono del clip
-              para subir un archivo CSV/Excel para análisis masivo.
+              Type a comment to classify it, or use the paperclip icon
+              to upload a CSV/Excel file for batch analysis.
             </p>
             <p className="text-sm md:hidden text-slate-500">
-              Escribe un comentario o fragmento de código para clasificar su deuda social y descubrir sus causas o riesgos.
+              Type a comment or code snippet to classify social debt and uncover its root causes or risks.
             </p>
           </div>
         </div>
@@ -310,7 +305,7 @@ export default function Home() {
                     <div className="glass-panel p-4 rounded-2xl rounded-bl-none flex items-center gap-3 text-slate-500 w-fit">
                       <Loader2 className="w-5 h-5 animate-spin" />
                       <span className="text-sm font-medium">
-                        Analizando comentario...
+                        Analyzing comment...
                       </span>
                     </div>
                   ) : msg.result ? (
@@ -324,7 +319,7 @@ export default function Home() {
                       }
                       filename={
                         msg.batchFile?.name ||
-                        `Lote ${new Date().toLocaleTimeString()}`
+                        `Batch ${new Date().toLocaleTimeString()}`
                       }
                       isDeleted={
                         !historyItems.some(

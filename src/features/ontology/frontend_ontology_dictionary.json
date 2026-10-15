@@ -7,7 +7,7 @@
     "E": "Collaboration and interpersonal tensions",
     "F": "Knowledge, documentation, and standards deficiencies",
     "G": "Resource, tooling, access, and validation dependencies",
-    "H": "No identificable (Noise)"
+    "H": "Unidentifiable (Noise)"
   },
   "micro_causes": {
     "CA-006_UnclearRolesAndResponsibilities": {
@@ -1230,23 +1230,23 @@
   "microcause_types": {
     "AdministrativeCause": {
       "name": "Administrative Cause",
-      "description": "Causas vinculadas a procesos administrativos, políticas, flujos de revisión, soporte y herramientas organizacionales."
+      "description": "Causes linked to administrative processes, policies, review workflows, support, and organizational tooling."
     },
     "CongruenceCause": {
       "name": "Congruence Cause",
-      "description": "Causas relacionadas con la congruencia socio-técnica, silos de conocimiento, complejidad técnica de dependencias y restricciones del sistema."
+      "description": "Causes related to socio-technical congruence, knowledge silos, dependency technical complexity, and system constraints."
     },
     "CollaborationCause": {
       "name": "Collaboration Cause",
-      "description": "Causas sobre dinámicas de trabajo en equipo, confianza, apoyo entre pares y transferencia/socialización del conocimiento."
+      "description": "Causes regarding teamwork dynamics, trust, peer support, and knowledge transfer/socialization."
     },
     "CoordinationCause": {
       "name": "Coordination Cause",
-      "description": "Causas de desalineación en coordinación, toma de decisiones, flujo de información, traspaso de tareas y gestión de liderazgo."
+      "description": "Causes of misalignment in coordination, decision making, information flow, task handoffs, and leadership management."
     },
     "CommunicationCause": {
       "name": "Communication Cause",
-      "description": "Causas sobre barreras idiomáticas, retroalimentación tardía, comunicación ambigua o malentendidos."
+      "description": "Causes regarding language barriers, delayed feedback, ambiguous communication, or misunderstandings."
     }
   }
 }

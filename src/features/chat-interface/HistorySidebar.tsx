@@ -34,7 +34,7 @@ export const HistorySidebar = ({
           }`}
         >
           <MessageSquarePlus className="w-5 h-5" />
-          Regresar al chat
+          Return to chat
         </button>
         {onClose && (
           <button
@@ -48,12 +48,12 @@ export const HistorySidebar = ({
 
       <div className="flex-1 overflow-y-auto px-3 space-y-2 pb-4">
         <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-1 mt-2">
-          Historial de Archivos
+          File History
         </h3>
 
         {items.length === 0 ? (
           <p className="text-xs text-slate-400 text-center italic px-2 mt-4">
-            No hay análisis previos guardados.
+            No previous analyses saved.
           </p>
         ) : (
           items.map((item) => {
@@ -102,7 +102,7 @@ export const HistorySidebar = ({
                       e.stopPropagation();
                       if(onDownload) onDownload(item);
                     }}
-                    title="Descargar resultados"
+                    title="Download results"
                   >
                     <Download className="w-5 h-5" />
                   </button>
@@ -112,7 +112,7 @@ export const HistorySidebar = ({
                       e.stopPropagation();
                       onDelete(item.jobId);
                     }}
-                    title="Eliminar análisis"
+                    title="Delete analysis"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
