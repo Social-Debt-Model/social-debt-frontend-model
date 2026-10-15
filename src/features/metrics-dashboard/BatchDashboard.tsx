@@ -101,7 +101,7 @@ const MetricBarChart = ({ data, colorClass }: { data: { name: string; value: num
 export const BatchDashboard = ({
   resultData,
   edaStats,
-  filename = "Analisis",
+  filename = "Analysis",
   jobId,
   onDownload,
 }: BatchDashboardProps) => {

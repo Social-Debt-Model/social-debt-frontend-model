@@ -360,7 +360,7 @@ export const AlgorithmAuditTrail = ({
 
     const totalComments = comments.length;
     
-    // Paso 2: Noise levels
+    // Step 2: Noise levels
     const noiseLevels: Record<string, number> = { "Hard noise": 0, "Soft noise": 0, "Useful": 0 };
     comments.forEach(c => {
       const level = (c.noise_level || "").toLowerCase();
@@ -369,8 +369,8 @@ export const AlgorithmAuditTrail = ({
       else noiseLevels["Useful"]++;
     });
 
-    // Paso 4: Unicas macro y micro
-    // Paso 4: Distribucion macrocausas
+    // Step 4: Unique macro and micro
+    // Step 4: Macrocauses distribution
     const macroDistribution: Record<string, number> = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0 };
     comments.forEach((c) => {
       if (c.macro_cause_code && c.macro_cause_code !== "none") {
@@ -384,9 +384,9 @@ export const AlgorithmAuditTrail = ({
       .filter(([, count]) => count > 0)
       .sort((a, b) => b[1] - a[1])
       .map(([macro, count]) => `${macro}: ${count}`)
-      .join(" | ") || "Ninguna";
+      .join(" | ") || "None";
 
-    // Paso 5: Max y Min SDI
+    // Step 5: Max and Min SDI
     let maxSdiValue = -1;
     let minSdiValue = Infinity;
 

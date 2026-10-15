@@ -105,7 +105,7 @@ const GlobalMetricBarChart = ({
               border: "none",
               boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
             }}
-            formatter={(value, name) => [format(typeof value === 'number' ? value : Number(value ?? 0)), name ?? "Frecuencia"]}
+            formatter={(value, name) => [format(typeof value === 'number' ? value : Number(value ?? 0)), name ?? "Frequency"]}
           />
           <Bar
             dataKey="value"
@@ -310,13 +310,13 @@ export const GlobalEdaDashboard = ({
   return (
     <div className="flex flex-col gap-8 pb-10 fade-in">
       <DashboardSection
-        title="Frecuencias Globales del Dataset"
+        title="Dataset Global Frequencies"
         icon={Layers}
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 7 Microcausas
+              Top 7 Microcauses
             </h3>
             <GlobalMetricBarChart
               data={globals.topMicrocauses.map((m) => ({
@@ -328,7 +328,7 @@ export const GlobalEdaDashboard = ({
           </div>
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 7 Riesgos
+              Top 7 Risks
             </h3>
             <GlobalMetricBarChart
               formatValue={(v) => Math.round(Number(v))}
@@ -344,7 +344,7 @@ export const GlobalEdaDashboard = ({
           </div>
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 7 Estrategias Preventivas
+              Top 7 Preventive Strategies
             </h3>
             <GlobalMetricBarChart
               formatValue={(v) => Math.round(Number(v))}
@@ -357,7 +357,7 @@ export const GlobalEdaDashboard = ({
           </div>
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
-              Top 7 Estrategias Correctivas
+              Top 7 Corrective Strategies
             </h3>
             <GlobalMetricBarChart
               formatValue={(v) => Math.round(Number(v))}
