@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { Info, Activity, AlertCircle } from "lucide-react";
-import { checkOpenAILimits } from "../batch-classification/actions";
+import { checkOpenAILimits } from "../batch-actions";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const OpenAILimitsBadge = () => {

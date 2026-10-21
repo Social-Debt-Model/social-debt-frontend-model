@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useOntology } from "../ontology/useOntology";
+import { useOntology } from "@/features/ontology-catalog/useOntology";
 import {
   AlertTriangle,
   CheckCircle,
@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Activity,
 } from "lucide-react";
-import { ClassifyTextResponse } from "./actions";
+import { ClassifyTextResponse } from "../text-actions";
 
 const MicrocauseCard = ({
   mc,

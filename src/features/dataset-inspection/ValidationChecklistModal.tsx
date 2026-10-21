@@ -17,7 +17,7 @@ import {
   VALID_COMMENT_HEADERS,
   VALID_ISSUE_HEADERS,
   VALID_ID_HEADERS,
-} from "../file-validation/useFileValidation";
+} from "./useFileValidation";
 
 type ValidationModalProps = {
   isOpen: boolean;

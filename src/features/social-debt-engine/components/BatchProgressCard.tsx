@@ -6,7 +6,8 @@ import {
   startBatchJob,
   checkBatchStatus,
   cancelBatchJob,
-} from "./actions";
+  BatchResultData,
+} from "../batch-actions";
 import {
   Loader2,
   Server,
@@ -15,8 +16,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { savePendingJob, deletePendingJob } from "@/lib/historyDB";
-import { BatchResultData } from "./actions";
+import { savePendingJob, deletePendingJob } from "@/features/history/historyDB";
 
 type BatchProgressCardProps = {
   file?: File;

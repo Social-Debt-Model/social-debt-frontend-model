@@ -1,22 +1,22 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { ChatLayout } from "@/features/chat-interface/ChatLayout";
-import { ChatInput } from "@/features/chat-interface/ChatInput";
+import { ChatLayout } from "@/shared/ChatLayout";
+import { ChatInput } from "@/shared/ChatInput";
 import {
   classifyText,
   ClassifyTextResponse,
-} from "@/features/text-classification/actions";
-import { TextResultCard } from "@/features/text-classification/TextResultCard";
-import { BatchProgressCard } from "@/features/batch-classification/BatchProgressCard";
-import { BatchResultData } from "@/features/batch-classification/actions";
-import { BatchDashboard } from "@/features/metrics-dashboard/BatchDashboard";
-import { precalculateEdaStats } from "@/features/metrics-dashboard/edaUtils";
-import { downloadFinalExcel } from "@/features/metrics-dashboard/AlgorithmAuditTrail";
+} from "@/features/social-debt-engine/text-actions";
+import { TextResultCard } from "@/features/social-debt-engine/components/TextResultCard";
+import { BatchProgressCard } from "@/features/social-debt-engine/components/BatchProgressCard";
+import { BatchResultData } from "@/features/social-debt-engine/batch-actions";
+import { BatchDashboard } from "@/features/analytics-dashboard/BatchDashboard";
+import { precalculateEdaStats } from "@/features/analytics-dashboard/global-view/edaUtils";
+import { downloadFinalExcel } from "@/features/analytics-dashboard/traceability-view/excelExportService";
 
-import { BatchResultSummaryCard } from "@/features/batch-classification/BatchResultSummaryCard";
-import { OpenAILimitsBadge } from "@/features/chat-interface/OpenAILimitsBadge";
-import { HistorySidebar } from "@/features/chat-interface/HistorySidebar";
+import { BatchResultSummaryCard } from "@/features/social-debt-engine/components/BatchResultSummaryCard";
+import { OpenAILimitsBadge } from "@/features/social-debt-engine/components/OpenAILimitsBadge";
+import { HistorySidebar } from "@/features/history/HistorySidebar";
 import { Loader2 } from "lucide-react";
 import {
   getAllHistoryItems,
@@ -25,7 +25,7 @@ import {
   HistoryItem,
   getPendingJobs,
   getHistoryItem,
-} from "@/lib/historyDB";
+} from "@/features/history/historyDB";
 
 type Message = {
   id: number;

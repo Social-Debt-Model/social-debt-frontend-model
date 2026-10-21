@@ -1,5 +1,5 @@
 import React from "react";
-import { HistoryItem } from "@/lib/historyDB";
+import { HistoryItem } from "./historyDB";
 import { FileText, MessageSquarePlus, Trash2, Clock, X, Download } from "lucide-react";
 
 type HistorySidebarProps = {

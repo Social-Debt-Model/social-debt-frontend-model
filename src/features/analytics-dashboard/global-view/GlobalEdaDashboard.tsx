@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { BatchResultData } from "../batch-classification/actions";
+import { BatchResultData } from "../../social-debt-engine/batch-actions";
 
-import { useOntology } from "../ontology/useOntology";
+import { useOntology } from "../../ontology-catalog/useOntology";
 import {
   BarChart,
   Bar,
@@ -287,8 +287,6 @@ export const GlobalEdaDashboard = ({
     getRiskDetails,
   } = useOntology();
 
-  // If precalculated stats from HistoryDB exist (near instant), use them
-  // Otherwise, compute them as an emergency fallback (will block main thread)
   const stats = useMemo(() => {
     if (precalculatedStats) {
       console.log("[EDA] Using precalculated statistics from HistoryDB!");

@@ -1,6 +1,6 @@
 import { get, set, keys, del } from "idb-keyval";
-import { BatchResultData } from "../features/batch-classification/actions";
-import { PrecalculatedEdaData } from "../features/metrics-dashboard/edaUtils";
+import { BatchResultData } from "../social-debt-engine/batch-actions";
+import { PrecalculatedEdaData } from "../analytics-dashboard/global-view/edaUtils";
 
 export type HistoryItem = {
   jobId: string;

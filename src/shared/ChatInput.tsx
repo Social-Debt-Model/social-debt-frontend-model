@@ -6,8 +6,8 @@ import {
   useFileValidation,
   FileProcessingResult,
   ValidationReport,
-} from "../file-validation/useFileValidation";
-import { ValidationChecklistModal } from "./ValidationChecklistModal";
+} from "@/features/dataset-inspection/useFileValidation";
+import { ValidationChecklistModal } from "@/features/dataset-inspection/ValidationChecklistModal";
 
 type ChatInputProps = {
   onSendMessage: (message: string) => void;

@@ -1,6 +1,6 @@
 "use server";
 
-import { ClassifyTextResponse } from "../text-classification/actions";
+import { ClassifyTextResponse } from "./text-actions";
 
 function parseErrorText(text: string, status: number): string {
   if (!text) return `API Error: ${status}`;

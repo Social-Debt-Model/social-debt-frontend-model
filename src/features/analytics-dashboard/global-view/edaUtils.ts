@@ -1,5 +1,5 @@
-import { BatchResultData } from "../batch-classification/actions";
-import { ClassifyTextResponse } from "../text-classification/actions";
+import { BatchResultData } from "../../social-debt-engine/batch-actions";
+import { ClassifyTextResponse } from "../../social-debt-engine/text-actions";
 
 /**
  * Calculates global Top N distributions across the entire dataset.
@@ -38,8 +38,6 @@ export const calculateGlobalDistributions = (data: BatchResultData) => {
     }
   });
 
-
-  // If strategies were not found in issues, calculate from comments
   if (Object.keys(prevStrategiesCount).length === 0 || Object.keys(corrStrategiesCount).length === 0) {
     comments.forEach((comment) => {
       if (!comment.is_noise && comment.microcauses) {

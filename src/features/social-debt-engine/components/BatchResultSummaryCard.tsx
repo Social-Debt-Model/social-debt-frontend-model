@@ -1,6 +1,6 @@
 import React from "react";
 import { CheckCircle2, BarChart2, Trash2 } from "lucide-react";
-import { BatchResultData } from "./actions";
+import { BatchResultData } from "../batch-actions";
 
 type BatchResultSummaryCardProps = {
   resultData: BatchResultData;
