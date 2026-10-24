@@ -8,7 +8,7 @@ export const VALID_COMMENT_HEADERS = [
   "body",
   "text",
   "content",
-    "comentario",
+  "comentario",
 ];
 export const VALID_ISSUE_HEADERS = [
   "issue_number",

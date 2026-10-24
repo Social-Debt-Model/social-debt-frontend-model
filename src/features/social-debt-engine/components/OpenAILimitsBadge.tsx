@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Info, Activity, AlertCircle } from "lucide-react";
 import { checkOpenAILimits } from "../batch-actions";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,7 +25,9 @@ export const OpenAILimitsBadge = () => {
         const res = await checkOpenAILimits();
         if (res?.error) {
           setErrorObj({ isError: true, code: res.code });
-          console.error(`[Social Debt API] Connection error (${res.code}). ${res.code === 401 ? "Check API_SECRET_KEY in the backend." : "Server unreachable."}`);
+          console.error(
+            `[Social Debt API] Connection error (${res.code}). ${res.code === 401 ? "Check API_SECRET_KEY in the backend." : "Server unreachable."}`,
+          );
         } else if (res?.limits) {
           setLimits(res.limits);
           setErrorObj({ isError: false });
@@ -56,7 +58,7 @@ export const OpenAILimitsBadge = () => {
   if (loading) {
     return (
       <div className="relative z-50 flex justify-end">
-        <div className="glass-panel px-0 md:px-4 w-[40px] md:w-auto h-[40px] rounded-full md:rounded-xl flex items-center justify-center gap-2 text-slate-500 shadow-sm ml-auto">
+        <div className="glass-panel px-0 md:px-4 w-10 md:w-auto h-10 rounded-full md:rounded-xl flex items-center justify-center gap-2 text-slate-500 shadow-sm ml-auto">
           <Activity className="w-4 h-4 animate-spin" />
           <span className="hidden md:inline text-xs">Checking network...</span>
         </div>
@@ -76,9 +78,8 @@ export const OpenAILimitsBadge = () => {
 
   return (
     <div className="relative z-50 flex justify-end" ref={badgeRef}>
-      {/* Main button */}
       <div
-        className={`glass-panel h-[40px] flex items-center justify-center rounded-full md:rounded-xl border shadow-sm backdrop-blur-md cursor-pointer transition-all ${badgeColor} w-[40px] md:w-auto md:px-4`}
+        className={`glass-panel h-10 flex items-center justify-center rounded-full md:rounded-xl border shadow-sm backdrop-blur-md cursor-pointer transition-all ${badgeColor} w-10 md:w-auto md:px-4`}
         onClick={() => setIsHovered(!isHovered)}
       >
         <div className="hidden md:flex items-center gap-2 text-sm font-semibold whitespace-nowrap mr-2">
@@ -100,7 +101,7 @@ export const OpenAILimitsBadge = () => {
           )}
         </div>
 
-        <div className="relative flex-shrink-0 flex items-center justify-center">
+        <div className="relative shrink-0 flex items-center justify-center">
           {!isHovered && (
             <span
               className={`absolute inline-flex h-full w-full rounded-full opacity-30 animate-ping ${errorObj.isError ? "bg-red-400" : "bg-blue-400"}`}
@@ -112,7 +113,6 @@ export const OpenAILimitsBadge = () => {
         </div>
       </div>
 
-      {/* Absolute dropdown popover */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
@@ -120,7 +120,7 @@ export const OpenAILimitsBadge = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`absolute top-[48px] right-0 w-[280px] p-4 backdrop-blur-xl border shadow-2xl rounded-2xl ${badgeColor}`}
+            className={`absolute top-12 right-0 w-70 p-4 backdrop-blur-xl border shadow-2xl rounded-2xl ${badgeColor}`}
           >
             {errorObj.isError ? (
               <>
@@ -128,7 +128,8 @@ export const OpenAILimitsBadge = () => {
                   Offline
                 </h4>
                 <p className="text-xs text-red-700/80 leading-relaxed">
-                  The system is currently disconnected. Analysis features may be temporarily unavailable.
+                  The system is currently disconnected. Analysis features may be
+                  temporarily unavailable.
                 </p>
               </>
             ) : (
@@ -137,7 +138,8 @@ export const OpenAILimitsBadge = () => {
                   OpenAI Network Quota
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                  Estimated number of remaining comments that can be analyzed before reaching the API rate limit.
+                  Estimated number of remaining comments that can be analyzed
+                  before reaching the API rate limit.
                 </p>
                 <div className="flex items-center gap-2 text-lg font-bold text-slate-800">
                   <Activity className="w-5 h-5 text-emerald-500" />

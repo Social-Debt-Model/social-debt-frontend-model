@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChatLayout } from "@/shared/ChatLayout";
 import { ChatInput } from "@/shared/ChatInput";
 import {
@@ -166,10 +166,10 @@ export default function Home() {
     );
 
     const timestamp = new Date().getTime();
-    
+
     console.log("[EDA] Precalculating dashboard stats...");
     const edaStats = precalculateEdaStats(resultData);
-    
+
     const historyItem: HistoryItem = {
       jobId,
       filename,
@@ -192,12 +192,16 @@ export default function Home() {
   const handleDeleteHistory = async (jobId: string) => {
     try {
       const itemToDelete = await getHistoryItem(jobId);
-      if (itemToDelete && itemToDelete.filename && typeof window !== "undefined") {
+      if (
+        itemToDelete &&
+        itemToDelete.filename &&
+        typeof window !== "undefined"
+      ) {
         const storageKey = itemToDelete.jobId || itemToDelete.filename;
         sessionStorage.removeItem(`batchDashboard_selectedIssue_${storageKey}`);
         sessionStorage.removeItem(`batchDashboard_activeTab_${storageKey}`);
       }
-    } catch(err) {
+    } catch (err) {
       console.error("Error clearing session storage on delete", err);
     }
 
@@ -258,7 +262,7 @@ export default function Home() {
         )
       }
     >
-      <div className="hidden 2xl:block absolute top-[108px] right-4 z-50">
+      <div className="hidden 2xl:block absolute top-27 right-4 z-50">
         {!focusedItem && <OpenAILimitsBadge />}
       </div>
       {focusedItem ? (
@@ -278,11 +282,12 @@ export default function Home() {
               ¡Welcome!
             </h2>
             <p className="text-sm hidden md:block">
-              Type a comment to classify it, or use the paperclip icon
-              to upload a CSV/Excel file for batch analysis.
+              Type a comment to classify it, or use the paperclip icon to upload
+              a CSV/Excel file for batch analysis.
             </p>
             <p className="text-sm md:hidden text-slate-500">
-              Type a comment or code snippet to classify social debt and uncover its root causes or risks.
+              Type a comment or code snippet to classify social debt and uncover
+              its root causes or risks.
             </p>
           </div>
         </div>
@@ -310,7 +315,9 @@ export default function Home() {
                     </div>
                   ) : msg.result ? (
                     <TextResultCard result={msg.result} />
-                  ) : (msg.batchResult || (msg.batchJobId && historyItems.some((h) => h.jobId === msg.batchJobId))) ? (
+                  ) : msg.batchResult ||
+                    (msg.batchJobId &&
+                      historyItems.some((h) => h.jobId === msg.batchJobId)) ? (
                     <BatchResultSummaryCard
                       resultData={
                         msg.batchResult ||

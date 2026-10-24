@@ -102,7 +102,7 @@ const MicrocauseCard = ({
 
   return (
     <div
-      className={`p-4 rounded-xl shadow-sm flex flex-col gap-1.5 transition-colors border min-w-0 break-words ${
+      className={`p-4 rounded-xl shadow-sm flex flex-col gap-1.5 transition-colors border min-w-0 wrap-break-word ${
         isDashboardMode
           ? "bg-slate-50 border-slate-200 hover:bg-slate-100"
           : "bg-white/60 border-white hover:bg-white/80"
@@ -114,7 +114,7 @@ const MicrocauseCard = ({
       >
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 md:gap-4 mb-2 min-w-0">
           <div className="flex items-start md:items-center justify-between gap-2 w-full md:w-auto md:flex-1 min-w-0">
-            <div className="min-w-0 flex-1 break-words">
+            <div className="min-w-0 flex-1 wrap-break-word">
               <span className="font-bold text-lg text-indigo-900 inline mr-2">
                 {microDesc.name}
               </span>
@@ -124,35 +124,45 @@ const MicrocauseCard = ({
                 </span>
               )}
             </div>
-            
-            <span className="md:hidden flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0 mt-0.5" title="Similarity / Confidence">
-              <CheckCircle className="w-3.5 h-3.5 opacity-75 flex-shrink-0" />
-              <span className="whitespace-nowrap block">{Math.round(mc.similarity * 100)}% sim.</span>
+
+            <span
+              className="md:hidden flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap shrink-0 mt-0.5"
+              title="Similarity / Confidence"
+            >
+              <CheckCircle className="w-3.5 h-3.5 opacity-75 shrink-0" />
+              <span className="whitespace-nowrap block">
+                {Math.round(mc.similarity * 100)}% sim.
+              </span>
             </span>
           </div>
 
-          <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto flex-shrink-0 flex-wrap md:flex-nowrap">
+          <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto shrink-0 flex-wrap md:flex-nowrap">
             {mc.cause_type && (
-              <span className="md:hidden flex items-center text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-1.5 rounded-md whitespace-nowrap flex-shrink-0">
+              <span className="md:hidden flex items-center text-sm font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-1.5 rounded-md whitespace-nowrap shrink-0">
                 {getMicrocauseTypeDetails(mc.cause_type).name}
               </span>
             )}
-            
-            <span className="hidden md:flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Similarity / Confidence">
-              <CheckCircle className="w-4 h-4 opacity-75 flex-shrink-0" />
-              <span className="whitespace-nowrap block">{Math.round(mc.similarity * 100)}% sim.</span>
+
+            <span
+              className="hidden md:flex items-center gap-1 text-sm font-medium bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap shrink-0"
+              title="Similarity / Confidence"
+            >
+              <CheckCircle className="w-4 h-4 opacity-75 shrink-0" />
+              <span className="whitespace-nowrap block">
+                {Math.round(mc.similarity * 100)}% sim.
+              </span>
             </span>
-            
+
             {hasDetails && (
-              <button className="flex text-sm font-semibold text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 transition px-2 py-1 md:py-0.5 rounded-md items-center gap-1 whitespace-nowrap flex-shrink-0 ml-auto md:ml-0">
+              <button className="flex text-sm font-semibold text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 transition px-2 py-1 md:py-0.5 rounded-md items-center gap-1 whitespace-nowrap shrink-0 ml-auto md:ml-0">
                 {isOpen ? (
                   <>
-                    <ChevronUp className="w-3.5 h-3.5 flex-shrink-0" />
+                    <ChevronUp className="w-3.5 h-3.5 shrink-0" />
                     Hide<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-3.5 h-3.5 flex-shrink-0" />
+                    <ChevronDown className="w-3.5 h-3.5 shrink-0" />
                     View<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 )}
@@ -160,7 +170,7 @@ const MicrocauseCard = ({
             )}
           </div>
         </div>
-        <span className="text-base text-indigo-900/80 leading-relaxed block break-words">
+        <span className="text-base text-indigo-900/80 leading-relaxed block wrap-break-word">
           {microDesc.description}
         </span>
       </div>
@@ -243,7 +253,10 @@ export const TextResultCard = ({
     }
     if (cardRef.current && !isDashboardMode) {
       const timer = setTimeout(() => {
-        cardRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        cardRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
       }, 250);
       return () => clearTimeout(timer);
     }
@@ -261,7 +274,7 @@ export const TextResultCard = ({
   if (result.is_noise) {
     return (
       <div
-        className={`w-full min-w-0 break-words p-4 md:p-5 flex flex-col gap-4 rounded-bl-none border-l-4 border-slate-300 ${
+        className={`w-full min-w-0 wrap-break-word p-4 md:p-5 flex flex-col gap-4 rounded-bl-none border-l-4 border-slate-300 ${
           isDashboardMode
             ? "bg-white border border-slate-100 shadow-sm"
             : "glass-panel"
@@ -275,7 +288,6 @@ export const TextResultCard = ({
                 : "bg-white/60 border-slate-200"
             }`}
           >
-            
             <div className="flex justify-between items-center mb-1">
               {index !== undefined && (
                 <span className="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">
@@ -297,8 +309,10 @@ export const TextResultCard = ({
         <div className="flex items-center gap-1.5 text-slate-500 relative group cursor-help w-max mt-1">
           <span className="font-semibold text-base">Operational Noise</span>
           <Info className="w-4 h-4" />
-          <div className="absolute bottom-full left-0 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] pointer-events-none font-normal normal-case tracking-normal">
-            This comment has been classified as operational noise (e.g., bot logs or automated messages) and does not represent genuine social debt.
+          <div className="absolute bottom-full left-0 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 pointer-events-none font-normal normal-case tracking-normal">
+            This comment has been classified as operational noise (e.g., bot
+            logs or automated messages) and does not represent genuine social
+            debt.
             <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
           </div>
         </div>
@@ -313,7 +327,7 @@ export const TextResultCard = ({
   return (
     <div
       ref={cardRef}
-      className={`w-full min-w-0 break-words p-4 md:p-5 flex flex-col gap-3 md:gap-4 rounded-bl-none border-l-4 border-indigo-500 transition-all ${
+      className={`w-full min-w-0 wrap-break-word p-4 md:p-5 flex flex-col gap-3 md:gap-4 rounded-bl-none border-l-4 border-indigo-500 transition-all ${
         isDashboardMode
           ? "bg-white border border-slate-200 shadow-sm"
           : "glass-panel"
@@ -329,7 +343,6 @@ export const TextResultCard = ({
                 : "bg-white/60 border-indigo-100"
             }`}
           >
-            
             <div className="flex justify-between items-center mb-1">
               {index !== undefined && (
                 <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md">
@@ -353,29 +366,34 @@ export const TextResultCard = ({
         >
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1">
-              <p className="text-sm font-semibold uppercase tracking-wider text-indigo-900/70 break-words flex-1 min-w-0">
+              <p className="text-sm font-semibold uppercase tracking-wider text-indigo-900/70 wrap-break-word flex-1 min-w-0">
                 Primary Macrocause ({result.macro_cause_code})
               </p>
-              <div className="md:hidden flex items-center gap-1 text-xs bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Similarity / Confidence">
-                <CheckCircle className="w-3.5 h-3.5 opacity-75 flex-shrink-0" />
-                <span className="whitespace-nowrap font-medium block">{confidencePercent}% sim.</span>
+              <div
+                className="md:hidden flex items-center gap-1 text-xs bg-indigo-50/80 text-indigo-700 px-2 py-1 rounded-full shadow-sm whitespace-nowrap shrink-0"
+                title="Similarity / Confidence"
+              >
+                <CheckCircle className="w-3.5 h-3.5 opacity-75 shrink-0" />
+                <span className="whitespace-nowrap font-medium block">
+                  {confidencePercent}% sim.
+                </span>
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-xl font-bold text-indigo-900 leading-tight break-words">
+              <h3 className="text-xl font-bold text-indigo-900 leading-tight wrap-break-word">
                 {macroDesc}
               </h3>
               {hasMicrocauses && (
-                <button className="md:hidden flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-auto flex-shrink-0">
+                <button className="md:hidden flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-auto shrink-0">
                   {isCardOpen ? (
                     <>
-                      <ChevronUp className="w-4 h-4 flex-shrink-0" />
+                      <ChevronUp className="w-4 h-4 shrink-0" />
                       Hide
                     </>
                   ) : (
                     <>
-                      <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                      <ChevronDown className="w-4 h-4 shrink-0" />
                       Details
                     </>
                   )}
@@ -383,22 +401,27 @@ export const TextResultCard = ({
               )}
             </div>
           </div>
-          
-          <div className="hidden md:flex items-center justify-end gap-2 w-full md:w-auto flex-shrink-0 flex-wrap md:flex-nowrap">
-            <div className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap flex-shrink-0" title="Similarity / Confidence">
-              <CheckCircle className="w-4 h-4 opacity-75 flex-shrink-0" />
-              <span className="whitespace-nowrap font-medium block">{confidencePercent}% sim.</span>
+
+          <div className="hidden md:flex items-center justify-end gap-2 w-full md:w-auto shrink-0 flex-wrap md:flex-nowrap">
+            <div
+              className="flex items-center gap-1 text-sm bg-indigo-50/80 text-indigo-700 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap shrink-0"
+              title="Similarity / Confidence"
+            >
+              <CheckCircle className="w-4 h-4 opacity-75 shrink-0" />
+              <span className="whitespace-nowrap font-medium block">
+                {confidencePercent}% sim.
+              </span>
             </div>
             {hasMicrocauses && (
               <button className="flex items-center gap-1 text-sm bg-indigo-50/80 hover:bg-indigo-100 transition text-indigo-700 px-3 py-1.5 rounded-full shadow-sm font-medium whitespace-nowrap ml-auto md:ml-0">
                 {isCardOpen ? (
                   <>
-                    <ChevronUp className="w-4 h-4 flex-shrink-0" />
+                    <ChevronUp className="w-4 h-4 shrink-0" />
                     Hide<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                    <ChevronDown className="w-4 h-4 shrink-0" />
                     View<span className="hidden md:inline">&nbsp;details</span>
                   </>
                 )}
@@ -409,7 +432,7 @@ export const TextResultCard = ({
       </div>
 
       {isCardOpen && hasMicrocauses && (
-        <div 
+        <div
           className="mt-2 space-y-3 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-200 cursor-auto"
           onClick={(e) => e.stopPropagation()}
         >

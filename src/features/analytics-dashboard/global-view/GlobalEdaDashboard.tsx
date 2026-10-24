@@ -14,20 +14,13 @@ import {
 import { ResponsiveHeatMap } from "@nivo/heatmap";
 import { ContinuousColorScaleConfig } from "@nivo/colors";
 import { BasicTooltip } from "@nivo/tooltip";
-import {
-  Layers,
-  Users,
-  Route,
-  Database,
-} from "lucide-react";
+import { Layers, Users, Route, Database } from "lucide-react";
 
 import { PrecalculatedEdaData, precalculateEdaStats } from "./edaUtils";
 type Props = {
   resultData: BatchResultData;
   precalculatedStats?: PrecalculatedEdaData;
 };
-
-
 
 const DashboardSection = ({
   title,
@@ -55,11 +48,8 @@ const DashboardSection = ({
           )}
         </h2>
       </div>
-      <div className="w-full relative">
-        {children}
-      </div>
-      {/* Subtle divider for visual pacing */}
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mt-16 mb-4"></div>
+      <div className="w-full relative">{children}</div>
+      <div className="w-full h-px bg-linear-to-r from-transparent via-slate-200 to-transparent mt-16 mb-4"></div>
     </section>
   );
 };
@@ -105,7 +95,10 @@ const GlobalMetricBarChart = ({
               border: "none",
               boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
             }}
-            formatter={(value, name) => [format(typeof value === 'number' ? value : Number(value ?? 0)), name ?? "Frequency"]}
+            formatter={(value, name) => [
+              format(typeof value === "number" ? value : Number(value ?? 0)),
+              name ?? "Frequency",
+            ]}
           />
           <Bar
             dataKey="value"
@@ -120,7 +113,9 @@ const GlobalMetricBarChart = ({
               fill="#334155"
               fontSize={13}
               fontWeight={700}
-              formatter={(v) => format(typeof v === 'number' ? v : Number(v ?? 0))}
+              formatter={(v) =>
+                format(typeof v === "number" ? v : Number(v ?? 0))
+              }
             />
           </Bar>
         </BarChart>
@@ -173,7 +168,7 @@ const NivoHeatmapWrapper = ({
     str.length > max ? str.substring(0, max) + "..." : str;
 
   const maxVal = Math.max(
-    ...rows.flatMap((r) => cols.map((c) => matrix[r]?.[c] || 0))
+    ...rows.flatMap((r) => cols.map((c) => matrix[r]?.[c] || 0)),
   );
 
   return (
@@ -203,7 +198,8 @@ const NivoHeatmapWrapper = ({
           format: (v: string) => truncate(getRowName ? getRowName(v) : v, 40),
         }}
         colors={
-          (colors as ContinuousColorScaleConfig) || ({
+          (colors as ContinuousColorScaleConfig) ||
+          ({
             type: "sequential",
             scheme: "purples",
           } as ContinuousColorScaleConfig)
@@ -256,7 +252,10 @@ const NivoHeatmapWrapper = ({
   );
 };
 
-const formatGroupLabel = (rawId: string, getDetailsFn: (id: string) => { name: string } | null | undefined) => {
+const formatGroupLabel = (
+  rawId: string,
+  getDetailsFn: (id: string) => { name: string } | null | undefined,
+) => {
   try {
     let clean = rawId.trim();
     if (clean.startsWith("[") && clean.endsWith("]")) {
@@ -307,10 +306,7 @@ export const GlobalEdaDashboard = ({
 
   return (
     <div className="flex flex-col gap-8 pb-10 fade-in">
-      <DashboardSection
-        title="Dataset Global Frequencies"
-        icon={Layers}
-      >
+      <DashboardSection title="Dataset Global Frequencies" icon={Layers}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider text-center">
@@ -419,10 +415,7 @@ export const GlobalEdaDashboard = ({
         </div>
       </DashboardSection>
 
-      <DashboardSection
-        title="Critical Propagation Paths (Top 7)"
-        icon={Route}
-      >
+      <DashboardSection title="Critical Propagation Paths (Top 7)" icon={Route}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead className="bg-slate-50 text-slate-600 font-semibold uppercase text-xs">
@@ -476,10 +469,7 @@ export const GlobalEdaDashboard = ({
         </div>
       </DashboardSection>
 
-      <DashboardSection
-        title="Static Model Benchmarks"
-        icon={Database}
-      >
+      <DashboardSection title="Static Model Benchmarks" icon={Database}>
         <div className="space-y-8">
           <div>
             <h3 className="text-lg font-bold text-slate-700 mb-4 border-b pb-2">
@@ -520,9 +510,7 @@ export const GlobalEdaDashboard = ({
                     <td className="px-4 py-3 font-medium text-slate-800">
                       TF-IDF + Logistic Regression
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
-                      Issue Text
-                    </td>
+                    <td className="px-4 py-3 text-slate-600">Issue Text</td>
                     <td className="px-4 py-3 text-right font-medium">0.5625</td>
                     <td className="px-4 py-3 text-right font-medium">0.5547</td>
                     <td className="px-4 py-3 text-right font-medium">0.5576</td>
@@ -531,9 +519,7 @@ export const GlobalEdaDashboard = ({
                     <td className="px-4 py-3 font-medium text-slate-800">
                       TF-IDF + Linear SVM
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
-                      Issue Text
-                    </td>
+                    <td className="px-4 py-3 text-slate-600">Issue Text</td>
                     <td className="px-4 py-3 text-right font-medium">0.5375</td>
                     <td className="px-4 py-3 text-right font-medium">0.5108</td>
                     <td className="px-4 py-3 text-right font-medium">0.5142</td>

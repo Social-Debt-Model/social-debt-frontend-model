@@ -2,7 +2,10 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import ontology_dictionary from "../../ontology-catalog/frontend_ontology_dictionary.json";
 import { flattenAndAggregateMetrics } from "../issue-view/issueMetricsUtils";
-import { BatchResultData } from "../../social-debt-engine/batch-actions";
+import {
+  BatchResultData,
+  MetricsData,
+} from "../../social-debt-engine/batch-actions";
 
 interface Step4Row {
   issue_number?: string | number;
@@ -136,7 +139,11 @@ const downloadExcelAsync = async (
 ) => {
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet(sheetName);
-  addDataToSheet(worksheet, dataArray as Record<string, unknown>[], "TablaExportacion");
+  addDataToSheet(
+    worksheet,
+    dataArray as Record<string, unknown>[],
+    "TablaExportacion",
+  );
   const buffer = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buffer]), fileName);
 };
@@ -221,9 +228,8 @@ export const downloadStepExcel = async (
           if (m) {
             row[`microcause_${i}_name`] = m.cause_name || "";
             row[`microcause_${i}_similarity`] =
-              ((m as Record<string, unknown>).similarity as
-                | string
-                | number) || "";
+              ((m as Record<string, unknown>).similarity as string | number) ||
+              "";
 
             const mTypes = (m as Record<string, unknown>).cause_type;
             row[`microcause_${i}_types`] = Array.isArray(mTypes)
@@ -240,19 +246,13 @@ export const downloadStepExcel = async (
               ? mSmells.map((s) => getSmellCode(s as string)).join(" | ")
               : "";
 
-            const mPrev = (m as Record<string, unknown>)
-              .preventive_strategies;
-            row[`microcause_${i}_preventive_strategies`] = Array.isArray(
-              mPrev,
-            )
+            const mPrev = (m as Record<string, unknown>).preventive_strategies;
+            row[`microcause_${i}_preventive_strategies`] = Array.isArray(mPrev)
               ? mPrev.join(" | ")
               : "";
 
-            const mCorr = (m as Record<string, unknown>)
-              .corrective_strategies;
-            row[`microcause_${i}_corrective_strategies`] = Array.isArray(
-              mCorr,
-            )
+            const mCorr = (m as Record<string, unknown>).corrective_strategies;
+            row[`microcause_${i}_corrective_strategies`] = Array.isArray(mCorr)
               ? mCorr.join(" | ")
               : "";
 
@@ -320,39 +320,71 @@ export const downloadStepExcel = async (
             issue_number: issue_number,
             ...metrics,
             dominant_macrocauses: formatTupleList(
-              flattenAndAggregateMetrics(metrics.dominant_macrocauses as [string, number][] || []),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_macrocauses as [string, number][]) || [],
+              ),
             ) as string,
             dominant_microcauses: formatTupleList(
-              flattenAndAggregateMetrics(metrics.dominant_microcauses as [string, number][] || []),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_microcauses as [string, number][]) || [],
+              ),
             ) as string,
             dominant_microcause_types: formatTupleList(
-              flattenAndAggregateMetrics(metrics.dominant_microcause_types as [string, number][] || []),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_microcause_types as [string, number][]) || [],
+              ),
             ) as string,
             dominant_community_smells: formatTupleList(
-              flattenAndAggregateMetrics(metrics.dominant_community_smells as [string, number][] || []),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_community_smells as [string, number][]) || [],
+              ),
               getSmellCode,
             ) as string,
             dominant_risks: formatTupleList(
-              flattenAndAggregateMetrics(metrics.dominant_risks as [string, number][] || [])
+              flattenAndAggregateMetrics(
+                (metrics.dominant_risks as [string, number][]) || [],
+              ),
             ) as string,
             key_indicators: formatTupleList(
-              flattenAndAggregateMetrics((metrics.dominant_indicators || metrics.key_indicators || []) as [string, number][]),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_indicators ||
+                  metrics.key_indicators ||
+                  []) as [string, number][],
+              ),
             ) as string,
             key_metrics: formatTupleList(
-              flattenAndAggregateMetrics((metrics.dominant_metrics || metrics.key_metrics || metrics.metrics || []) as [string, number][]),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_metrics ||
+                  metrics.key_metrics ||
+                  metrics.metrics ||
+                  []) as [string, number][],
+              ),
             ) as string,
             key_preventive_strategies: formatTupleList(
-              flattenAndAggregateMetrics((metrics.dominant_preventive_strategies || metrics.key_preventive_strategies || []) as [string, number][]),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_preventive_strategies ||
+                  metrics.key_preventive_strategies ||
+                  []) as [string, number][],
+              ),
             ) as string,
             key_corrective_strategies: formatTupleList(
-              flattenAndAggregateMetrics((metrics.dominant_corrective_strategies || metrics.key_corrective_strategies || []) as [string, number][]),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_corrective_strategies ||
+                  metrics.key_corrective_strategies ||
+                  []) as [string, number][],
+              ),
             ) as string,
             effects: formatTupleList(
-              flattenAndAggregateMetrics((metrics.dominant_effects || metrics.effects || []) as [string, number][]),
+              flattenAndAggregateMetrics(
+                (metrics.dominant_effects || metrics.effects || []) as [
+                  string,
+                  number,
+                ][],
+              ),
             ) as string,
             social_debt_index: Number(metrics.social_debt_index) || 0,
           };
-          
+
           delete row.dominant_indicators;
           delete row.dominant_metrics;
           delete row.dominant_preventive_strategies;
@@ -369,24 +401,70 @@ export const downloadStepExcel = async (
 
       const sheetSDI = workbook.addWorksheet("SDI Metrics");
       addDataToSheet(sheetSDI, sdiArray, "SDIMetricsStep5Table");
-      
+
       const modelComparisonData = [
-        { model: "Random Forest", input_type: "Adaptive Structured Features", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
-        { model: "TF-IDF + Logistic Regression", input_type: "Issue Text", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
-        { model: "TF-IDF + Linear SVM", input_type: "Issue Text", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
+        {
+          model: "Random Forest",
+          input_type: "Adaptive Structured Features",
+          accuracy: 0.9,
+          macro_f1: 0.9017,
+          weighted_f1: 0.9022,
+        },
+        {
+          model: "TF-IDF + Logistic Regression",
+          input_type: "Issue Text",
+          accuracy: 0.5625,
+          macro_f1: 0.5547,
+          weighted_f1: 0.5576,
+        },
+        {
+          model: "TF-IDF + Linear SVM",
+          input_type: "Issue Text",
+          accuracy: 0.5375,
+          macro_f1: 0.5108,
+          weighted_f1: 0.5142,
+        },
       ];
-      
+
       const crossValidationData = [
-        { model: "Random Forest + Adaptive Features", accuracy_mean: 0.9094, accuracy_std: 0.0220, macro_f1_mean: 0.9094, macro_f1_std: 0.0220, weighted_f1_mean: 0.9096, weighted_f1_std: 0.0217 },
-        { model: "TF-IDF + Logistic Regression", accuracy_mean: 0.6528, accuracy_std: 0.0627, macro_f1_mean: 0.6345, macro_f1_std: 0.0660, weighted_f1_mean: 0.6355, weighted_f1_std: 0.0660 },
-        { model: "TF-IDF + Linear SVM", accuracy_mean: 0.5887, accuracy_std: 0.0577, macro_f1_mean: 0.5558, macro_f1_std: 0.0552, weighted_f1_mean: 0.5577, weighted_f1_std: 0.0560 }
+        {
+          model: "Random Forest + Adaptive Features",
+          accuracy_mean: 0.9094,
+          accuracy_std: 0.022,
+          macro_f1_mean: 0.9094,
+          macro_f1_std: 0.022,
+          weighted_f1_mean: 0.9096,
+          weighted_f1_std: 0.0217,
+        },
+        {
+          model: "TF-IDF + Logistic Regression",
+          accuracy_mean: 0.6528,
+          accuracy_std: 0.0627,
+          macro_f1_mean: 0.6345,
+          macro_f1_std: 0.066,
+          weighted_f1_mean: 0.6355,
+          weighted_f1_std: 0.066,
+        },
+        {
+          model: "TF-IDF + Linear SVM",
+          accuracy_mean: 0.5887,
+          accuracy_std: 0.0577,
+          macro_f1_mean: 0.5558,
+          macro_f1_std: 0.0552,
+          weighted_f1_mean: 0.5577,
+          weighted_f1_std: 0.056,
+        },
       ];
 
       const sheetModel = workbook.addWorksheet("Model Comparison");
       addDataToSheet(sheetModel, modelComparisonData, "ModelComparisonTable");
 
       const sheetCrossVal = workbook.addWorksheet("Cross-Validation");
-      addDataToSheet(sheetCrossVal, crossValidationData, "CrossValidationTable");
+      addDataToSheet(
+        sheetCrossVal,
+        crossValidationData,
+        "CrossValidationTable",
+      );
 
       const ontDict = ontology_dictionary as OntDictType;
       Object.keys(ontDict).forEach((category, idx) => {
@@ -421,38 +499,12 @@ export const downloadFinalExcel = async (
   if (baseName.includes(".")) {
     baseName = baseName.substring(0, baseName.lastIndexOf("."));
   }
-
   const { comments = [], issues_metrics = {} } = resultData;
 
-  const workbook = new ExcelJS.Workbook();
-  workbook.creator = "Social Debt Detection Tool";
-  workbook.created = new Date();
-
-  const dataStep1 = comments.map((c) => ({
-    issue_number: c.issue_number,
-    comment_id: c.comment_id,
-    raw_text: c.raw_text,
-    cleaned_text: c.cleaned_text,
-  }));
-  const sheet1 = workbook.addWorksheet("1. Raw Cleaning");
-  addDataToSheet(sheet1, dataStep1, "TablaPaso1");
-
-  const dataStep2 = comments.map((c) => ({
-    issue_number: c.issue_number,
-    comment_id: c.comment_id,
-    raw_text: c.raw_text,
-    cleaned_text: c.cleaned_text,
-    is_noise: c.is_noise,
-    noise_level: c.noise_level,
-  }));
-  const sheet2 = workbook.addWorksheet("2. Noise Filter");
-  addDataToSheet(sheet2, dataStep2, "TablaPaso2");
-
-  const dataStep3 = comments
-    .filter((c) => c.is_noise === false)
-    .map((c) => ({
-      issue_number: c.issue_number,
-      comment_id: c.comment_id,
+  const dataStep4 = comments.map((c) => {
+    const row: Step4Row = {
+      issue_number: c.issue_number as string | number | undefined,
+      comment_id: c.comment_id as string | number | undefined,
       raw_text: c.raw_text,
       cleaned_text: c.cleaned_text,
       is_noise: c.is_noise,
@@ -461,86 +513,62 @@ export const downloadFinalExcel = async (
       macro_cause_clean: c.macro_cause_clean,
       rule_applied: c.rule_applied,
       confidence: c.confidence,
-    }));
-  const sheet3 = workbook.addWorksheet("3. Macrocauses");
-  addDataToSheet(sheet3, dataStep3, "TablaPaso3");
+    };
 
-  const dataStep4 = comments
-    .filter((c) => c.is_noise === false && c.macro_cause_code !== "H")
-    .map((c) => {
-      const row: Step4Row = {
-        issue_number: c.issue_number as string | number | undefined,
-        comment_id: c.comment_id as string | number | undefined,
-        raw_text: c.raw_text,
-        cleaned_text: c.cleaned_text,
-        is_noise: c.is_noise,
-        noise_level: c.noise_level,
-        macro_cause_code: c.macro_cause_code,
-        macro_cause_clean: c.macro_cause_clean,
-        rule_applied: c.rule_applied,
-        confidence: c.confidence,
-      };
+    for (let i = 1; i <= 3; i++) {
+      const m = c.microcauses && c.microcauses[i - 1];
+      if (m) {
+        row[`microcause_${i}_name`] = m.cause_name || "";
+        row[`microcause_${i}_similarity`] =
+          ((m as Record<string, unknown>).similarity as string | number) || "";
 
-      for (let i = 1; i <= 3; i++) {
-        const m = c.microcauses && c.microcauses[i - 1];
-        if (m) {
-          row[`microcause_${i}_name`] = m.cause_name || "";
-          row[`microcause_${i}_similarity`] =
-            ((m as Record<string, unknown>).similarity as
-              | string
-              | number) || "";
+        const mTypes = (m as Record<string, unknown>).cause_type;
+        row[`microcause_${i}_types`] = Array.isArray(mTypes)
+          ? mTypes.join(" | ")
+          : (mTypes as string) || "";
 
-          const mTypes = (m as Record<string, unknown>).cause_type;
-          row[`microcause_${i}_types`] = Array.isArray(mTypes)
-            ? mTypes.join(" | ")
-            : (mTypes as string) || "";
+        const mRisks = (m as Record<string, unknown>).risks;
+        row[`microcause_${i}_risks`] = Array.isArray(mRisks)
+          ? mRisks.join(" | ")
+          : "";
 
-          const mRisks = (m as Record<string, unknown>).risks;
-          row[`microcause_${i}_risks`] = Array.isArray(mRisks)
-            ? mRisks.join(" | ")
-            : "";
+        const mSmells = (m as Record<string, unknown>).community_smells;
+        row[`microcause_${i}_smells`] = Array.isArray(mSmells)
+          ? mSmells.map((s) => getSmellCode(s as string)).join(" | ")
+          : "";
 
-          const mSmells = (m as Record<string, unknown>).community_smells;
-          row[`microcause_${i}_smells`] = Array.isArray(mSmells)
-            ? mSmells.map((s) => getSmellCode(s as string)).join(" | ")
-            : "";
+        const mPrev = (m as Record<string, unknown>).preventive_strategies;
+        row[`microcause_${i}_preventive_strategies`] = Array.isArray(mPrev)
+          ? mPrev.join(" | ")
+          : "";
 
-          const mPrev = (m as Record<string, unknown>)
-            .preventive_strategies;
-          row[`microcause_${i}_preventive_strategies`] = Array.isArray(
-            mPrev,
-          )
-            ? mPrev.join(" | ")
-            : "";
+        const mCorr = (m as Record<string, unknown>).corrective_strategies;
+        row[`microcause_${i}_corrective_strategies`] = Array.isArray(mCorr)
+          ? mCorr.join(" | ")
+          : "";
 
-          const mCorr = (m as Record<string, unknown>)
-            .corrective_strategies;
-          row[`microcause_${i}_corrective_strategies`] = Array.isArray(
-            mCorr,
-          )
-            ? mCorr.join(" | ")
-            : "";
+        const mEff = (m as Record<string, unknown>).effects;
+        row[`microcause_${i}_effects`] = Array.isArray(mEff)
+          ? mEff.join(" | ")
+          : "";
 
-          const mEff = (m as Record<string, unknown>).effects;
-          row[`microcause_${i}_effects`] = Array.isArray(mEff)
-            ? mEff.join(" | ")
-            : "";
+        const mInd = (m as Record<string, unknown>).indicators;
+        row[`microcause_${i}_indicators`] = Array.isArray(mInd)
+          ? mInd.join(" | ")
+          : "";
 
-          const mInd = (m as Record<string, unknown>).indicators;
-          row[`microcause_${i}_indicators`] = Array.isArray(mInd)
-            ? mInd.join(" | ")
-            : "";
-
-          const mMet = (m as Record<string, unknown>).metrics;
-          row[`microcause_${i}_metrics`] = Array.isArray(mMet)
-            ? mMet.join(" | ")
-            : "";
-        }
+        const mMet = (m as Record<string, unknown>).metrics;
+        row[`microcause_${i}_metrics`] = Array.isArray(mMet)
+          ? mMet.join(" | ")
+          : "";
       }
-      return row;
-    });
-  const sheet4 = workbook.addWorksheet("4. Microcauses");
-  addDataToSheet(sheet4, dataStep4, "TablaPaso4");
+    }
+    return row;
+  });
+
+  const workbook = new ExcelJS.Workbook();
+  const sheetComments = workbook.addWorksheet("Comments");
+  addDataToSheet(sheetComments, dataStep4, "CommentsTable");
 
   const formatTupleList = (
     lst: unknown,
@@ -568,74 +596,136 @@ export const downloadFinalExcel = async (
 
   const sdiArray = Object.keys(issues_metrics)
     .map((issue_number) => {
-      const metrics = issues_metrics[issue_number] as Record<
-        string,
-        unknown
-      >;
+      const metrics = issues_metrics[issue_number] as Record<string, unknown>;
+      const {
+        dominant_macrocauses,
+        dominant_microcauses,
+        dominant_microcause_types,
+        dominant_community_smells,
+        dominant_risks,
+        dominant_indicators,
+        dominant_preventive_strategies,
+        dominant_corrective_strategies,
+        dominant_effects,
+        dominant_metrics,
+        ...otherMetrics
+      } = metrics as MetricsData;
       const row: SDIArrayRow = {
         issue_number: issue_number,
-        ...metrics,
-        dominant_macrocauses: formatTupleList(
-          flattenAndAggregateMetrics(metrics.dominant_macrocauses as [string, number][] || []),
+        ...otherMetrics,
+        macrocauses: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_macrocauses as [string, number][]) || undefined,
+          ),
         ) as string,
-        dominant_microcauses: formatTupleList(
-          flattenAndAggregateMetrics(metrics.dominant_microcauses as [string, number][] || []),
+        microcauses: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_microcauses as [string, number][]) || undefined,
+          ),
         ) as string,
-        dominant_microcause_types: formatTupleList(
-          flattenAndAggregateMetrics(metrics.dominant_microcause_types as [string, number][] || []),
+        microcause_types: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_microcause_types as [string, number][]) || undefined,
+          ),
         ) as string,
-        dominant_community_smells: formatTupleList(
-          flattenAndAggregateMetrics(metrics.dominant_community_smells as [string, number][] || []),
+        community_smells: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_community_smells as [string, number][]) || undefined,
+          ),
           getSmellCode,
         ) as string,
-        dominant_risks: formatTupleList(
-          flattenAndAggregateMetrics(metrics.dominant_risks as [string, number][] || [])
+        risks: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_risks as [string, number][]) || undefined,
+          ),
         ) as string,
-        key_indicators: formatTupleList(
-          flattenAndAggregateMetrics((metrics.dominant_indicators || metrics.key_indicators || []) as [string, number][]),
+        indicators: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_indicators as [string, number][]) || undefined,
+          ),
         ) as string,
-        key_metrics: formatTupleList(
-          flattenAndAggregateMetrics((metrics.dominant_metrics || metrics.key_metrics || metrics.metrics || []) as [string, number][]),
+        preventive_strategies: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_preventive_strategies as [string, number][]) || undefined,
+          ),
         ) as string,
-        key_preventive_strategies: formatTupleList(
-          flattenAndAggregateMetrics((metrics.dominant_preventive_strategies || metrics.key_preventive_strategies || []) as [string, number][]),
-        ) as string,
-        key_corrective_strategies: formatTupleList(
-          flattenAndAggregateMetrics((metrics.dominant_corrective_strategies || metrics.key_corrective_strategies || []) as [string, number][]),
+        corrective_strategies: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_corrective_strategies as [string, number][]) || undefined,
+          ),
         ) as string,
         effects: formatTupleList(
-          flattenAndAggregateMetrics((metrics.dominant_effects || metrics.effects || []) as [string, number][]),
+          flattenAndAggregateMetrics(
+            (dominant_effects as [string, number][]) || undefined,
+          ),
         ) as string,
-        social_debt_index: Number(metrics.social_debt_index) || 0,
+        metrics: formatTupleList(
+          flattenAndAggregateMetrics(
+            (dominant_metrics as [string, number][]) || undefined,
+          ),
+        ) as string,
       };
-
-      delete row.dominant_indicators;
-      delete row.dominant_metrics;
-      delete row.dominant_preventive_strategies;
-      delete row.dominant_corrective_strategies;
-      delete row.effects;
-
       return row;
     })
     .sort(
       (a, b) =>
-        (Number(b.social_debt_index) || 0) -
-        (Number(a.social_debt_index) || 0),
+        (Number(b.social_debt_index) || 0) - (Number(a.social_debt_index) || 0),
     );
 
-  const sheet5 = workbook.addWorksheet("5. SDI Metrics");
-  addDataToSheet(sheet5, sdiArray, "TablaPaso5");
-
+  const sheetSDI = workbook.addWorksheet("SDI Metrics");
+  addDataToSheet(sheetSDI, sdiArray, "TablaMetricasSDI");
   const modelComparisonData = [
-    { model: "Random Forest", tipo_de_entrada: "Adaptive Structured Features", accuracy: 0.9000, macro_f1: 0.9017, weighted_f1: 0.9022 },
-    { model: "TF-IDF + Logistic Regression", tipo_de_entrada: "Issue Text", accuracy: 0.5625, macro_f1: 0.5547, weighted_f1: 0.5576 },
-    { model: "TF-IDF + Linear SVM", tipo_de_entrada: "Issue Text", accuracy: 0.5375, macro_f1: 0.5108, weighted_f1: 0.5142 }
+    {
+      model: "Random Forest",
+      tipo_de_entrada: "Adaptive Structured Features",
+      accuracy: 0.9,
+      macro_f1: 0.9017,
+      weighted_f1: 0.9022,
+    },
+    {
+      model: "TF-IDF + Logistic Regression",
+      tipo_de_entrada: "Issue Text",
+      accuracy: 0.5625,
+      macro_f1: 0.5547,
+      weighted_f1: 0.5576,
+    },
+    {
+      model: "TF-IDF + Linear SVM",
+      tipo_de_entrada: "Issue Text",
+      accuracy: 0.5375,
+      macro_f1: 0.5108,
+      weighted_f1: 0.5142,
+    },
   ];
-  
+
   const crossValidationData = [
-    { model: "Random Forest + Adaptive Features", accuracy_mean: 0.9094, accuracy_std: 0.0220, macro_f1_mean: 0.9094, macro_f1_std: 0.0220, weighted_f1_mean: 0.9096, weighted_f1_std: 0.0217 },
-    { model: "TF-IDF + Logistic Regression", accuracy_mean: 0.6528, accuracy_std: 0.0627, macro_f1_mean: 0.6345, macro_f1_std: 0.0660, weighted_f1_mean: 0.6355, weighted_f1_std: 0.0660 },
-    { model: "TF-IDF + Linear SVM", accuracy_mean: 0.5887, accuracy_std: 0.0577, macro_f1_mean: 0.5558, macro_f1_std: 0.0552, weighted_f1_mean: 0.5577, weighted_f1_std: 0.0560 }
+    {
+      model: "Random Forest + Adaptive Features",
+      accuracy_mean: 0.9094,
+      accuracy_std: 0.022,
+      macro_f1_mean: 0.9094,
+      macro_f1_std: 0.022,
+      weighted_f1_mean: 0.9096,
+      weighted_f1_std: 0.0217,
+    },
+    {
+      model: "TF-IDF + Logistic Regression",
+      accuracy_mean: 0.6528,
+      accuracy_std: 0.0627,
+      macro_f1_mean: 0.6345,
+      macro_f1_std: 0.066,
+      weighted_f1_mean: 0.6355,
+      weighted_f1_std: 0.066,
+    },
+    {
+      model: "TF-IDF + Linear SVM",
+      accuracy_mean: 0.5887,
+      accuracy_std: 0.0577,
+      macro_f1_mean: 0.5558,
+      macro_f1_std: 0.0552,
+      weighted_f1_mean: 0.5577,
+      weighted_f1_std: 0.056,
+    },
   ];
 
   const sheetModel = workbook.addWorksheet("Model Comparison");
@@ -643,7 +733,6 @@ export const downloadFinalExcel = async (
 
   const sheetCrossVal = workbook.addWorksheet("Cross Validation");
   addDataToSheet(sheetCrossVal, crossValidationData, "TablaValidacionCruzada");
-
 
   const ontDict = ontology_dictionary as OntDictType;
   Object.keys(ontDict).forEach((category, idx) => {

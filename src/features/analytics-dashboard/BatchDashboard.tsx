@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  BarChart3,
-  PieChart,
-  Search,
-  Download,
-} from "lucide-react";
+import { BarChart3, PieChart, Search, Download } from "lucide-react";
 
 import { BatchResultData } from "../social-debt-engine/batch-actions";
 import { PrecalculatedEdaData } from "./global-view/edaUtils";
@@ -30,19 +25,25 @@ export const BatchDashboard = ({
   onDownload,
 }: BatchDashboardProps) => {
   const storageKey = jobId || filename;
-  const [activeTab, setActiveTab] = useState<"global" | "audit" | "dashboard">(() => {
-    if (typeof window !== "undefined") {
-      const saved = sessionStorage.getItem(
-        `batchDashboard_activeTab_${storageKey}`,
-      );
-      if (saved === "global" || saved === "audit" || saved === "dashboard") return saved;
-    }
-    return "global";
-  });
+  const [activeTab, setActiveTab] = useState<"global" | "audit" | "dashboard">(
+    () => {
+      if (typeof window !== "undefined") {
+        const saved = sessionStorage.getItem(
+          `batchDashboard_activeTab_${storageKey}`,
+        );
+        if (saved === "global" || saved === "audit" || saved === "dashboard")
+          return saved;
+      }
+      return "global";
+    },
+  );
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem(`batchDashboard_activeTab_${storageKey}`, activeTab);
+      sessionStorage.setItem(
+        `batchDashboard_activeTab_${storageKey}`,
+        activeTab,
+      );
     }
   }, [activeTab, filename, storageKey]);
 
@@ -69,7 +70,7 @@ export const BatchDashboard = ({
                 50,
               );
             }}
-            className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "global" ? "text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
+            className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-50 ${activeTab === "global" ? "text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
           >
             <PieChart className="w-4 h-4" /> Global Dashboard
           </button>
@@ -84,7 +85,7 @@ export const BatchDashboard = ({
                 50,
               );
             }}
-            className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "dashboard" ? "text-blue-700 border-b-2 border-blue-500 bg-blue-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
+            className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-50 ${activeTab === "dashboard" ? "text-blue-700 border-b-2 border-blue-500 bg-blue-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
           >
             <BarChart3 className="w-4 h-4" /> Issue-Level Dashboard
           </button>
@@ -99,7 +100,7 @@ export const BatchDashboard = ({
                 50,
               );
             }}
-            className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-[200px] ${activeTab === "audit" ? "text-indigo-700 border-b-2 border-indigo-500 bg-indigo-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
+            className={`flex-1 py-4 flex items-center justify-center gap-2 text-center font-bold text-sm uppercase tracking-wider transition-colors min-w-50 ${activeTab === "audit" ? "text-indigo-700 border-b-2 border-indigo-500 bg-indigo-50/50" : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-700"}`}
           >
             <Search className="w-4 h-4" /> Traceability
           </button>
@@ -123,8 +124,11 @@ export const BatchDashboard = ({
         className="flex-1 overflow-y-auto overflow-x-hidden relative"
       >
         {activeTab === "global" && (
-          <div className="p-4 md:p-6 w-full max-w-[1400px] mx-auto min-h-[500px]">
-            <GlobalEdaDashboard resultData={resultData} precalculatedStats={edaStats} />
+          <div className="p-4 md:p-6 w-full max-w-350 mx-auto min-h-125">
+            <GlobalEdaDashboard
+              resultData={resultData}
+              precalculatedStats={edaStats}
+            />
           </div>
         )}
 

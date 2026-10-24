@@ -11,7 +11,6 @@
   "dependencies": {
     "@nivo/core": "^0.99.0",
     "@nivo/heatmap": "^0.99.0",
-    "axios": "^1.19.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "framer-motion": "^13.1.1",

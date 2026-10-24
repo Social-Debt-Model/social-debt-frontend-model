@@ -36,7 +36,10 @@ import {
 } from "lucide-react";
 import { TextResultCard } from "../../social-debt-engine/components/TextResultCard";
 
-import { BatchResultData, MetricsData } from "../../social-debt-engine/batch-actions";
+import {
+  BatchResultData,
+  MetricsData,
+} from "../../social-debt-engine/batch-actions";
 import { flattenAndAggregateMetrics } from "./issueMetricsUtils";
 
 type IssueLevelDashboardProps = {
@@ -44,7 +47,6 @@ type IssueLevelDashboardProps = {
   filename?: string;
   jobId?: string;
 };
-
 
 const PIE_PALETTE = [
   "#3b82f6",
@@ -57,9 +59,13 @@ const PIE_PALETTE = [
   "#14b8a6",
 ];
 
-
-
-const MetricBarChart = ({ data, colorClass }: { data: { name: string; value: number; color?: string }[]; colorClass: string }) => {
+const MetricBarChart = ({
+  data,
+  colorClass,
+}: {
+  data: { name: string; value: number; color?: string }[];
+  colorClass: string;
+}) => {
   if (data.length === 0) {
     return (
       <div className="absolute inset-0 flex items-center justify-center">
@@ -69,22 +75,56 @@ const MetricBarChart = ({ data, colorClass }: { data: { name: string; value: num
   }
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={data} layout="vertical" margin={{ top: 0, right: 40, left: 0, bottom: 0 }}>
+      <BarChart
+        data={data}
+        layout="vertical"
+        margin={{ top: 0, right: 40, left: 0, bottom: 0 }}
+      >
         <XAxis type="number" hide />
-        <YAxis type="category" dataKey="name" width={320} tick={{ fontSize: 13, fill: "#334155", fontWeight: 500 }} axisLine={false} tickLine={false} interval={0} />
-        <Tooltip wrapperStyle={{ zIndex: 999 }} cursor={{ fill: "rgba(0,0,0,0.05)" }} content={({ active, payload }) => {
-          if (active && payload && payload.length) {
-            return (
-              <div className="bg-white p-2 rounded shadow border border-slate-100 text-xs z-[999]">
-                <p className="font-bold text-slate-800 mb-1 max-w-[200px] whitespace-normal">{payload[0].payload.name}</p>
-                <p className={`${colorClass} font-medium`}>Value: {payload[0].value}</p>
-              </div>
-            );
-          } return null;
-        }} />
-        <Bar isAnimationActive={false} dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={30}>
-          <LabelList dataKey="value" position="right" fill="#334155" fontSize={15} fontWeight={700} />
-          {data.map((entry: { color?: string }, idx: number) => (<Cell key={`cell-${idx}`} fill={entry.color} />))}
+        <YAxis
+          type="category"
+          dataKey="name"
+          width={320}
+          tick={{ fontSize: 13, fill: "#334155", fontWeight: 500 }}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+        />
+        <Tooltip
+          wrapperStyle={{ zIndex: 999 }}
+          cursor={{ fill: "rgba(0,0,0,0.05)" }}
+          content={({ active, payload }) => {
+            if (active && payload && payload.length) {
+              return (
+                <div className="bg-white p-2 rounded shadow border border-slate-100 text-xs z-999">
+                  <p className="font-bold text-slate-800 mb-1 max-w-50 whitespace-normal">
+                    {payload[0].payload.name}
+                  </p>
+                  <p className={`${colorClass} font-medium`}>
+                    Value: {payload[0].value}
+                  </p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
+        <Bar
+          isAnimationActive={false}
+          dataKey="value"
+          radius={[0, 4, 4, 0]}
+          maxBarSize={30}
+        >
+          <LabelList
+            dataKey="value"
+            position="right"
+            fill="#334155"
+            fontSize={15}
+            fontWeight={700}
+          />
+          {data.map((entry: { color?: string }, idx: number) => (
+            <Cell key={`cell-${idx}`} fill={entry.color} />
+          ))}
         </Bar>
       </BarChart>
     </ResponsiveContainer>
@@ -98,9 +138,10 @@ export const IssueLevelDashboard = ({
 }: IssueLevelDashboardProps) => {
   const { comments = [], social_debt_metrics, issues_metrics } = resultData;
   const metrics = useMemo<Record<string, MetricsData>>(() => {
-    return (social_debt_metrics ||
-      issues_metrics ||
-      {}) as Record<string, MetricsData>;
+    return (social_debt_metrics || issues_metrics || {}) as Record<
+      string,
+      MetricsData
+    >;
   }, [social_debt_metrics, issues_metrics]);
   const issueKeys = Object.keys(metrics);
   const storageKey = jobId || filename;
@@ -225,20 +266,26 @@ export const IssueLevelDashboard = ({
     ? (metrics[selectedIssue as string] as MetricsData | undefined)
     : undefined;
 
-  const formatPythonList = (strValue: string | undefined, getDetailsFn?: (key: string) => { name: string } | null | undefined) => {
+  const formatPythonList = (
+    strValue: string | undefined,
+    getDetailsFn?: (key: string) => { name: string } | null | undefined,
+  ) => {
     if (!strValue) return "N/A";
     const cleanStr = strValue.trim();
     if (cleanStr.startsWith("[") && cleanStr.endsWith("]")) {
       const inner = cleanStr.substring(1, cleanStr.length - 1).trim();
       if (!inner) return "N/A";
-      return inner.split(/,(?=(?:[^'"]*['"'][^'"]*['"'])*[^'"]*$)/).map(s => {
-        const cleaned = s.trim().replace(/^['"']|['"']$/g, "");
-        if (getDetailsFn) {
-          const detail = getDetailsFn(cleaned);
-          return detail?.name || cleaned;
-        }
-        return cleaned;
-      }).join(" + ");
+      return inner
+        .split(/,(?=(?:[^'"]*['"'][^'"]*['"'])*[^'"]*$)/)
+        .map((s) => {
+          const cleaned = s.trim().replace(/^['"']|['"']$/g, "");
+          if (getDetailsFn) {
+            const detail = getDetailsFn(cleaned);
+            return detail?.name || cleaned;
+          }
+          return cleaned;
+        })
+        .join(" + ");
     }
     if (getDetailsFn) {
       const detail = getDetailsFn(cleanStr);
@@ -266,54 +313,69 @@ export const IssueLevelDashboard = ({
 
   const microChartData = useMemo(() => {
     if (!currentMetrics?.dominant_microcauses) return [];
-    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_microcauses as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    const flattened = flattenAndAggregateMetrics(
+      currentMetrics.dominant_microcauses as [string, number][],
+    );
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getMicroCauseDetails(item[0])?.name || item[0],
         value: parseFloat(item[1].toFixed(2)),
         color: PIE_PALETTE[(index + 8) % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getMicroCauseDetails]);
 
   const smellChartData = useMemo(() => {
     if (!currentMetrics?.dominant_community_smells) return [];
-    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_community_smells as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    const flattened = flattenAndAggregateMetrics(
+      currentMetrics.dominant_community_smells as [string, number][],
+    );
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getCommunitySmellDetails(item[0])?.name || item[0],
         value: Math.round(item[1]),
         color: PIE_PALETTE[index % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getCommunitySmellDetails]);
 
   const riskChartData = useMemo(() => {
     if (!currentMetrics?.dominant_risks) return [];
-    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_risks as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    const flattened = flattenAndAggregateMetrics(
+      currentMetrics.dominant_risks as [string, number][],
+    );
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getRiskDetails(item[0])?.name || item[0],
         value: Math.round(item[1]),
         color: PIE_PALETTE[(index + 3) % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getRiskDetails]);
 
   const typeChartData = useMemo(() => {
     if (!currentMetrics?.dominant_microcause_types) return [];
-    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_microcause_types as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    const flattened = flattenAndAggregateMetrics(
+      currentMetrics.dominant_microcause_types as [string, number][],
+    );
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getMicrocauseTypeDetails(item[0])?.name || item[0],
         value: Math.round(item[1]),
         color: PIE_PALETTE[(index + 5) % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getMicrocauseTypeDetails]);
 
   const aggregateFromComments = React.useCallback(
-    (key: 'metrics' | 'indicators' | 'preventive_strategies' | 'corrective_strategies' | 'effects') => {
+    (
+      key:
+        | "metrics"
+        | "indicators"
+        | "preventive_strategies"
+        | "corrective_strategies"
+        | "effects",
+    ) => {
       const counts: Record<string, number> = {};
       issueComments.forEach((comment) => {
         if (!comment.is_noise && comment.microcauses) {
@@ -330,84 +392,92 @@ export const IssueLevelDashboard = ({
       const arr = Object.entries(counts).sort((a, b) => b[1] - a[1]);
       return arr.length > 0 ? arr : null;
     },
-    [issueComments]
+    [issueComments],
   );
 
   const metricsChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_metrics || (currentMetrics as Record<string, unknown>)?.metrics || aggregateFromComments("metrics");
+    const raw =
+      currentMetrics?.dominant_metrics ||
+      (currentMetrics as Record<string, unknown>)?.metrics ||
+      aggregateFromComments("metrics");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getMetricDetails(item[0])?.name || item[0],
         value: Math.round(item[1]),
         color: PIE_PALETTE[(index + 7) % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getMetricDetails, aggregateFromComments]);
 
   const indicatorChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_indicators || (currentMetrics as Record<string, unknown>)?.indicators || aggregateFromComments("indicators");
+    const raw =
+      currentMetrics?.dominant_indicators ||
+      (currentMetrics as Record<string, unknown>)?.indicators ||
+      aggregateFromComments("indicators");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getIndicatorDetails(item[0])?.name || item[0],
         value: Math.round(item[1]),
         color: PIE_PALETTE[(index + 1) % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getIndicatorDetails, aggregateFromComments]);
 
-
-
   const correctiveChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_corrective_strategies || (currentMetrics as Record<string, unknown>)?.corrective_strategies || aggregateFromComments("corrective_strategies");
+    const raw =
+      currentMetrics?.dominant_corrective_strategies ||
+      (currentMetrics as Record<string, unknown>)?.corrective_strategies ||
+      aggregateFromComments("corrective_strategies");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getStrategyDetails(item[0])?.name || item[0],
         value: Math.round(item[1]),
         color: PIE_PALETTE[(index + 4) % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getStrategyDetails, aggregateFromComments]);
 
   const effectsChartData = useMemo(() => {
-    const raw = currentMetrics?.dominant_effects || (currentMetrics as Record<string, unknown>)?.effects || aggregateFromComments("effects");
+    const raw =
+      currentMetrics?.dominant_effects ||
+      (currentMetrics as Record<string, unknown>)?.effects ||
+      aggregateFromComments("effects");
     if (!raw) return [];
     const flattened = flattenAndAggregateMetrics(raw as [string, number][]);
-    return flattened.slice(0, 3).map(
-      (item: [string, number], index: number) => ({
+    return flattened
+      .slice(0, 3)
+      .map((item: [string, number], index: number) => ({
         name: getEffectDetails(item[0])?.name || item[0],
         value: Math.round(item[1]),
         color: PIE_PALETTE[(index + 6) % PIE_PALETTE.length],
-      }),
-    );
+      }));
   }, [currentMetrics, getEffectDetails, aggregateFromComments]);
-
 
   const chartData = useMemo(() => {
     if (!currentMetrics?.dominant_macrocauses) return [];
     let colorIndex = 0;
-    const flattened = flattenAndAggregateMetrics(currentMetrics.dominant_macrocauses as [string, number][]);
-    return flattened.slice(0, 3)
-      .map((item: [string, number]) => {
-        const code = item[0];
-        const color =
-          code === "H"
-            ? "#94a3b8"
-            : PIE_PALETTE[colorIndex % PIE_PALETTE.length];
-        if (code !== "H") colorIndex++;
-        return {
-          name: code,
-          desc: getMacroCauseDescription(code),
-          label: `${code} - ${getMacroCauseDescription(code)}`,
-          count: item[1],
-          color,
-        };
-      });
+    const flattened = flattenAndAggregateMetrics(
+      currentMetrics.dominant_macrocauses as [string, number][],
+    );
+    return flattened.slice(0, 3).map((item: [string, number]) => {
+      const code = item[0];
+      const color =
+        code === "H" ? "#94a3b8" : PIE_PALETTE[colorIndex % PIE_PALETTE.length];
+      if (code !== "H") colorIndex++;
+      return {
+        name: code,
+        desc: getMacroCauseDescription(code),
+        label: `${code} - ${getMacroCauseDescription(code)}`,
+        count: item[1],
+        color,
+      };
+    });
   }, [currentMetrics, getMacroCauseDescription]);
 
   if (issueKeys.length === 0 && hasOrphanComments) {
@@ -419,15 +489,15 @@ export const IssueLevelDashboard = ({
 
     return (
       <div className="glass-panel p-6 flex flex-col gap-4 rounded-bl-none w-full h-full overflow-hidden">
-        <h2 className="text-xl font-bold text-slate-800 flex-shrink-0">
+        <h2 className="text-xl font-bold text-slate-800 shrink-0">
           Analysis Results
         </h2>
-        <p className="text-sm text-slate-600 flex-shrink-0">
+        <p className="text-sm text-slate-600 shrink-0">
           {comments.length} comments were individually analyzed.
         </p>
         <button
           onClick={() => setShowComments(!showComments)}
-          className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg w-fit text-sm font-medium border border-blue-100 hover:bg-blue-100 transition flex-shrink-0"
+          className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg w-fit text-sm font-medium border border-blue-100 hover:bg-blue-100 transition shrink-0"
         >
           {showComments ? "Hide Comments" : "View Comments"}
         </button>
@@ -486,708 +556,895 @@ export const IssueLevelDashboard = ({
 
   return (
     <div className="flex flex-col min-h-full">
-            <div
-              ref={mainHeaderRef}
-              className="bg-white/90 backdrop-blur-md p-3 md:p-4 border-b border-slate-100/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm z-30 sticky top-0"
-            >
-              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-blue-600" />
-                  Analysis Results
-                </h2>
-                <div className="h-5 w-px bg-slate-300 hidden md:block"></div>
-                <div className="flex items-center gap-3 text-sm font-medium text-slate-500">
-                  <p>
-                    <span className="font-bold text-slate-700">
-                      {comments.length}
-                    </span>{" "}
-                    comments processed
-                  </p>
-                  <div className="h-4 w-px bg-slate-300"></div>
-                  <p>
-                    <span className="font-bold text-slate-700">
-                      {issueKeys.length}
-                    </span>{" "}
-                    issues analyzed
-                  </p>
-                </div>
-              </div>
+      <div
+        ref={mainHeaderRef}
+        className="bg-white/90 backdrop-blur-md p-3 md:p-4 border-b border-slate-100/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm z-30 sticky top-0"
+      >
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-blue-600" />
+            Analysis Results
+          </h2>
+          <div className="h-5 w-px bg-slate-300 hidden md:block"></div>
+          <div className="flex items-center gap-3 text-sm font-medium text-slate-500">
+            <p>
+              <span className="font-bold text-slate-700">
+                {comments.length}
+              </span>{" "}
+              comments processed
+            </p>
+            <div className="h-4 w-px bg-slate-300"></div>
+            <p>
+              <span className="font-bold text-slate-700">
+                {issueKeys.length}
+              </span>{" "}
+              issues analyzed
+            </p>
+          </div>
+        </div>
 
-              <div className="flex flex-col md:flex-row items-stretch md:items-end w-full md:w-auto gap-4 flex-shrink-0">
-
-
-                {hasOrphanComments && (
-                  <div className="relative flex flex-col items-start md:items-end gap-1">
-                    <button
-                      onClick={() => setSelectedIssue("individuales")}
-                      className={`bg-white h-[44px] w-full md:w-auto px-4 py-2 flex items-center justify-center gap-2 outline-none text-sm font-bold transition-all duration-200 cursor-pointer shadow-sm border rounded-xl ${
-                        selectedIssue === "individuales"
-                          ? "border-slate-300 ring-0 text-slate-800 bg-slate-50"
-                          : "text-slate-700 border-slate-200 hover:bg-slate-50"
-                      }`}
-                    >
-                      Individuales ({orphanComments.length})
-                    </button>
-                  </div>
-                )}
-
-                {issueKeys.length > 0 && (
-                  <div className="relative flex flex-col items-start md:items-end gap-1">
-                    <button
-                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      className={`relative bg-white w-full md:w-72 px-5 py-2.5 flex items-center justify-between gap-3 outline-none text-sm font-bold transition-all duration-200 cursor-pointer shadow-sm rounded-xl ${
-                        isDropdownOpen
-                          ? "border border-blue-500 ring-2 ring-blue-500/20 text-blue-700"
-                          : selectedIssue === null
-                            ? "border-2 border-amber-400 text-slate-800 bg-amber-50/30"
-                            : "border border-slate-200 text-slate-700 hover:bg-slate-50"
-                      }`}
-                    >
-                      {selectedIssue === null && (
-                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500 shadow-sm"></span>
-                        </span>
-                      )}
-                      <span className="truncate flex items-center gap-2">
-                        {selectedIssue === null
-                          ? "Select an issue..."
-                          : selectedIssue === "individuales"
-                            ? "Global Results"
-                            : `Issue: ${selectedIssue} (${metrics[selectedIssue as string]?.comment_count || 0} messages)`}
-                      </span>
-                      <ChevronDown className="w-5 h-5 flex-shrink-0 text-indigo-600" />
-                    </button>
-
-                    {isDropdownOpen && (
-                      <>
-                        <div
-                          className="fixed inset-0 z-40"
-                          onClick={() => setIsDropdownOpen(false)}
-                        ></div>
-
-                        <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-xl p-2 z-[999] flex flex-col gap-2 shadow-2xl border border-slate-100">
-                          <div className="relative flex-shrink-0">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <input
-                              type="text"
-                              autoFocus
-                              placeholder="Search Issue..."
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
-                              className="w-full bg-white/70 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all placeholder:text-slate-400"
-                            />
-                          </div>
-
-                          <div className="max-h-60 overflow-y-auto flex flex-col gap-1 pr-1 custom-scrollbar">
-                            {filteredIssues.length === 0 ? (
-                              <p className="text-xs text-center text-slate-500 py-3">
-                                No issues found.
-                              </p>
-                            ) : (
-                              filteredIssues.map((key) => (
-                                <button
-                                  key={key}
-                                  onClick={() => {
-                                    setSelectedIssue(key);
-                                    setIsDropdownOpen(false);
-                                    setSearchQuery("");
-                                  }}
-                                  id={`issue-item-${key}`}
-                                  className={`text-left px-3 py-2 text-sm rounded-lg transition-colors ${
-                                    selectedIssue === key
-                                      ? "bg-indigo-50 text-indigo-700 font-medium"
-                                      : "text-slate-600 hover:bg-slate-100"
-                                  }`}
-                                >
-                                  Issue: {key}
-                                  <span className="block text-xs text-slate-500">
-                                    {metrics[key].comment_count} comments
-                                  </span>
-                                </button>
-                              ))
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
+        <div className="flex flex-col md:flex-row items-stretch md:items-end w-full md:w-auto gap-4 shrink-0">
+          {hasOrphanComments && (
+            <div className="relative flex flex-col items-start md:items-end gap-1">
+              <button
+                onClick={() => setSelectedIssue("individuales")}
+                className={`bg-white h-11 w-full md:w-auto px-4 py-2 flex items-center justify-center gap-2 outline-none text-sm font-bold transition-all duration-200 cursor-pointer shadow-sm border rounded-xl ${
+                  selectedIssue === "individuales"
+                    ? "border-slate-300 ring-0 text-slate-800 bg-slate-50"
+                    : "text-slate-700 border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                Individuales ({orphanComments.length})
+              </button>
             </div>
+          )}
 
-            <div className="flex-1 flex flex-col w-full relative">
-              {selectedIssue === null ? (
-                <div className="flex-1 flex flex-col items-center justify-center p-12 text-center my-auto min-h-[400px]">
-                  <div className="w-20 h-20 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-6 shadow-sm border border-blue-100">
-                    <BarChart3 className="w-10 h-10" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-3">
-                    Select an Issue to get started
-                  </h3>
-                  <p className="text-slate-500 max-w-md text-base leading-relaxed">
-                    Choose an issue from the top-right dropdown menu
-                    to view its metrics, social debt levels, and detailed comments.
-                  </p>
-                </div>
-              ) : (
+          {issueKeys.length > 0 && (
+            <div className="relative flex flex-col items-start md:items-end gap-1">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className={`relative bg-white w-full md:w-72 px-5 py-2.5 flex items-center justify-between gap-3 outline-none text-sm font-bold transition-all duration-200 cursor-pointer shadow-sm rounded-xl ${
+                  isDropdownOpen
+                    ? "border border-blue-500 ring-2 ring-blue-500/20 text-blue-700"
+                    : selectedIssue === null
+                      ? "border-2 border-amber-400 text-slate-800 bg-amber-50/30"
+                      : "border border-slate-200 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                {selectedIssue === null && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500 shadow-sm"></span>
+                  </span>
+                )}
+                <span className="truncate flex items-center gap-2">
+                  {selectedIssue === null
+                    ? "Select an issue..."
+                    : selectedIssue === "individuales"
+                      ? "Global Results"
+                      : `Issue: ${selectedIssue} (${metrics[selectedIssue as string]?.comment_count || 0} messages)`}
+                </span>
+                <ChevronDown className="w-5 h-5 shrink-0 text-indigo-600" />
+              </button>
+
+              {isDropdownOpen && (
                 <>
-                  {currentMetrics && (
-                    <div className="flex flex-col w-full">
-                      <div className="px-4 md:px-6 pt-4">
-                          {/* SDI BANNER */}
-                          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative">
-                            <div>
-                              <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-1 flex items-center gap-1.5 relative group cursor-help w-max">
-                                Social Debt Index (SDI)
-                                <Info className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] pointer-events-none font-normal text-center normal-case tracking-normal">
-                                  {isSingleIssue
-                                    ? "The SDI is a relative ranking index. It requires the simultaneous analysis of at least 2 distinct Issues to calculate and compare social debt variance."
-                                    : "The SDI (Social Debt Index) is a relative index. It is calculated by comparing the volume and severity of this Issue against all other Issues analyzed in this batch."}
-                                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
-                                </div>
-                              </div>
-                              <p className={`text-lg font-semibold ${isSingleIssue ? "text-slate-500" : sdiColor}`}>
-                                {isSingleIssue ? "Not Calculable" : currentMetrics.social_debt_level}
-                              </p>
-                            </div>
-                            <div className={`text-4xl md:text-5xl font-black ${sdiColor}`}>
-                              {isSingleIssue ? "N/A" : sdiPercent}
-                              {!isSingleIssue && (
-                                <span className="text-lg md:text-xl text-slate-400 font-bold ml-1">/100</span>
-                              )}
-                            </div>
-                          </div>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsDropdownOpen(false)}
+                  ></div>
 
-</div>
-                      <div className="px-4 md:px-6 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                            Comments in Issue
-                          </span>
-                          <span className="text-2xl font-black text-slate-700">
-                            {funnelStats.total}
-                          </span>
-                        </div>
-                        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
-                          <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider">
-                            Noise (Discarded)
-                          </span>
-                          <span className="text-2xl font-black text-red-500">
-                            {funnelStats.noise}
-                          </span>
-                        </div>
-                        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
-                          <span className="text-[10px] font-bold text-yellow-600 uppercase tracking-wider">
-                            Cause H (Non-identifiable)
-                          </span>
-                          <span className="text-2xl font-black text-yellow-500">
-                            {funnelStats.causeH}
-                          </span>
-                        </div>
-                        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
-                          <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
-                            With Social Debt
-                          </span>
-                          <span className="text-2xl font-black text-emerald-600">
-                            {funnelStats.debt}
-                          </span>
-                        </div>
-                      </div>
+                  <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-xl p-2 z-999 flex flex-col gap-2 shadow-2xl border border-slate-100">
+                    <div className="relative shrink-0">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <input
+                        type="text"
+                        autoFocus
+                        placeholder="Search Issue..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-white/70 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all placeholder:text-slate-400"
+                      />
+                    </div>
 
-                      {/* Empty state if no social debt detected */}
-                      {funnelStats.debt === 0 ? (
-                        <div className="p-8 md:p-12 mx-4 md:mx-6 mt-4 lg:mt-6 mb-6 flex flex-col items-center justify-center text-center bg-white/60 rounded-2xl border border-slate-200 shadow-sm min-h-[250px]">
-                          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 border border-slate-200">
-                            <Info className="w-8 h-8 text-slate-400" />
-                          </div>
-                          <h3 className="text-xl font-bold text-slate-700 mb-2">
-                            No Social Debt Detected
-                          </h3>
-                          <p className="text-slate-500 max-w-md">
-                            All comments in this thread were classified as noise
-                            or normal conversations (Cause H). No debt metrics or
-                            charts were generated for this Issue.
-                          </p>
-                        </div>
+                    <div className="max-h-60 overflow-y-auto flex flex-col gap-1 pr-1 custom-scrollbar">
+                      {filteredIssues.length === 0 ? (
+                        <p className="text-xs text-center text-slate-500 py-3">
+                          No issues found.
+                        </p>
                       ) : (
-                        <div className="px-4 md:px-6 pt-4 pb-4 md:pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                          {/* DOMINANT ISSUE CHARACTERISTICS */}
-                          <div className="col-span-1 lg:col-span-2 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
-                            <h3 className="text-base md:text-lg font-bold text-slate-700 mb-5 flex items-center gap-2 border-b border-slate-100 pb-3">
-                              <Trophy className="w-5 h-5 text-amber-500" /> Dominant Issue Characteristics
-                            </h3>
-                            <div className="flex flex-wrap gap-x-8 gap-y-6">
-                              {currentMetrics && currentMetrics.dominant_macrocauses && currentMetrics.dominant_macrocauses.length > 0 && (
-                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
-                                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0"><Target className="w-5 h-5" /></div>
-                                  <div>
-                                    <p className="text-sm font-bold text-slate-800">Primary Macrocause</p>
-                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_macrocauses[0][0] as string, (key) => ({ name: getMacroCauseDescription(key) }))}</p>
-                                  </div>
-                                </div>
-                              )}
-                              {currentMetrics && currentMetrics.dominant_microcauses && currentMetrics.dominant_microcauses.length > 0 && (
-                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
-                                  <div className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 shrink-0"><Database className="w-5 h-5" /></div>
-                                  <div>
-                                    <p className="text-sm font-bold text-slate-800">Primary Microcause</p>
-                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_microcauses[0][0] as string, getMicroCauseDetails)}</p>
-                                  </div>
-                                </div>
-                              )}
-                              {currentMetrics && currentMetrics.dominant_community_smells && currentMetrics.dominant_community_smells.length > 0 && (
-                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
-                                  <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 shrink-0"><Users className="w-5 h-5" /></div>
-                                  <div>
-                                    <p className="text-sm font-bold text-slate-800">Community Smell</p>
-                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_community_smells[0][0] as string, getCommunitySmellDetails)}</p>
-                                  </div>
-                                </div>
-                              )}
-                              {currentMetrics && currentMetrics.dominant_risks && currentMetrics.dominant_risks.length > 0 && (
-                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
-                                  <div className="p-2.5 rounded-xl bg-orange-50 text-orange-600 shrink-0"><ShieldAlert className="w-5 h-5" /></div>
-                                  <div>
-                                    <p className="text-sm font-bold text-slate-800">Primary Risk</p>
-                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_risks[0][0] as string, getRiskDetails).replace(/ [Rr]isk$/i, "")}</p>
-                                  </div>
-                                </div>
-                              )}
-                              {currentMetrics && currentMetrics.dominant_effects && currentMetrics.dominant_effects.length > 0 && (
-                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
-                                  <div className="p-2.5 rounded-xl bg-red-50 text-red-600 shrink-0"><Activity className="w-5 h-5" /></div>
-                                  <div>
-                                    <p className="text-sm font-bold text-slate-800">Most Common Effect</p>
-                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_effects[0][0] as string, getEffectDetails)}</p>
-                                  </div>
-                                </div>
-                              )}
-                              {currentMetrics && currentMetrics.dominant_preventive_strategies && currentMetrics.dominant_preventive_strategies.length > 0 && (
-                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
-                                  <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 shrink-0"><ShieldCheck className="w-5 h-5" /></div>
-                                  <div>
-                                    <p className="text-sm font-bold text-slate-800">Preventive Strategy</p>
-                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_preventive_strategies[0][0] as string, getStrategyDetails)}</p>
-                                  </div>
-                                </div>
-                              )}
-                              {currentMetrics && currentMetrics.dominant_corrective_strategies && currentMetrics.dominant_corrective_strategies.length > 0 && (
-                                <div className="flex items-start gap-3 flex-1 min-w-[250px]">
-                                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-700 shrink-0"><Wrench className="w-5 h-5" /></div>
-                                  <div>
-                                    <p className="text-sm font-bold text-slate-800">Corrective Strategy</p>
-                                    <p className="text-sm text-slate-600 mt-1 leading-snug">{formatPythonList(currentMetrics.dominant_corrective_strategies[0][0] as string, getStrategyDetails)}</p>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* ROW 1: MACROCAUSES | MICROCAUSE TYPES */}
-                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                              <Layers className="w-4 h-4" /> Distribution of Macrocauses (Top 3)
-                            </h3>
-                            <div className="w-full">
-                              <ResponsiveContainer width="100%" height={320}>
-                                <RechartsPieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
-                                  <Pie data={chartData} cx="50%" cy="45%" innerRadius={50} outerRadius={75} paddingAngle={2} dataKey="count" nameKey="label" stroke="none" label={({ value }) => value}>
-                                    {chartData.map((entry, index) => (
-                                      <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                  </Pie>
-                                  <Tooltip wrapperStyle={{ zIndex: 999 }} content={({ active, payload }) => {
-                                    if (active && payload && payload.length) {
-                                      return (
-                                        <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
-                                          <p className="font-bold text-slate-800 mb-1">{payload[0].payload.name}: {payload[0].payload.desc}</p>
-                                          <p className="text-blue-600 font-medium">Frequency: {payload[0].value}</p>
-                                        </div>
-                                      );
-                                    }
-                                    return null;
-                                  }} />
-                                  <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ fontSize: "13px", lineHeight: "18px", paddingTop: "10px" }} />
-                                </RechartsPieChart>
-                              </ResponsiveContainer>
-                            </div>
-                          </div>
-
-                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2 group relative">
-                              <Layers className="w-4 h-4 text-pink-500" /> Microcause Types (Top 3)
-                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Underlying theoretical nature of identified issues.
-                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                              </div>
-                            </h3>
-                            <div className="w-full">
-                              <ResponsiveContainer width="100%" height={320}>
-                                <RechartsPieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
-                                  <Pie data={typeChartData} cx="50%" cy="45%" innerRadius={50} outerRadius={75} paddingAngle={2} dataKey="value" nameKey="name" stroke="none" label={({ value }) => value}>
-                                    {typeChartData.map((entry: { color: string }, index: number) => (
-                                      <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                  </Pie>
-                                  <Tooltip wrapperStyle={{ zIndex: 999 }} content={({ active, payload }) => {
-                                    if (active && payload && payload.length) {
-                                      return (
-                                        <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
-                                          <p className="font-bold text-slate-800 mb-1">{payload[0].payload.name}</p>
-                                          <p className="text-pink-600 font-medium">Frequency: {payload[0].value}</p>
-                                        </div>
-                                      );
-                                    }
-                                    return null;
-                                  }} />
-                                  <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ fontSize: "13px", lineHeight: "18px", paddingTop: "10px" }} />
-                                </RechartsPieChart>
-                              </ResponsiveContainer>
-                            </div>
-                          </div>
-
-                          {/* ROW 2: MICROCAUSES | COMMUNITY SMELLS */}
-                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <ListFilter className="w-4 h-4 text-indigo-500" /> Microcauses (Top 3)
-                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                List of specific severe social or technical issues identified. The value represents the cumulative AI confidence mass.
-                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                              </div>
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={microChartData} colorClass="text-indigo-600" />
-                            </div>
-                          </div>
-
-                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <Users className="w-4 h-4 text-purple-600" /> Community Smells (Top 3)
-                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Patterns of inefficient or toxic behavior in the community.
-                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                              </div>
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={smellChartData} colorClass="text-purple-600" />
-                            </div>
-                          </div>
-
-                          {/* ROW 3: RISKS */}
-<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <AlertTriangle className="w-4 h-4 text-orange-500" /> Risks (Top 3)
-                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Potential negative consequences if this thread&apos;s social debt remains unresolved.
-                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                              </div>
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={riskChartData} colorClass="text-orange-500" />
-                            </div>
-                          </div>
-
-
-
-                          {/* ROW 4: INDICATORS */}
-                          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicators (Top 3)
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={indicatorChartData} colorClass="text-indigo-500" />
-                            </div>
-                          </div>
-
-                          
-
-                          {/* ROW 5: CORRECTIVE STRATEGIES | EFFECTS */}
-<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <Layers className="w-4 h-4 text-blue-600" /> Corrective Strategies (Top 3)
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={correctiveChartData} colorClass="text-blue-600" />
-                            </div>
-                          </div>
-
-<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <AlertTriangle className="w-4 h-4 text-orange-600" /> Effects (Top 3)
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={effectsChartData} colorClass="text-orange-600" />
-                            </div>
-                          </div>
-
-                          {/* ROW 6: METRICS */}
-<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <TrendingUp className="w-4 h-4 text-emerald-600" /> Metrics (Top 3)
-                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
-                              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-[999] font-normal normal-case pointer-events-none">
-                                Relevant software metrics linked to the identified issues.
-                                <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
-                              </div>
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={metricsChartData} colorClass="text-emerald-600" />
-                            </div>
-                          </div>
-
-<div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
-                              <TrendingUp className="w-4 h-4 text-indigo-500" /> Indicators (Top 3)
-                            </h3>
-                            <div className="w-full mt-2 relative h-[160px]">
-                              <MetricBarChart data={indicatorChartData} colorClass="text-indigo-500" />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {true && (
-                    <div className="bg-slate-50/50 flex-shrink-0 flex-1">
-                      {selectedIssue === "individuales" && (
-                        <div className="px-4 md:px-6 pt-6 pb-2">
-                          <h3 className="text-lg font-semibold text-slate-800 mb-1">
-                            Individual Comments
-                          </h3>
-                          <p className="text-sm text-slate-500">
-                            These comments were not associated with any issue,
-                            or were chosen to be processed individually.
-                            Use the filters below to explore them.
-                          </p>
-                        </div>
-                      )}
-                      {/* Boton removido */}
-
-                      {true && (
-                        <div ref={commentsListRef} className="flex flex-col mt-6 border-t border-slate-200 pt-6 scroll-mt-32">
-                          <div
-                            className="sticky z-20 bg-slate-50/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 shadow-sm flex flex-wrap gap-2 items-center transition-all duration-75"
-                            style={{
-                              top: headerHeight ? `${headerHeight}px` : "100px",
+                        filteredIssues.map((key) => (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              setSelectedIssue(key);
+                              setIsDropdownOpen(false);
+                              setSearchQuery("");
                             }}
+                            id={`issue-item-${key}`}
+                            className={`text-left px-3 py-2 text-sm rounded-lg transition-colors ${
+                              selectedIssue === key
+                                ? "bg-indigo-50 text-indigo-700 font-medium"
+                                : "text-slate-600 hover:bg-slate-100"
+                            }`}
                           >
-                            <span className="text-xs font-bold text-slate-500 uppercase mr-2">
-                              Filters:
+                            Issue: {key}
+                            <span className="block text-xs text-slate-500">
+                              {metrics[key].comment_count} comments
                             </span>
-
-                            {(() => {
-                              const MACROCAUSES = [
-                                "A",
-                                "B",
-                                "C",
-                                "D",
-                                "E",
-                                "F",
-                                "G",
-                                "H",
-                              ];
-                              const macrocauseCounts: Record<string, number> =
-                                {};
-                              let noiseCount = 0;
-                              let cleanCount = 0;
-
-                              issueComments.forEach((c) => {
-                                if (c.is_noise) {
-                                  noiseCount++;
-                                } else {
-                                  cleanCount++;
-                                  if (c.macro_cause_code) {
-                                    macrocauseCounts[c.macro_cause_code] =
-                                      (macrocauseCounts[c.macro_cause_code] ||
-                                        0) + 1;
-                                  }
-                                }
-                              });
-
-                              return (
-                                <>
-                                  <button
-                                    onClick={() => {
-                                      setSelectedMacrocauseFilter(null);
-                                      setCurrentPage(1);
-                                    }}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                                      selectedMacrocauseFilter === null
-                                        ? "bg-slate-800 text-white shadow-md"
-                                        : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
-                                    }`}
-                                  >
-                                    All{" "}
-                                    <span className="opacity-70 ml-1">
-                                      ({cleanCount})
-                                    </span>
-                                  </button>
-
-                                  {/* Filter buttons A-H */}
-                                  {MACROCAUSES.map((code) => {
-                                    const count = macrocauseCounts[code] || 0;
-                                    const isDisabled = count === 0;
-                                    const isH = code === "H";
-
-                                    return (
-                                      <React.Fragment key={code}>
-                                        {isH && (
-                                          <div className="w-px h-6 bg-slate-300 mx-1 hidden sm:block"></div>
-                                        )}
-                                        <button
-                                          disabled={isDisabled}
-                                          onClick={() => {
-                                            setSelectedMacrocauseFilter(code);
-                                            setCurrentPage(1);
-                                          }}
-                                          className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                                            isDisabled
-                                              ? "opacity-50 cursor-not-allowed bg-slate-50 text-slate-400 border border-slate-200"
-                                              : selectedMacrocauseFilter ===
-                                                  code
-                                                ? "bg-blue-600 text-white shadow-md border border-blue-600"
-                                                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
-                                          }`}
-                                        >
-                                          Cause {code}{" "}
-                                          <span className="opacity-70 ml-1">
-                                            ({count})
-                                          </span>
-                                        </button>
-                                      </React.Fragment>
-                                    );
-                                  })}
-
-                                  <div className="flex-1 min-w-[20px]"></div>
-
-                                  <button
-                                    disabled={noiseCount === 0}
-                                    onClick={() => {
-                                      setShowNoise(!showNoise);
-                                      setCurrentPage(1);
-                                    }}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 border ${
-                                      noiseCount === 0
-                                        ? "opacity-50 cursor-not-allowed bg-slate-50 text-slate-400 border-slate-200"
-                                        : showNoise
-                                          ? "bg-amber-100 text-amber-800 border-amber-300 shadow-sm"
-                                          : "bg-white text-slate-500 border-slate-200 hover:bg-slate-100 opacity-80"
-                                    }`}
-                                  >
-                                    <div
-                                      className={`w-2 h-2 rounded-full ${showNoise ? "bg-amber-500" : "bg-slate-300"}`}
-                                    ></div>
-                                    Include Noise ({noiseCount})
-                                  </button>
-                                </>
-                              );
-                            })()}
-                          </div>
-
-                          <div className="flex flex-col gap-8 p-4 mt-2">
-                            {(() => {
-                              const filteredComments = issueComments.filter(
-                                (c) => {
-                                  if (!showNoise && c.is_noise) return false;
-                                  if (
-                                    selectedMacrocauseFilter &&
-                                    c.macro_cause_code !==
-                                      selectedMacrocauseFilter
-                                  )
-                                    return false;
-                                  return true;
-                                },
-                              );
-
-                              const totalPages =
-                                Math.ceil(filteredComments.length / pageSize) ||
-                                1;
-                              const paginatedComments = filteredComments.slice(
-                                (currentPage - 1) * pageSize,
-                                currentPage * pageSize,
-                              );
-
-                              const handlePageChange = (newPage: number) => {
-                                setCurrentPage(newPage);
-                                setTimeout(() => {
-                                  if (commentsListRef.current) {
-                                    commentsListRef.current.scrollIntoView({
-                                      behavior: "smooth",
-                                      block: "start",
-                                    });
-                                  }
-                                }, 100);
-                              };
-
-                              return (
-                                <>
-                                  {filteredComments.length === 0 ? (
-                                    <div className="text-center py-10 text-slate-400 bg-white/50 rounded-xl border border-slate-100 font-medium">
-                                      No comments match these filters.
-                                    </div>
-                                  ) : (
-                                    paginatedComments.map((c, i) => (
-                                      <TextResultCard
-                                        key={i}
-                                        result={c}
-                                        isDashboardMode={true}
-                                        index={
-                                          (currentPage - 1) * pageSize + i + 1
-                                        }
-                                      />
-                                    ))
-                                  )}
-
-                                  {totalPages > 1 && (
-                                    <div className="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-200 mt-2 shadow-sm">
-                                      <button
-                                        disabled={currentPage === 1}
-                                        onClick={() =>
-                                          handlePageChange(
-                                            Math.max(1, currentPage - 1),
-                                          )
-                                        }
-                                        className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
-                                      >
-                                        Previous
-                                      </button>
-                                      <span className="text-sm font-semibold text-slate-600">
-                                        Page {currentPage} of {totalPages}
-                                      </span>
-                                      <button
-                                        disabled={currentPage === totalPages}
-                                        onClick={() =>
-                                          handlePageChange(
-                                            Math.min(
-                                              totalPages,
-                                              currentPage + 1,
-                                            ),
-                                          )
-                                        }
-                                        className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
-                                      >
-                                        Next
-                                      </button>
-                                    </div>
-                                  )}
-                                </>
-                              );
-                            })()}
-                          </div>
-                        </div>
+                          </button>
+                        ))
                       )}
                     </div>
-                  )}
+                  </div>
                 </>
               )}
             </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col w-full relative">
+        {selectedIssue === null ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-12 text-center my-auto min-h-100">
+            <div className="w-20 h-20 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-6 shadow-sm border border-blue-100">
+              <BarChart3 className="w-10 h-10" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-800 mb-3">
+              Select an Issue to get started
+            </h3>
+            <p className="text-slate-500 max-w-md text-base leading-relaxed">
+              Choose an issue from the top-right dropdown menu to view its
+              metrics, social debt levels, and detailed comments.
+            </p>
           </div>
+        ) : (
+          <>
+            {currentMetrics && (
+              <div className="flex flex-col w-full">
+                <div className="px-4 md:px-6 pt-4">
+                  <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative">
+                    <div>
+                      <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-1 flex items-center gap-1.5 relative group cursor-help w-max">
+                        Social Debt Index (SDI)
+                        <Info className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 pointer-events-none font-normal text-center normal-case tracking-normal">
+                          {isSingleIssue
+                            ? "The SDI is a relative ranking index. It requires the simultaneous analysis of at least 2 distinct Issues to calculate and compare social debt variance."
+                            : "The SDI (Social Debt Index) is a relative index. It is calculated by comparing the volume and severity of this Issue against all other Issues analyzed in this batch."}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                        </div>
+                      </div>
+                      <p
+                        className={`text-lg font-semibold ${isSingleIssue ? "text-slate-500" : sdiColor}`}
+                      >
+                        {isSingleIssue
+                          ? "Not Calculable"
+                          : currentMetrics.social_debt_level}
+                      </p>
+                    </div>
+                    <div
+                      className={`text-4xl md:text-5xl font-black ${sdiColor}`}
+                    >
+                      {isSingleIssue ? "N/A" : sdiPercent}
+                      {!isSingleIssue && (
+                        <span className="text-lg md:text-xl text-slate-400 font-bold ml-1">
+                          /100
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="px-4 md:px-6 pt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      Comments in Issue
+                    </span>
+                    <span className="text-2xl font-black text-slate-700">
+                      {funnelStats.total}
+                    </span>
+                  </div>
+                  <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
+                    <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider">
+                      Noise (Discarded)
+                    </span>
+                    <span className="text-2xl font-black text-red-500">
+                      {funnelStats.noise}
+                    </span>
+                  </div>
+                  <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
+                    <span className="text-[10px] font-bold text-yellow-600 uppercase tracking-wider">
+                      Cause H (Non-identifiable)
+                    </span>
+                    <span className="text-2xl font-black text-yellow-500">
+                      {funnelStats.causeH}
+                    </span>
+                  </div>
+                  <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center flex-1">
+                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+                      With Social Debt
+                    </span>
+                    <span className="text-2xl font-black text-emerald-600">
+                      {funnelStats.debt}
+                    </span>
+                  </div>
+                </div>
+
+                {funnelStats.debt === 0 ? (
+                  <div className="p-8 md:p-12 mx-4 md:mx-6 mt-4 lg:mt-6 mb-6 flex flex-col items-center justify-center text-center bg-white/60 rounded-2xl border border-slate-200 shadow-sm min-h-62.5">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 border border-slate-200">
+                      <Info className="w-8 h-8 text-slate-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-700 mb-2">
+                      No Social Debt Detected
+                    </h3>
+                    <p className="text-slate-500 max-w-md">
+                      All comments in this thread were classified as noise or
+                      normal conversations (Cause H). No debt metrics or charts
+                      were generated for this Issue.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="px-4 md:px-6 pt-4 pb-4 md:pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                    <div className="col-span-1 lg:col-span-2 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100">
+                      <h3 className="text-base md:text-lg font-bold text-slate-700 mb-5 flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <Trophy className="w-5 h-5 text-amber-500" /> Dominant
+                        Issue Characteristics
+                      </h3>
+                      <div className="flex flex-wrap gap-x-8 gap-y-6">
+                        {currentMetrics &&
+                          currentMetrics.dominant_macrocauses &&
+                          currentMetrics.dominant_macrocauses.length > 0 && (
+                            <div className="flex items-start gap-3 flex-1 min-w-62.5">
+                              <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                                <Target className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">
+                                  Primary Macrocause
+                                </p>
+                                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                                  {formatPythonList(
+                                    currentMetrics
+                                      .dominant_macrocauses[0][0] as string,
+                                    (key) => ({
+                                      name: getMacroCauseDescription(key),
+                                    }),
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        {currentMetrics &&
+                          currentMetrics.dominant_microcauses &&
+                          currentMetrics.dominant_microcauses.length > 0 && (
+                            <div className="flex items-start gap-3 flex-1 min-w-62.5">
+                              <div className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
+                                <Database className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">
+                                  Primary Microcause
+                                </p>
+                                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                                  {formatPythonList(
+                                    currentMetrics
+                                      .dominant_microcauses[0][0] as string,
+                                    getMicroCauseDetails,
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        {currentMetrics &&
+                          currentMetrics.dominant_community_smells &&
+                          currentMetrics.dominant_community_smells.length >
+                            0 && (
+                            <div className="flex items-start gap-3 flex-1 min-w-62.5">
+                              <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 shrink-0">
+                                <Users className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">
+                                  Community Smell
+                                </p>
+                                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                                  {formatPythonList(
+                                    currentMetrics
+                                      .dominant_community_smells[0][0] as string,
+                                    getCommunitySmellDetails,
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        {currentMetrics &&
+                          currentMetrics.dominant_risks &&
+                          currentMetrics.dominant_risks.length > 0 && (
+                            <div className="flex items-start gap-3 flex-1 min-w-62.5">
+                              <div className="p-2.5 rounded-xl bg-orange-50 text-orange-600 shrink-0">
+                                <ShieldAlert className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">
+                                  Primary Risk
+                                </p>
+                                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                                  {formatPythonList(
+                                    currentMetrics
+                                      .dominant_risks[0][0] as string,
+                                    getRiskDetails,
+                                  ).replace(/ [Rr]isk$/i, "")}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        {currentMetrics &&
+                          currentMetrics.dominant_effects &&
+                          currentMetrics.dominant_effects.length > 0 && (
+                            <div className="flex items-start gap-3 flex-1 min-w-62.5">
+                              <div className="p-2.5 rounded-xl bg-red-50 text-red-600 shrink-0">
+                                <Activity className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">
+                                  Most Common Effect
+                                </p>
+                                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                                  {formatPythonList(
+                                    currentMetrics
+                                      .dominant_effects[0][0] as string,
+                                    getEffectDetails,
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        {currentMetrics &&
+                          currentMetrics.dominant_preventive_strategies &&
+                          currentMetrics.dominant_preventive_strategies.length >
+                            0 && (
+                            <div className="flex items-start gap-3 flex-1 min-w-62.5">
+                              <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 shrink-0">
+                                <ShieldCheck className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">
+                                  Preventive Strategy
+                                </p>
+                                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                                  {formatPythonList(
+                                    currentMetrics
+                                      .dominant_preventive_strategies[0][0] as string,
+                                    getStrategyDetails,
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        {currentMetrics &&
+                          currentMetrics.dominant_corrective_strategies &&
+                          currentMetrics.dominant_corrective_strategies.length >
+                            0 && (
+                            <div className="flex items-start gap-3 flex-1 min-w-62.5">
+                              <div className="p-2.5 rounded-xl bg-blue-50 text-blue-700 shrink-0">
+                                <Wrench className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-800">
+                                  Corrective Strategy
+                                </p>
+                                <p className="text-sm text-slate-600 mt-1 leading-snug">
+                                  {formatPythonList(
+                                    currentMetrics
+                                      .dominant_corrective_strategies[0][0] as string,
+                                    getStrategyDetails,
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                        <Layers className="w-4 h-4" /> Distribution of
+                        Macrocauses (Top 3)
+                      </h3>
+                      <div className="w-full">
+                        <ResponsiveContainer width="100%" height={320}>
+                          <RechartsPieChart
+                            margin={{
+                              top: 20,
+                              right: 30,
+                              left: 30,
+                              bottom: 20,
+                            }}
+                          >
+                            <Pie
+                              data={chartData}
+                              cx="50%"
+                              cy="45%"
+                              innerRadius={50}
+                              outerRadius={75}
+                              paddingAngle={2}
+                              dataKey="count"
+                              nameKey="label"
+                              stroke="none"
+                              label={({ value }) => value}
+                            >
+                              {chartData.map((entry, index) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={entry.color}
+                                />
+                              ))}
+                            </Pie>
+                            <Tooltip
+                              wrapperStyle={{ zIndex: 999 }}
+                              content={({ active, payload }) => {
+                                if (active && payload && payload.length) {
+                                  return (
+                                    <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
+                                      <p className="font-bold text-slate-800 mb-1">
+                                        {payload[0].payload.name}:{" "}
+                                        {payload[0].payload.desc}
+                                      </p>
+                                      <p className="text-blue-600 font-medium">
+                                        Frequency: {payload[0].value}
+                                      </p>
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              }}
+                            />
+                            <Legend
+                              layout="horizontal"
+                              verticalAlign="bottom"
+                              align="center"
+                              wrapperStyle={{
+                                fontSize: "13px",
+                                lineHeight: "18px",
+                                paddingTop: "10px",
+                              }}
+                            />
+                          </RechartsPieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-2 flex items-center gap-2 group relative">
+                        <Layers className="w-4 h-4 text-pink-500" /> Microcause
+                        Types (Top 3)
+                        <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 font-normal normal-case pointer-events-none">
+                          Underlying theoretical nature of identified issues.
+                          <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                        </div>
+                      </h3>
+                      <div className="w-full">
+                        <ResponsiveContainer width="100%" height={320}>
+                          <RechartsPieChart
+                            margin={{
+                              top: 20,
+                              right: 30,
+                              left: 30,
+                              bottom: 20,
+                            }}
+                          >
+                            <Pie
+                              data={typeChartData}
+                              cx="50%"
+                              cy="45%"
+                              innerRadius={50}
+                              outerRadius={75}
+                              paddingAngle={2}
+                              dataKey="value"
+                              nameKey="name"
+                              stroke="none"
+                              label={({ value }) => value}
+                            >
+                              {typeChartData.map(
+                                (entry: { color: string }, index: number) => (
+                                  <Cell
+                                    key={`cell-${index}`}
+                                    fill={entry.color}
+                                  />
+                                ),
+                              )}
+                            </Pie>
+                            <Tooltip
+                              wrapperStyle={{ zIndex: 999 }}
+                              content={({ active, payload }) => {
+                                if (active && payload && payload.length) {
+                                  return (
+                                    <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100 text-xs">
+                                      <p className="font-bold text-slate-800 mb-1">
+                                        {payload[0].payload.name}
+                                      </p>
+                                      <p className="text-pink-600 font-medium">
+                                        Frequency: {payload[0].value}
+                                      </p>
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              }}
+                            />
+                            <Legend
+                              layout="horizontal"
+                              verticalAlign="bottom"
+                              align="center"
+                              wrapperStyle={{
+                                fontSize: "13px",
+                                lineHeight: "18px",
+                                paddingTop: "10px",
+                              }}
+                            />
+                          </RechartsPieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <ListFilter className="w-4 h-4 text-indigo-500" />{" "}
+                        Microcauses (Top 3)
+                        <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 font-normal normal-case pointer-events-none">
+                          List of specific severe social or technical issues
+                          identified. The value represents the cumulative AI
+                          confidence mass.
+                          <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                        </div>
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={microChartData}
+                          colorClass="text-indigo-600"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <Users className="w-4 h-4 text-purple-600" /> Community
+                        Smells (Top 3)
+                        <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 font-normal normal-case pointer-events-none">
+                          Patterns of inefficient or toxic behavior in the
+                          community.
+                          <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                        </div>
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={smellChartData}
+                          colorClass="text-purple-600"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <AlertTriangle className="w-4 h-4 text-orange-500" />{" "}
+                        Risks (Top 3)
+                        <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 font-normal normal-case pointer-events-none">
+                          Potential negative consequences if this thread&apos;s
+                          social debt remains unresolved.
+                          <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                        </div>
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={riskChartData}
+                          colorClass="text-orange-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <TrendingUp className="w-4 h-4 text-indigo-500" />{" "}
+                        Indicators (Top 3)
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={indicatorChartData}
+                          colorClass="text-indigo-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <Layers className="w-4 h-4 text-blue-600" /> Corrective
+                        Strategies (Top 3)
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={correctiveChartData}
+                          colorClass="text-blue-600"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <AlertTriangle className="w-4 h-4 text-orange-600" />{" "}
+                        Effects (Top 3)
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={effectsChartData}
+                          colorClass="text-orange-600"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <TrendingUp className="w-4 h-4 text-emerald-600" />{" "}
+                        Metrics (Top 3)
+                        <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-xs leading-tight rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 font-normal normal-case pointer-events-none">
+                          Relevant software metrics linked to the identified
+                          issues.
+                          <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-800"></div>
+                        </div>
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={metricsChartData}
+                          colorClass="text-emerald-600"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                      <h3 className="text-sm md:text-base font-semibold text-slate-700 mb-3 flex items-center gap-2 group relative">
+                        <TrendingUp className="w-4 h-4 text-indigo-500" />{" "}
+                        Indicators (Top 3)
+                      </h3>
+                      <div className="w-full mt-2 relative h-40">
+                        <MetricBarChart
+                          data={indicatorChartData}
+                          colorClass="text-indigo-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {true && (
+              <div className="bg-slate-50/50 shrink-0 flex-1">
+                {selectedIssue === "individuales" && (
+                  <div className="px-4 md:px-6 pt-6 pb-2">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-1">
+                      Individual Comments
+                    </h3>
+                    <p className="text-sm text-slate-500">
+                      These comments were not associated with any issue, or were
+                      chosen to be processed individually. Use the filters below
+                      to explore them.
+                    </p>
+                  </div>
+                )}
+
+                {true && (
+                  <div
+                    ref={commentsListRef}
+                    className="flex flex-col mt-6 border-t border-slate-200 pt-6 scroll-mt-32"
+                  >
+                    <div
+                      className="sticky z-20 bg-slate-50/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 shadow-sm flex flex-wrap gap-2 items-center transition-all duration-75"
+                      style={{
+                        top: headerHeight ? `${headerHeight}px` : "100px",
+                      }}
+                    >
+                      <span className="text-xs font-bold text-slate-500 uppercase mr-2">
+                        Filters:
+                      </span>
+
+                      {(() => {
+                        const MACROCAUSES = [
+                          "A",
+                          "B",
+                          "C",
+                          "D",
+                          "E",
+                          "F",
+                          "G",
+                          "H",
+                        ];
+                        const macrocauseCounts: Record<string, number> = {};
+                        let noiseCount = 0;
+                        let cleanCount = 0;
+
+                        issueComments.forEach((c) => {
+                          if (c.is_noise) {
+                            noiseCount++;
+                          } else {
+                            cleanCount++;
+                            if (c.macro_cause_code) {
+                              macrocauseCounts[c.macro_cause_code] =
+                                (macrocauseCounts[c.macro_cause_code] || 0) + 1;
+                            }
+                          }
+                        });
+
+                        return (
+                          <>
+                            <button
+                              onClick={() => {
+                                setSelectedMacrocauseFilter(null);
+                                setCurrentPage(1);
+                              }}
+                              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                                selectedMacrocauseFilter === null
+                                  ? "bg-slate-800 text-white shadow-md"
+                                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                              }`}
+                            >
+                              All{" "}
+                              <span className="opacity-70 ml-1">
+                                ({cleanCount})
+                              </span>
+                            </button>
+
+                            {MACROCAUSES.map((code) => {
+                              const count = macrocauseCounts[code] || 0;
+                              const isDisabled = count === 0;
+                              const isH = code === "H";
+
+                              return (
+                                <React.Fragment key={code}>
+                                  {isH && (
+                                    <div className="w-px h-6 bg-slate-300 mx-1 hidden sm:block"></div>
+                                  )}
+                                  <button
+                                    disabled={isDisabled}
+                                    onClick={() => {
+                                      setSelectedMacrocauseFilter(code);
+                                      setCurrentPage(1);
+                                    }}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                                      isDisabled
+                                        ? "opacity-50 cursor-not-allowed bg-slate-50 text-slate-400 border border-slate-200"
+                                        : selectedMacrocauseFilter === code
+                                          ? "bg-blue-600 text-white shadow-md border border-blue-600"
+                                          : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                                    }`}
+                                  >
+                                    Cause {code}{" "}
+                                    <span className="opacity-70 ml-1">
+                                      ({count})
+                                    </span>
+                                  </button>
+                                </React.Fragment>
+                              );
+                            })}
+
+                            <div className="flex-1 min-w-5"></div>
+
+                            <button
+                              disabled={noiseCount === 0}
+                              onClick={() => {
+                                setShowNoise(!showNoise);
+                                setCurrentPage(1);
+                              }}
+                              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 border ${
+                                noiseCount === 0
+                                  ? "opacity-50 cursor-not-allowed bg-slate-50 text-slate-400 border-slate-200"
+                                  : showNoise
+                                    ? "bg-amber-100 text-amber-800 border-amber-300 shadow-sm"
+                                    : "bg-white text-slate-500 border-slate-200 hover:bg-slate-100 opacity-80"
+                              }`}
+                            >
+                              <div
+                                className={`w-2 h-2 rounded-full ${showNoise ? "bg-amber-500" : "bg-slate-300"}`}
+                              ></div>
+                              Include Noise ({noiseCount})
+                            </button>
+                          </>
+                        );
+                      })()}
+                    </div>
+
+                    <div className="flex flex-col gap-8 p-4 mt-2">
+                      {(() => {
+                        const filteredComments = issueComments.filter((c) => {
+                          if (!showNoise && c.is_noise) return false;
+                          if (
+                            selectedMacrocauseFilter &&
+                            c.macro_cause_code !== selectedMacrocauseFilter
+                          )
+                            return false;
+                          return true;
+                        });
+
+                        const totalPages =
+                          Math.ceil(filteredComments.length / pageSize) || 1;
+                        const paginatedComments = filteredComments.slice(
+                          (currentPage - 1) * pageSize,
+                          currentPage * pageSize,
+                        );
+
+                        const handlePageChange = (newPage: number) => {
+                          setCurrentPage(newPage);
+                          setTimeout(() => {
+                            if (commentsListRef.current) {
+                              commentsListRef.current.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                              });
+                            }
+                          }, 100);
+                        };
+
+                        return (
+                          <>
+                            {filteredComments.length === 0 ? (
+                              <div className="text-center py-10 text-slate-400 bg-white/50 rounded-xl border border-slate-100 font-medium">
+                                No comments match these filters.
+                              </div>
+                            ) : (
+                              paginatedComments.map((c, i) => (
+                                <TextResultCard
+                                  key={i}
+                                  result={c}
+                                  isDashboardMode={true}
+                                  index={(currentPage - 1) * pageSize + i + 1}
+                                />
+                              ))
+                            )}
+
+                            {totalPages > 1 && (
+                              <div className="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-200 mt-2 shadow-sm">
+                                <button
+                                  disabled={currentPage === 1}
+                                  onClick={() =>
+                                    handlePageChange(
+                                      Math.max(1, currentPage - 1),
+                                    )
+                                  }
+                                  className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
+                                >
+                                  Previous
+                                </button>
+                                <span className="text-sm font-semibold text-slate-600">
+                                  Page {currentPage} of {totalPages}
+                                </span>
+                                <button
+                                  disabled={currentPage === totalPages}
+                                  onClick={() =>
+                                    handlePageChange(
+                                      Math.min(totalPages, currentPage + 1),
+                                    )
+                                  }
+                                  className="px-4 py-1.5 bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition"
+                                >
+                                  Next
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
   );
 };

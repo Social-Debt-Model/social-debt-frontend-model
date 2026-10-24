@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   checkOpenAILimits,
   startBatchJob,
@@ -48,12 +48,24 @@ export const BatchProgressCard = ({
     | "completed"
     | "error"
     | "cancelled"
-  >(isCancelled ? "cancelled" : isError ? "error" : resumeJobId ? "processing" : "checking_limits");
+  >(
+    isCancelled
+      ? "cancelled"
+      : isError
+        ? "error"
+        : resumeJobId
+          ? "processing"
+          : "checking_limits",
+  );
   const [progressMsg, setProgressMsg] = useState(
-    isCancelled ? "Analysis cancelled." : isError ? "Error processing file." : "Verifying OpenAI quota...",
+    isCancelled
+      ? "Analysis cancelled."
+      : isError
+        ? "Error processing file."
+        : "Verifying OpenAI quota...",
   );
   const [progressPercent, setProgressPercent] = useState(
-    isCancelled || isError ? 100 : 0
+    isCancelled || isError ? 100 : 0,
   );
   const [estimatedTime, setEstimatedTime] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
@@ -61,7 +73,12 @@ export const BatchProgressCard = ({
 
   const isCancelledRef = useRef(false);
 
-  const callbacksRef = useRef({ onCompleted, onCancelled, onError, onJobStarted });
+  const callbacksRef = useRef({
+    onCompleted,
+    onCancelled,
+    onError,
+    onJobStarted,
+  });
   useEffect(() => {
     callbacksRef.current = { onCompleted, onCancelled, onError, onJobStarted };
   });
@@ -103,8 +120,17 @@ export const BatchProgressCard = ({
 
         const formData = new FormData();
         formData.append("file", file);
-        if ((file as File & { _instructions?: Record<string, unknown> })._instructions) {
-          formData.append("instructions", JSON.stringify((file as File & { _instructions?: Record<string, unknown> })._instructions));
+        if (
+          (file as File & { _instructions?: Record<string, unknown> })
+            ._instructions
+        ) {
+          formData.append(
+            "instructions",
+            JSON.stringify(
+              (file as File & { _instructions?: Record<string, unknown> })
+                ._instructions,
+            ),
+          );
         }
 
         const uploadRes = await startBatchJob(formData);
@@ -154,9 +180,7 @@ export const BatchProgressCard = ({
           if (intervalId) clearInterval(intervalId);
           setStep("error");
           if (statusRes.code === 404) {
-            setProgressMsg(
-              "Job expired or was not found on the server (404).",
-            );
+            setProgressMsg("Job expired or was not found on the server (404).");
           } else {
             setProgressMsg(
               `Connection error: ${statusRes.message || "Unknown"}`,
@@ -185,11 +209,11 @@ export const BatchProgressCard = ({
         ) {
           isFinished = true;
           if (intervalId) clearInterval(intervalId);
-          
+
           setStep("processing");
           setProgressPercent(99);
           setProgressMsg("Computing EDA charts and metrics...");
-          
+
           setTimeout(async () => {
             await deletePendingJob(newJobId!);
             if (callbacksRef.current.onCompleted) {
@@ -236,7 +260,7 @@ export const BatchProgressCard = ({
           if (extractedPercent !== null && !isNaN(extractedPercent)) {
             setProgressPercent(20 + Math.floor(extractedPercent * 0.8));
           } else if (statusRes.status === "pending") {
-            setProgressPercent(20); // Remains at 20% while queued
+            setProgressPercent(20);
           } else {
             setProgressPercent((prev) => Math.min(prev + 5, 95));
           }
@@ -280,9 +304,9 @@ export const BatchProgressCard = ({
     if (!jobId) return;
     setStep("cancelled");
     setProgressMsg("Cancelling...");
-    
+
     cancelBatchJob(jobId).catch(() => {});
-    
+
     await deletePendingJob(jobId);
     if (onCancelled) onCancelled(jobId);
   };
@@ -296,7 +320,7 @@ export const BatchProgressCard = ({
   };
 
   return (
-    <div className="glass-panel p-6 flex flex-col rounded-bl-none max-w-md w-full relative overflow-hidden h-[180px]">
+    <div className="glass-panel p-6 flex flex-col rounded-bl-none max-w-md w-full relative overflow-hidden h-45">
       <div className="flex items-center gap-3">
         {step === "completed" ? (
           <CheckCircle className="w-6 h-6 text-emerald-500" />
@@ -321,7 +345,7 @@ export const BatchProgressCard = ({
                   : "Batch Analysis in Progress"}
           </h3>
           {(file?.name || resumeFilename) && (
-            <p className="text-xs text-slate-500 font-medium truncate max-w-[200px]">
+            <p className="text-xs text-slate-500 font-medium truncate max-w-50">
               {file?.name || resumeFilename}
             </p>
           )}
@@ -330,7 +354,7 @@ export const BatchProgressCard = ({
         {(step === "uploading" || step === "processing") && jobId && (
           <button
             onClick={handleCancel}
-            className="flex-shrink-0 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
+            className="shrink-0 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
           >
             Cancel
           </button>
@@ -339,7 +363,7 @@ export const BatchProgressCard = ({
         {step === "error" && jobId && (
           <button
             onClick={handleDiscardError}
-            className="flex-shrink-0 text-xs text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
+            className="shrink-0 text-xs text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors font-semibold shadow-sm ml-auto"
           >
             Discard
           </button>
@@ -348,8 +372,10 @@ export const BatchProgressCard = ({
 
       <div className="flex flex-col flex-1 justify-end pb-1">
         <div className="mb-3">
-          <p className="text-sm text-slate-600 font-medium truncate">{progressMsg || "Starting..."}</p>
-          <div className="min-h-[16px] mt-1">
+          <p className="text-sm text-slate-600 font-medium truncate">
+            {progressMsg || "Starting..."}
+          </p>
+          <div className="min-h-4 mt-1">
             {estimatedTime && step === "processing" ? (
               <p className="text-xs text-slate-500 font-medium truncate">
                 {estimatedTime}

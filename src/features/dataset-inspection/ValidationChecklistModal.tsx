@@ -19,7 +19,7 @@ import {
   VALID_ID_HEADERS,
 } from "./useFileValidation";
 
-type ValidationModalProps = {
+type ValidationChecklistModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onProceed?: (decision?: "group" | "individual" | "discard") => void;
@@ -37,12 +37,11 @@ export const ValidationChecklistModal = ({
   report,
   hasOrphans,
   isProcessingFile,
-}: ValidationModalProps) => {
+}: ValidationChecklistModalProps) => {
   const [decision, setDecision] = useState<
     "group" | "individual" | "discard" | undefined
   >();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
 
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   if (isOpen !== prevIsOpen) {
@@ -56,7 +55,7 @@ export const ValidationChecklistModal = ({
 
   if (!report) {
     const content = (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-800/1 md:bg-slate-800/10 backdrop-blur-lg md:backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="fixed inset-0 z-100 flex items-center justify-center bg-slate-800/1 md:bg-slate-800/10 backdrop-blur-lg md:backdrop-blur-sm p-4 overflow-y-auto">
         <div className="glass-panel p-6 max-w-4xl w-full relative bg-white md:bg-white/80 my-auto">
           <button
             onClick={onClose}
@@ -80,7 +79,8 @@ export const ValidationChecklistModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="p-4 rounded-xl border bg-slate-50/50 border-slate-200 h-full">
               <h4 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-emerald-500" /> Required Fields
+                <AlertCircle className="w-5 h-5 text-emerald-500" /> Required
+                Fields
               </h4>
               <div className="flex items-start gap-2">
                 <div className="w-2 h-2 mt-1.5 rounded-full bg-emerald-500 shrink-0"></div>
@@ -89,7 +89,8 @@ export const ValidationChecklistModal = ({
                     Comment Content
                   </p>
                   <p className="text-base text-slate-500">
-                    Column containing the comment text, which must be named exactly as one of these options:
+                    Column containing the comment text, which must be named
+                    exactly as one of these options:
                   </p>
                   <div className="grid grid-cols-2 gap-2 mt-2">
                     {VALID_COMMENT_HEADERS.map((h) => (
@@ -114,12 +115,21 @@ export const ValidationChecklistModal = ({
                   <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
                   <div className="flex flex-col gap-2 w-full">
                     <div>
-                      <p className="text-base font-semibold text-slate-700">Comment ID</p>
-                      <p className="text-sm text-slate-500 leading-tight mt-0.5">If missing, one will be generated.</p>
+                      <p className="text-base font-semibold text-slate-700">
+                        Comment ID
+                      </p>
+                      <p className="text-sm text-slate-500 leading-tight mt-0.5">
+                        If missing, one will be generated.
+                      </p>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {VALID_ID_HEADERS.map((h) => (
-                        <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
+                        <span
+                          key={h}
+                          className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate"
+                        >
+                          {h}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -129,12 +139,21 @@ export const ValidationChecklistModal = ({
                   <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 shrink-0"></div>
                   <div className="flex flex-col gap-2 w-full">
                     <div>
-                      <p className="text-base font-semibold text-slate-700">Issue / Ticket</p>
-                      <p className="text-sm text-slate-500 leading-tight mt-0.5">Groups comments together.</p>
+                      <p className="text-base font-semibold text-slate-700">
+                        Issue / Ticket
+                      </p>
+                      <p className="text-sm text-slate-500 leading-tight mt-0.5">
+                        Groups comments together.
+                      </p>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {VALID_ISSUE_HEADERS.map((h) => (
-                        <span key={h} className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate">{h}</span>
+                        <span
+                          key={h}
+                          className="font-mono text-xs bg-white text-slate-600 px-2 py-1 rounded border border-slate-200 shadow-sm text-center truncate"
+                        >
+                          {h}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -195,7 +214,7 @@ export const ValidationChecklistModal = ({
   }
 
   const content = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-800/1 md:bg-slate-800/10 backdrop-blur-lg md:backdrop-blur-sm p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-slate-800/1 md:bg-slate-800/10 backdrop-blur-lg md:backdrop-blur-sm p-4 overflow-y-auto">
       <div className="glass-panel p-5 max-w-3xl w-full relative bg-white md:bg-white/80 my-auto">
         <button
           onClick={onClose}
@@ -359,14 +378,14 @@ export const ValidationChecklistModal = ({
                 )}
               </div>
             </div>
-
-            </div>
+          </div>
         </div>
 
         {report.isValid && hasOrphans && (
           <div className="mt-4 pt-4 border-t border-slate-200">
             <h4 className="text-base font-semibold text-slate-800 mb-3 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-orange-500" /> How should unassigned comments be handled?
+              <AlertCircle className="w-4 h-4 text-orange-500" /> How should
+              unassigned comments be handled?
             </h4>
             <p className="text-sm text-slate-600 mb-4">
               Detected{" "}
@@ -403,7 +422,8 @@ export const ValidationChecklistModal = ({
                   Group into a single Issue
                 </p>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-center">
-                  All unassigned comments will be grouped under UNGROUPED-COMMENTS.
+                  All unassigned comments will be grouped under
+                  UNGROUPED-COMMENTS.
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                 </div>
               </label>
@@ -434,7 +454,8 @@ export const ValidationChecklistModal = ({
                   Evaluate separately
                 </p>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-center">
-                  Each comment will be analyzed independently without associating with others.
+                  Each comment will be analyzed independently without
+                  associating with others.
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                 </div>
               </label>
@@ -465,7 +486,8 @@ export const ValidationChecklistModal = ({
                   Only process valid issues
                 </p>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-slate-800 text-white text-sm leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50 pointer-events-none text-center">
-                  These comments will be ignored and only comments with an Issue will be analyzed.
+                  These comments will be ignored and only comments with an Issue
+                  will be analyzed.
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                 </div>
               </label>
@@ -481,7 +503,7 @@ export const ValidationChecklistModal = ({
             {report.detectedColumns.map((col, idx) => (
               <span
                 key={idx}
-                className="text-base bg-slate-100 text-slate-600 px-2 py-1 rounded shadow-sm font-mono truncate max-w-[150px]"
+                className="text-base bg-slate-100 text-slate-600 px-2 py-1 rounded shadow-sm font-mono truncate max-w-37.5"
                 title={col}
               >
                 {col}
@@ -514,7 +536,7 @@ export const ValidationChecklistModal = ({
                   }
                 }}
                 disabled={(hasOrphans && !decision) || isProcessingFile}
-                className={`px-5 py-2 rounded-lg font-medium transition shadow-sm flex items-center justify-center min-w-[120px] gap-2 ${
+                className={`px-5 py-2 rounded-lg font-medium transition shadow-sm flex items-center justify-center min-w-30 gap-2 ${
                   (hasOrphans && !decision) || isProcessingFile
                     ? "bg-slate-300 text-slate-500 cursor-not-allowed"
                     : "bg-emerald-600 text-white hover:bg-emerald-700"

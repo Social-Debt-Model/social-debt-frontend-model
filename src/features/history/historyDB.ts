@@ -22,10 +22,6 @@ const PENDING_PREFIX = "social-debt-pending-";
 const VERSION_KEY = "social-debt-app-version";
 const CURRENT_VERSION = "v1.5.0";
 
-/**
- * Checks if the application version has changed.
- * If so, clears the IndexedDB history to prevent incompatibility crashes.
- */
 export async function checkAndClearOldCache(): Promise<void> {
   try {
     const storedVersion = await get(VERSION_KEY);

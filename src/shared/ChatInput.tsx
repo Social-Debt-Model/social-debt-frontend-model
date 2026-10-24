@@ -32,8 +32,7 @@ export const ChatInput = ({
   const [isProcessingFile, setIsProcessingFile] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { processFile,  error,  clearError } =
-    useFileValidation();
+  const { processFile, error, clearError } = useFileValidation();
 
   const handleAttachmentClick = () => {
     setPendingFileResult(null);
@@ -79,17 +78,19 @@ export const ChatInput = ({
     setTimeout(() => {
       try {
         const start = Date.now();
-        
+
         const instructions = {
           orphan_decision: decision || "individual",
           mapping: {
             comment_col: validReport.matchedCommentColumn,
             issue_col: validReport.matchedIssueColumn,
-            id_col: validReport.matchedIdColumn
-          }
+            id_col: validReport.matchedIdColumn,
+          },
         };
-        
-        const fileToUpload = validResult.file! as File & { _instructions?: Record<string, unknown> };
+
+        const fileToUpload = validResult.file! as File & {
+          _instructions?: Record<string, unknown>;
+        };
         fileToUpload._instructions = instructions;
 
         if (onSendFile) {
@@ -167,7 +168,7 @@ export const ChatInput = ({
             type="button"
             onClick={handleAttachmentClick}
             disabled={!!selectedFile || isProcessingFile || isChatDisabled}
-            className={`hidden md:flex flex-shrink-0 p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"} ${isProcessingFile || isChatDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`hidden md:flex shrink-0 p-3 rounded-xl transition self-end ${selectedFile ? "text-blue-500 bg-blue-50/50" : "text-slate-400 hover:text-blue-500 hover:bg-blue-50"} ${isProcessingFile || isChatDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {isProcessingFile ? (
               <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
@@ -177,7 +178,7 @@ export const ChatInput = ({
           </button>
 
           {selectedFile ? (
-            <div className="flex-1 min-w-0 flex items-center justify-between bg-blue-50/80 border border-blue-200 rounded-lg px-2 md:px-3 py-2 text-sm text-blue-800 shadow-sm h-[44px] mb-[2px]">
+            <div className="flex-1 min-w-0 flex items-center justify-between bg-blue-50/80 border border-blue-200 rounded-lg px-2 md:px-3 py-2 text-sm text-blue-800 shadow-sm h-11 mb-0.5">
               <span className="flex items-center gap-2 min-w-0 flex-1">
                 <span
                   className="font-medium truncate"
@@ -185,11 +186,11 @@ export const ChatInput = ({
                 >
                   {selectedFile.name}
                 </span>
-                <span className="hidden md:inline-flex text-xs text-blue-500 bg-blue-100 px-2 py-0.5 rounded-full flex-shrink-0">
+                <span className="hidden md:inline-flex text-xs text-blue-500 bg-blue-100 px-2 py-0.5 rounded-full shrink-0">
                   Ready
                 </span>
               </span>
-              <div className="flex items-center flex-shrink-0 ml-1 md:ml-3">
+              <div className="flex items-center shrink-0 ml-1 md:ml-3">
                 <button
                   type="button"
                   onClick={() => {
@@ -228,7 +229,7 @@ export const ChatInput = ({
               placeholder={
                 isChatDisabled ? "Analyzing..." : "Type a message..."
               }
-              className="w-full max-h-32 min-h-[44px] bg-transparent resize-none outline-none py-3 px-2 text-base text-slate-800 placeholder-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full max-h-32 min-h-11 bg-transparent resize-none outline-none py-3 px-2 text-base text-slate-800 placeholder-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
               rows={1}
               disabled={isChatDisabled}
             />
@@ -237,14 +238,15 @@ export const ChatInput = ({
           <button
             type="submit"
             disabled={(!message.trim() && !selectedFile) || isChatDisabled}
-            className="flex-shrink-0 p-3 bg-slate-800 text-white rounded-full hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all self-end shadow-sm"
+            className="shrink-0 p-3 bg-slate-800 text-white rounded-full hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all self-end shadow-sm"
           >
             <Send className="w-5 h-5" />
           </button>
         </form>
         <div className="flex justify-center items-center mt-2">
           <p className="text-center text-[10px] md:text-xs text-slate-500 font-medium leading-tight">
-            Results are inferred by the model and may not be completely exact or deterministic.
+            Results are inferred by the model and may not be completely exact or
+            deterministic.
           </p>
         </div>
       </div>

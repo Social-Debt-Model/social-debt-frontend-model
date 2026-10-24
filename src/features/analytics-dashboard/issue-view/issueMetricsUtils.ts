@@ -11,7 +11,7 @@ export const parseListString = (str: string): string[] => {
 };
 
 export const flattenAndAggregateMetrics = (
-  groupedMetrics?: [string, number][]
+  groupedMetrics?: [string, number][],
 ): [string, number][] => {
   if (!groupedMetrics || !Array.isArray(groupedMetrics)) return [];
 

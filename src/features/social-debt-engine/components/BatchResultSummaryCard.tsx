@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckCircle2, BarChart2, Trash2 } from "lucide-react";
 import { BatchResultData } from "../batch-actions";
 
@@ -20,11 +19,11 @@ export const BatchResultSummaryCard = ({
 
   return (
     <div
-      className={`glass-panel p-5 rounded-2xl rounded-bl-none shadow-sm flex flex-col gap-3 min-w-[280px] max-w-[350px] ${isDeleted ? "opacity-75 grayscale" : ""}`}
+      className={`glass-panel p-5 rounded-2xl rounded-bl-none shadow-sm flex flex-col gap-3 min-w-70 max-w-87.5 ${isDeleted ? "opacity-75 grayscale" : ""}`}
     >
       <div className="flex items-center gap-3">
         <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${isDeleted ? "bg-slate-100" : "bg-emerald-100"}`}
+          className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isDeleted ? "bg-slate-100" : "bg-emerald-100"}`}
         >
           {isDeleted ? (
             <Trash2 className="w-5 h-5 text-slate-400" />
@@ -39,8 +38,7 @@ export const BatchResultSummaryCard = ({
             {filename}
           </h4>
           <p className="text-xs text-slate-500">
-            {count}{" "}
-            {count === 1 ? "comment processed" : "comments processed"}
+            {count} {count === 1 ? "comment processed" : "comments processed"}
           </p>
         </div>
       </div>

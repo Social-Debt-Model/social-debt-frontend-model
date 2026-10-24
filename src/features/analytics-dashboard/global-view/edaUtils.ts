@@ -1,14 +1,16 @@
 import { BatchResultData } from "../../social-debt-engine/batch-actions";
 import { ClassifyTextResponse } from "../../social-debt-engine/text-actions";
 
-/**
- * Calculates global Top N distributions across the entire dataset.
- */
 export const calculateGlobalDistributions = (data: BatchResultData) => {
   const { issues_metrics, comments = [] } = data;
-  if (!issues_metrics) return { topMicrocauses: [], topRisks: [], topPrevStrategies: [], topCorrStrategies: [] };
+  if (!issues_metrics)
+    return {
+      topMicrocauses: [],
+      topRisks: [],
+      topPrevStrategies: [],
+      topCorrStrategies: [],
+    };
   const issues = Object.values(issues_metrics);
-
 
   const microcausesCount: Record<string, number> = {};
   const risksCount: Record<string, number> = {};
@@ -27,32 +29,43 @@ export const calculateGlobalDistributions = (data: BatchResultData) => {
       });
     }
     if (issue.dominant_preventive_strategies) {
-      issue.dominant_preventive_strategies.forEach(([strat, freq]: [string, number]) => {
-        prevStrategiesCount[strat] = (prevStrategiesCount[strat] || 0) + freq;
-      });
+      issue.dominant_preventive_strategies.forEach(
+        ([strat, freq]: [string, number]) => {
+          prevStrategiesCount[strat] = (prevStrategiesCount[strat] || 0) + freq;
+        },
+      );
     }
     if (issue.dominant_corrective_strategies) {
-      issue.dominant_corrective_strategies.forEach(([strat, freq]: [string, number]) => {
-        corrStrategiesCount[strat] = (corrStrategiesCount[strat] || 0) + freq;
-      });
+      issue.dominant_corrective_strategies.forEach(
+        ([strat, freq]: [string, number]) => {
+          corrStrategiesCount[strat] = (corrStrategiesCount[strat] || 0) + freq;
+        },
+      );
     }
   });
 
-  if (Object.keys(prevStrategiesCount).length === 0 || Object.keys(corrStrategiesCount).length === 0) {
+  if (
+    Object.keys(prevStrategiesCount).length === 0 ||
+    Object.keys(corrStrategiesCount).length === 0
+  ) {
     comments.forEach((comment) => {
       if (!comment.is_noise && comment.microcauses) {
-        comment.microcauses.forEach((mc: NonNullable<ClassifyTextResponse['microcauses']>[number]) => {
-          if (Array.isArray(mc.preventive_strategies)) {
-            mc.preventive_strategies.forEach((strat: string) => {
-              prevStrategiesCount[strat] = (prevStrategiesCount[strat] || 0) + 1;
-            });
-          }
-          if (Array.isArray(mc.corrective_strategies)) {
-            mc.corrective_strategies.forEach((strat: string) => {
-              corrStrategiesCount[strat] = (corrStrategiesCount[strat] || 0) + 1;
-            });
-          }
-        });
+        comment.microcauses.forEach(
+          (mc: NonNullable<ClassifyTextResponse["microcauses"]>[number]) => {
+            if (Array.isArray(mc.preventive_strategies)) {
+              mc.preventive_strategies.forEach((strat: string) => {
+                prevStrategiesCount[strat] =
+                  (prevStrategiesCount[strat] || 0) + 1;
+              });
+            }
+            if (Array.isArray(mc.corrective_strategies)) {
+              mc.corrective_strategies.forEach((strat: string) => {
+                corrStrategiesCount[strat] =
+                  (corrStrategiesCount[strat] || 0) + 1;
+              });
+            }
+          },
+        );
       }
     });
   }
@@ -74,18 +87,17 @@ export const calculateGlobalDistributions = (data: BatchResultData) => {
   };
 };
 
-/**
- * Calculates cross-tabulation matrix between Microcauses and Community Smells.
- */
-export const calculateMicrocauseSmellMatrix = (data: BatchResultData, topMicrocauses: string[]) => {
+export const calculateMicrocauseSmellMatrix = (
+  data: BatchResultData,
+  topMicrocauses: string[],
+) => {
   const { issues_metrics } = data;
   if (!issues_metrics) return { matrix: {}, smellsList: [] };
   const issues = Object.values(issues_metrics);
 
-  
   const matrix: Record<string, Record<string, number>> = {};
-  
-  topMicrocauses.forEach(mc => {
+
+  topMicrocauses.forEach((mc) => {
     matrix[mc] = {};
   });
 
@@ -105,27 +117,34 @@ export const calculateMicrocauseSmellMatrix = (data: BatchResultData, topMicroca
     });
   });
 
-  const sortedSmells = Array.from(allSmellsSet).sort((a, b) => {
-    const sumA = topMicrocauses.reduce((sum, mc) => sum + (matrix[mc][a] || 0), 0);
-    const sumB = topMicrocauses.reduce((sum, mc) => sum + (matrix[mc][b] || 0), 0);
-    return sumB - sumA;
-  }).slice(0, 7);
+  const sortedSmells = Array.from(allSmellsSet)
+    .sort((a, b) => {
+      const sumA = topMicrocauses.reduce(
+        (sum, mc) => sum + (matrix[mc][a] || 0),
+        0,
+      );
+      const sumB = topMicrocauses.reduce(
+        (sum, mc) => sum + (matrix[mc][b] || 0),
+        0,
+      );
+      return sumB - sumA;
+    })
+    .slice(0, 7);
 
   return {
     matrix,
-    smellsList: sortedSmells
+    smellsList: sortedSmells,
   };
 };
 
-/**
- * Calculates cross-tabulation matrix between Community Smells and Risks.
- */
-export const calculateSmellRiskMatrix = (data: BatchResultData, topRisks: string[]) => {
+export const calculateSmellRiskMatrix = (
+  data: BatchResultData,
+  topRisks: string[],
+) => {
   const { issues_metrics } = data;
   if (!issues_metrics) return { matrix: {}, smellsList: [] };
   const issues = Object.values(issues_metrics);
 
-  
   const matrix: Record<string, Record<string, number>> = {};
   const allSmellsSet = new Set<string>();
 
@@ -136,7 +155,7 @@ export const calculateSmellRiskMatrix = (data: BatchResultData, topRisks: string
     issueSmells.forEach((smell: string) => {
       if (!matrix[smell]) matrix[smell] = {};
       allSmellsSet.add(smell);
-      
+
       issueRisks.forEach((risk: string) => {
         if (topRisks.includes(risk)) {
           matrix[smell][risk] = (matrix[smell][risk] || 0) + 1;
@@ -145,34 +164,41 @@ export const calculateSmellRiskMatrix = (data: BatchResultData, topRisks: string
     });
   });
 
-  const sortedSmells = Array.from(allSmellsSet).sort((a, b) => {
-    const sumA = topRisks.reduce((sum, risk) => sum + (matrix[a][risk] || 0), 0);
-    const sumB = topRisks.reduce((sum, risk) => sum + (matrix[b][risk] || 0), 0);
-    return sumB - sumA;
-  }).slice(0, 7);
+  const sortedSmells = Array.from(allSmellsSet)
+    .sort((a, b) => {
+      const sumA = topRisks.reduce(
+        (sum, risk) => sum + (matrix[a][risk] || 0),
+        0,
+      );
+      const sumB = topRisks.reduce(
+        (sum, risk) => sum + (matrix[b][risk] || 0),
+        0,
+      );
+      return sumB - sumA;
+    })
+    .slice(0, 7);
 
-  sortedSmells.forEach(smell => {
-    topRisks.forEach(risk => {
+  sortedSmells.forEach((smell) => {
+    topRisks.forEach((risk) => {
       if (!matrix[smell][risk]) matrix[smell][risk] = 0;
     });
   });
 
   return {
     matrix,
-    smellsList: sortedSmells
+    smellsList: sortedSmells,
   };
 };
 
-/**
- * Calculates the critical paths (Microcause -> Smell -> Risk)
- */
 export const calculateCriticalPaths = (data: BatchResultData) => {
   const { issues_metrics } = data;
   if (!issues_metrics) return [];
   const issues = Object.values(issues_metrics);
 
-  
-  const pathCounts: Record<string, { microcause: string, smell: string, risk: string, count: number }> = {};
+  const pathCounts: Record<
+    string,
+    { microcause: string; smell: string; risk: string; count: number }
+  > = {};
 
   issues.forEach((issue) => {
     const mcs = issue.dominant_microcauses?.map((m) => m[0]) || [];
@@ -220,18 +246,20 @@ export type PrecalculatedEdaData = {
   }[];
 };
 
-export const precalculateEdaStats = (data: BatchResultData): PrecalculatedEdaData => {
+export const precalculateEdaStats = (
+  data: BatchResultData,
+): PrecalculatedEdaData => {
   const globals = calculateGlobalDistributions(data);
   const microTopKeys = globals.topMicrocauses.map((m) => m.name);
   const microSmellEda = calculateMicrocauseSmellMatrix(data, microTopKeys);
   const risksTopKeys = globals.topRisks.map((r) => r.name);
   const smellRiskEda = calculateSmellRiskMatrix(data, risksTopKeys);
   const criticalPaths = calculateCriticalPaths(data);
-  
+
   return {
     globals,
     microSmellEda,
     smellRiskEda,
-    criticalPaths
+    criticalPaths,
   };
 };

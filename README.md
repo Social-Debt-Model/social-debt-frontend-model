@@ -20,16 +20,16 @@ Este proyecto actúa como el front-end principal para un modelo de clasificació
 
 ## 🛠️ Stack Tecnológico
 
-| Capa | Tecnología |
-|------|-----------|
-| **Framework Core** | [Next.js 16](https://nextjs.org/) (App Router) + [React 19](https://react.dev/) |
-| **Estilos** | [Tailwind CSS v4](https://tailwindcss.com/) |
-| **Iconografía** | [Lucide React](https://lucide.dev/) |
-| **Visualización** | [Recharts](https://recharts.org/) + [Nivo](https://nivo.rocks/) (Heatmaps) |
+| Capa                          | Tecnología                                                                                           |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Framework Core**            | [Next.js 16](https://nextjs.org/) (App Router) + [React 19](https://react.dev/)                      |
+| **Estilos**                   | [Tailwind CSS v4](https://tailwindcss.com/)                                                          |
+| **Iconografía**               | [Lucide React](https://lucide.dev/)                                                                  |
+| **Visualización**             | [Recharts](https://recharts.org/) + [Nivo](https://nivo.rocks/) (Heatmaps)                           |
 | **Procesamiento de Archivos** | [PapaParse](https://www.papaparse.com/) (CSV) + [ExcelJS](https://github.com/exceljs/exceljs) (XLSX) |
-| **Animaciones** | [Framer Motion](https://www.framer.com/motion/) |
-| **Almacenamiento Local** | `idb-keyval` (IndexedDB) |
-| **Calidad de Código** | ESLint + TypeScript estricto |
+| **Animaciones**               | [Framer Motion](https://www.framer.com/motion/)                                                      |
+| **Almacenamiento Local**      | `idb-keyval` (IndexedDB)                                                                             |
+| **Calidad de Código**         | ESLint + TypeScript estricto                                                                         |
 
 ---
 
@@ -37,21 +37,33 @@ Este proyecto actúa como el front-end principal para un modelo de clasificació
 
 ```text
 src/
-├── app/                      # Layout y rutas principales (Next.js App Router)
-├── features/
-│   ├── chat-interface/       # Chat, Sidebar, Modales de validación y carga
-│   ├── batch-classification/ # Lógica de clasificación en lote, progreso y acciones
-│   ├── metrics-dashboard/    # Dashboard EDA global, BatchDashboard, Audit Trail
-│   │   ├── BatchDashboard.tsx        # Dashboard por issue/dataset
-│   │   ├── GlobalEdaDashboard.tsx    # Dashboard EDA agregado global
-│   │   ├── AlgorithmAuditTrail.tsx   # Exportación Excel multi-hoja
-│   │   ├── edaUtils.ts               # Cálculo de distribuciones globales
-│   │   └── utils.ts                  # Utilidades de aplanado de métricas
-│   ├── ontology/             # Diccionario de ontología y hooks de acceso
-│   │   ├── frontend_ontology_dictionary.json  # +1200 entradas de ontología
-│   │   └── useOntology.ts             # Hook con búsqueda flexible de entidades
-│   └── text-classification/  # Componentes de resultado de clasificación individual
-└── lib/                      # Utilidades compartidas (historyDB, etc.)
+├── app/                              # Layout, estilos globales y página principal (Next.js App Router)
+│   ├── globals.css                   # Tailwind v4, temas y utilidades globales
+│   ├── layout.tsx                    # RootLayout con fuentes y metadata
+│   ├── not-found.tsx                 # Redirección de rutas 404
+│   └── page.tsx                      # Orquestador del feed interactivo y dashboard
+├── features/                         # Módulos de dominio y casos de uso
+│   ├── analytics-dashboard/          # Visualización de métricas, gráficos e informes
+│   │   ├── BatchDashboard.tsx        # Contenedor con navegación por pestañas del análisis
+│   │   ├── global-view/              # Pestaña Global (frecuencias, heatmaps EDA, caminos críticos)
+│   │   ├── issue-view/               # Pestaña Issue-Level (SDI, desglose de causas y comentarios)
+│   │   └── traceability-view/        # Pestaña Trazabilidad (auditoría algorítmica y exportación Excel)
+│   ├── dataset-inspection/           # Inspección previa y validación de archivos de entrada
+│   │   ├── useFileValidation.ts      # Hook de validación de encabezados CSV/XLSX y orfandad
+│   │   └── ValidationChecklistModal.tsx # Modal interactivo con checklist y selector de estrategia
+│   ├── history/                      # Persistencia y gestión del historial local
+│   │   ├── historyDB.ts              # Almacenamiento local en IndexedDB con versionado de caché
+│   │   └── HistorySidebar.tsx        # Barra lateral de historial, selección y descarga
+│   ├── ontology-catalog/             # Catálogo de entidades ontológicas de deuda social
+│   │   ├── frontend_ontology_dictionary.json # Diccionario (+1,200 entidades)
+│   │   └── useOntology.ts            # Hook para consulta flexible de descripciones y taxonomía
+│   └── social-debt-engine/           # Comunicación con backend y componentes del motor
+│       ├── batch-actions.ts          # Server Actions para jobs en lote, estados y límites
+│       ├── text-actions.ts           # Server Action para clasificación de texto individual
+│       └── components/               # Tarjetas de progreso, resumen, límites y desglose
+└── shared/                           # Componentes transversales de la aplicación
+    ├── ChatInput.tsx                 # Barra inferior de redacción y carga de archivos
+    └── ChatLayout.tsx                # Shell estructural con soporte responsive y drawer
 ```
 
 ---
@@ -64,41 +76,44 @@ src/
 
 ---
 
-## 🚀 Empezando (Getting Started)
+## 🚀 Configuración y Ejecución
 
-### 1. Clonar el repositorio
+### 1. Variables de Entorno
 
-```bash
-git clone <url-del-repositorio>
-cd social-debt-frontend-model
-```
-
-### 2. Instalar dependencias
+Copia la plantilla `.env.example` a `.env` en la raíz del proyecto:
 
 ```bash
-npm install
+cp .env.example .env
 ```
 
-### 3. Configurar variables de entorno
-
-Crea un archivo `.env` en la raíz del proyecto:
+El archivo `.env` contiene las siguientes variables:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
-API_SECRET_KEY=tu_clave_secreta
+PROJECT_NAME="Social Debt Model"
+API_V1_STR="/api/v1"
+API_SECRET_KEY="tu_clave_secreta"
+API_URL="http://localhost:8000/api/v1"
+NEXT_PUBLIC_API_URL="http://localhost:8000/api/v1"
 ```
 
-> ⚠️ El archivo `.env` **no debe commitearse**. Asegúrate de tenerlo en `.gitignore`.
+> **Nota:**
+>
+> - `NEXT_PUBLIC_API_URL` / `API_URL`: URL base del backend de la API del modelo (incluyendo el prefijo `/api/v1`).
+> - `API_SECRET_KEY`: Clave de autenticación para la cabecera `X-API-Key`.
+> - `API_V1_STR`: Sufijo de versión de la API.
+> - `PROJECT_NAME`: Nombre descriptivo del proyecto.
 
-### 4. Iniciar el servidor de desarrollo
+### 2. Instalación y Ejecución
 
 ```bash
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
 npm run dev
 ```
 
-### 5. Abrir en el navegador
-
-Navega a [http://localhost:3000](http://localhost:3000).
+La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
 
 ---
 
