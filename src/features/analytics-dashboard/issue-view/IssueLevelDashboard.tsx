@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   BarChart,
   Bar,
@@ -33,6 +34,7 @@ import {
   Activity,
   ShieldCheck,
   Wrench,
+  X,
 } from "lucide-react";
 import { TextResultCard } from "../../social-debt-engine/components/TextResultCard";
 
@@ -176,6 +178,19 @@ export const IssueLevelDashboard = ({
   const [showComments, setShowComments] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSdiModalOpen, setIsSdiModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsSdiModalOpen(false);
+      }
+    };
+    if (isSdiModalOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isSdiModalOpen]);
 
   React.useEffect(() => {
     let resetTimer: NodeJS.Timeout;
@@ -705,15 +720,16 @@ export const IssueLevelDashboard = ({
                 <div className="px-4 md:px-6 pt-4">
                   <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between relative">
                     <div>
-                      <div className="text-xs font-bold uppercase tracking-widest text-slate-600 mb-1 flex items-center gap-1.5 relative group cursor-help w-max">
-                        Social Debt Index (SDI)
-                        <Info className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-800 text-white text-xs leading-relaxed rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-999 pointer-events-none font-normal text-center normal-case tracking-normal">
-                          {isSingleIssue
-                            ? "The SDI is a relative ranking index. It requires the simultaneous analysis of at least 2 distinct Issues to calculate and compare social debt variance."
-                            : "The SDI (Social Debt Index) is a relative index. It is calculated by comparing the volume and severity of this Issue against all other Issues analyzed in this batch."}
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
-                        </div>
+                      <div className="mb-1 flex items-center">
+                        <button
+                          type="button"
+                          onClick={() => setIsSdiModalOpen(true)}
+                          className="text-xs font-bold uppercase tracking-widest text-slate-600 hover:text-blue-600 flex items-center gap-1.5 transition-colors cursor-pointer text-left"
+                          aria-label="Abrir información sobre el Índice de Deuda Social (SDI)"
+                        >
+                          <span>Social Debt Index (SDI)</span>
+                          <Info className="w-4 h-4 text-slate-400 hover:text-blue-600 transition-colors" />
+                        </button>
                       </div>
                       <p
                         className={`text-lg font-semibold ${isSingleIssue ? "text-slate-500" : sdiColor}`}
@@ -1444,6 +1460,158 @@ export const IssueLevelDashboard = ({
             )}
           </>
         )}
+        {isSdiModalOpen &&
+          typeof document !== "undefined" &&
+          createPortal(
+            <div
+              className="fixed inset-0 z-100 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-200"
+              onClick={() => setIsSdiModalOpen(false)}
+            >
+              <div
+                className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-3xl w-full p-5 md:p-6 max-h-[90vh] flex flex-col relative my-auto overflow-hidden animate-in zoom-in-95 duration-200"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header - Fijo */}
+                <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-slate-100 shrink-0">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-xs border border-blue-100">
+                      <Info className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-bold text-slate-900">
+                        Índice de Deuda Social (SDI)
+                      </h3>
+                      <p className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">
+                        Marco de Cálculo y Clasificación
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsSdiModalOpen(false)}
+                    className="p-1.5 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+                    aria-label="Cerrar modal"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Body - Con scroll interno si la pantalla es reducida */}
+                <div className="space-y-4 text-slate-700 leading-relaxed overflow-y-auto pr-1">
+                  {/* ¿Qué es? */}
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <h4 className="font-bold text-slate-900 text-base md:text-lg mb-1.5">
+                      ¿Qué es el Índice de Deuda Social (SDI)?
+                    </h4>
+                    <p className="text-slate-700 text-sm md:text-base leading-relaxed">
+                      Es un indicador que permite estimar el nivel de deuda social presente en un hilo de discusión de GitHub, a partir de las problemáticas sociotécnicas identificadas.
+                    </p>
+                  </div>
+
+                  {/* ¿Cómo se calcula? */}
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-base md:text-lg mb-1.5">
+                      ¿Cómo se calcula?
+                    </h4>
+                    <p className="text-slate-700 text-sm md:text-base mb-3 leading-relaxed">
+                      El SDI se obtiene mediante el promedio de seis dimensiones: cantidad de comentarios, diversidad de macrocausas, frecuencia de la macrocausa predominante, puntuación de microcausas, frecuencia de olores comunitarios y frecuencia de riesgos. Estas dimensiones se normalizan en una escala de 0 a 1.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-xs md:text-sm">
+                        <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                          1
+                        </span>
+                        <span>Cantidad de comentarios</span>
+                      </div>
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-xs md:text-sm">
+                        <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                          2
+                        </span>
+                        <span>Diversidad de macrocausas</span>
+                      </div>
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-xs md:text-sm">
+                        <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                          3
+                        </span>
+                        <span>Frecuencia predominante</span>
+                      </div>
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-xs md:text-sm">
+                        <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                          4
+                        </span>
+                        <span>Puntuación microcausas</span>
+                      </div>
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-xs md:text-sm">
+                        <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                          5
+                        </span>
+                        <span>Olores comunitarios</span>
+                      </div>
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-xs md:text-sm">
+                        <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                          6
+                        </span>
+                        <span>Frecuencia de riesgos</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Niveles de deuda social */}
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-base md:text-lg mb-2">
+                      Niveles de deuda social:
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="flex-1 py-3 px-3 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col items-center justify-center text-center gap-1.5 min-h-20 shadow-xs">
+                        <span className="text-sm font-bold uppercase tracking-wider text-emerald-800">
+                          Baja
+                        </span>
+                        <span className="font-mono text-xs md:text-sm font-bold text-emerald-800 bg-white px-2.5 py-1 rounded-lg border border-emerald-300 shadow-xs whitespace-nowrap">
+                          SDI ≤ 0,200174
+                        </span>
+                      </div>
+                      <div className="flex-1 py-3 px-3 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col items-center justify-center text-center gap-1.5 min-h-20 shadow-xs">
+                        <span className="text-sm font-bold uppercase tracking-wider text-amber-800">
+                          Media
+                        </span>
+                        <span className="font-mono text-xs md:text-sm font-bold text-amber-800 bg-white px-2.5 py-1 rounded-lg border border-amber-300 shadow-xs whitespace-nowrap">
+                          0,200174 &lt; SDI ≤ 0,292189
+                        </span>
+                      </div>
+                      <div className="flex-1 py-3 px-3 rounded-2xl bg-rose-50 border border-rose-200 flex flex-col items-center justify-center text-center gap-1.5 min-h-20 shadow-xs">
+                        <span className="text-sm font-bold uppercase tracking-wider text-rose-800">
+                          Alta
+                        </span>
+                        <span className="font-mono text-xs md:text-sm font-bold text-rose-800 bg-white px-2.5 py-1 rounded-lg border border-rose-300 shadow-xs whitespace-nowrap">
+                          SDI &gt; 0,292189
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Nota aclaratoria */}
+                  <div className="p-3.5 rounded-2xl bg-slate-100 border border-slate-200 flex items-start gap-2.5">
+                    <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <p className="text-xs md:text-sm text-slate-700 leading-relaxed font-medium">
+                      Estos límites se establecieron mediante terciles estadísticos del conjunto de datos de referencia. Un valor más alto indica mayor acumulación relativa de deuda social en el hilo analizado.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Footer - Fijo */}
+                <div className="mt-4 pt-3 border-t border-slate-100 flex justify-end shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setIsSdiModalOpen(false)}
+                    className="px-6 py-2 bg-slate-800 hover:bg-slate-900 text-white text-sm md:text-base font-semibold rounded-xl shadow transition cursor-pointer"
+                  >
+                    Entendido
+                  </button>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )}
       </div>
     </div>
   );
