@@ -1514,7 +1514,7 @@ export const IssueLevelDashboard = ({
                       ¿Cómo se calcula?
                     </h4>
                     <p className="text-slate-700 text-sm md:text-base mb-3 leading-relaxed">
-                      El SDI se obtiene mediante el promedio de seis dimensiones: cantidad de comentarios, diversidad de macrocausas, frecuencia de la macrocausa predominante, puntuación de microcausas, frecuencia de olores comunitarios y frecuencia de riesgos. Estas dimensiones se normalizan en una escala de 0 a 1.
+                      El SDI se obtiene mediante el promedio de seis dimensiones normalizadas en una escala de 0 a 1:
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
                       <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold text-xs md:text-sm">
